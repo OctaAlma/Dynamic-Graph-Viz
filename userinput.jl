@@ -5,7 +5,7 @@ include("varrad.jl")
 
 n = 10   # Number of nodes
 r = n * 2    # The radius of the circle
-k = 2    # there will be k * n edges in the output graph
+k = 1.5    # there will be k * n edges in the output graph
 
 degree = ones(n) # array used to keep track of the degree of each node
 
@@ -34,7 +34,7 @@ while true
         xOrY = commands[3] 
         units = parse(Float64, commands[4])
 
-        if (nodeLabel ∈ [i in 1..n])
+        if (nodeLabel ∈ range(1,n))
             
             if (lowercase(xOrY) == "x")
                 xy[nodeLabel, 1] = xy[nodeLabel, 1] + units
