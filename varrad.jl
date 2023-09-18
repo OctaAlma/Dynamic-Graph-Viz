@@ -21,7 +21,7 @@ function drawGraph(xy, edges)
     nodesize = 12
     txtsize = 12
     plot_font = "computer modern"
-    scatter!(plotObject, xy[:,1], xy[:,2],markersize = nodesize, color = :white)
+    scatter!(plotObject, xy[:,1], xy[:,2],markersize = nodesize, color = "white")
     for j = 1:size(xy,1)
         annotate!(plotObject,xy[j,1], xy[j,2],text("$j",plot_font, txtsize))
     end
