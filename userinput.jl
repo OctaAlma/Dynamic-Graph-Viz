@@ -1,12 +1,13 @@
 include("createEdges.jl")
 include("varrad.jl")
+include("vacRead.jl")
 
 # NOTE: These are just sample values used for the DEMO
 
 n = 10   # Number of nodes
 r = n * 2    # The radius of the circle
 k = 1.5    # there will be k * n edges in the output graph
-
+filename::String = ""
 degree = ones(n) # array used to keep track of the degree of each node
 
 function printHelp()
@@ -20,13 +21,13 @@ function printHelp()
     println("\tcircularCoords             - Places all nodes in a cirlce")
     println("\tdegreeDependent            - Re-draws the graph for a degree-dependant radius approach")
     println()
-    println("\n\tCOMING SOON: \n\t\tload FILENAME \n\t\tsaveGraph FILENAME \n\t\tremoveNode NODE_LABEL \n\t\taddNode NODE_LABEL \n\t\taddEdge START_NODE END_NODE")
-    println()
-    println()
-    println()
-    println()
-    println()
-    println()
+    println("\tCOMING SOON:")
+    println("\tload FILENAME")
+    println("\tsaveGraph FILENAME ")
+    println("\tremoveNode NODE_LABEL")
+    println("\taddNode NODE_LABEL")
+    println("\taddEdge START_NODE END_NODE")
+    println("")
 end
 
 global edges = randomEdges(n, k, degree)
@@ -107,6 +108,10 @@ while true
             global edges = circleEdges(n, xy)
             
             display(drawGraph(xy, edges))
+
+        elseif commands[1] == "load"
+            global filename = commands[2]
+            vacRead(filename)
         
         elseif commands[1] == "help"
             printHelp()

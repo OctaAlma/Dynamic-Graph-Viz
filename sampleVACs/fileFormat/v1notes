@@ -2,10 +2,9 @@ Proposed name: .vac
 
 Contents:
 Version Number(just an int, starting at 1)
-#nodes #edges 
 
-Boolean indicating if directed or undirected
-Boolean indicating if weighted or unweighted
+Boolean indicating if directed or undirected. d = directed. u = undirected
+Boolean indicating if weighted or unweighted. w = weighted or u = unweighted.
 
 (after this point lines starting with an 'n' represent a node and it's constructor data
 lines starting with an 'e' represent an edge)
