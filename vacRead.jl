@@ -6,7 +6,6 @@ function vacRead(filepath::String)
         open(filepath) do file
             # do stuff with the open file instance 'f'
             s = readline(file)
-            println(s)
             intS = parse(Int64, s)  
         end
     catch
@@ -19,18 +18,119 @@ function vacRead(filepath::String)
 
 end
 
+# returns the index of a string in a vector. Returns -1 if not found
+function findIndex(lineArgs, substr)
+    for i in 1:length(lineArgs)
+        if lineArgs[i] == substr
+            return i
+        end
+    end
+    return -1
+end
 
+function parseNode(lineArgs::Vector{SubString{String}}, currIndex)
+    label = ""
+    size = 10
+    outlineColor = "black"
+    fillColor = "white"
+    labelColor = "black"
+    xCoord = 0.0
+    yCoord = 0.0
+
+    i = findIndex(lineArgs, "-l")
+    if i != -1
+        label = lineArgs[i+1]
+    end
+    i = findIndex(lineArgs, "-x")
+    if i != -1
+        xCoord = parse(Float64, lineArgs[i+1])
+    end
+    i = findIndex(lineArgs, "-y")
+    if i != -1
+        yCoord = parse(Float64, lineArgs[i+1])
+    end
+    i = findIndex(lineArgs, "-f")
+    if i != -1
+        fillColor = lineArgs[i+1]
+    end
+    i = findIndex(lineArgs, "-o")
+    if i != -1
+        outlineColor = lineArgs[i+1]
+    end
+    i = findIndex(lineArgs, "-lc")
+    if i != -1
+        labelColor = lineArgs[i+1]
+    end
+    i = findIndex(lineArgs, "-s")
+    if i != -1
+        size = parse(Int64, lineArgs[i+1])
+    end
+    
+    newNode = Node()
+    newNode.label = label
+    newNode.key = currIndex
+    newNode.size = size
+    newNode.outlineColor = outlineColor
+    newNode.fillColor = fillColor
+    newNode.labelColor = labelColor
+    newNode.xCoord = xCoord
+    newNode.yCoord = yCoord
+
+    return newNode
+end
+
+function findKey(label::SubString{String}, allNodes::Vector{Node})
+    
+    for i in 1:length(allNodes)
+        if allNodes[i].label == label
+            return allNodes[i].key
+        end
+    end
+
+    return -1
+end
+
+function parseEdge(lineArgs::Vector{SubString{String}}, allNodes::Vector{Node})
+    weight = 1.0
+    color = "black"
+    sourceKey = -1
+    destKey = -1
+
+    i = findIndex(lineArgs, "-s")
+    if (i != -1)
+        label = lineArgs[i + 1]
+        sourceKey = findKey(label, allNodes)
+    end
+    i = findIndex(lineArgs, "-d")
+    if (i != -1)
+        label = lineArgs[i + 1]
+        destKey = findKey(label, allNodes)
+    end
+    i = findIndex(lineArgs, "-w")
+    if (i != -1)
+        weight = parse(Float64, lineArgs[i+1])
+    end
+    i = findIndex(lineArgs, "-c")
+    if (i != -1)
+        color = lineArgs[i + 1]
+    end
+
+    newEdge = Edge(false, weight, color, sourceKey, destKey)
+    return newEdge
+end
+
+# Parse a version 1 .vac file and return a graph object
 function vacReadv1(filepath::String)
     newGraph = Graph()
 
     newGraph.versionNo = 1
     
+    # Empty the vectors for nodes and edges
     empty!(newGraph.edges)
     empty!(newGraph.nodes)
-    
 
-    println("newGraph created")
-    
+    index = 1
+
     try
         open(filepath) do file
             # do stuff with the open file instance 'f'
@@ -52,16 +152,35 @@ function vacReadv1(filepath::String)
                             newGraph.weighted = true
                         end
                     end
+                else
+                    #Read in the nodes and edges!
+                    lineArgs = split(currLine, " ")
+                    
+                    if lineArgs[1] == "n"
+                        push!(newGraph.nodes, parseNode(lineArgs, index))
+
+                    elseif lineArgs[1] == "e"
+                        push!(newGraph.edges, parseEdge(lineArgs, newGraph.nodes))
+                    end
                 end
                 lineNo = lineNo + 1
+                index = index + 1
             end
         end
-    catch
+    catch e
         println("Something went wrong in reading the file. Version 1.\n")
+        rethrow(e)
     end
 
-    println(newGraph.directed)
-    println(newGraph.weighted)
+    for i ∈ newGraph.nodes
+        println("Node ",i, " has been added to graph.")
+    end
+
+    for i ∈ newGraph.edges
+        println("Edge ",i, " has been added to graph.")
+    end
+
+    println("New Graph has been created")
 
     return newGraph
 end

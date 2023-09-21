@@ -119,7 +119,8 @@ while true
             notFound = commands[1]
             println("Command $notFound was not found. Enter \"help\" to view valid commands")
         end
-    catch
+    catch e
+        rethrow(e)
         println("Something went wrong. Be careful with the syntax")
     end
 end
