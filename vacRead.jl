@@ -161,7 +161,7 @@ function vacReadv1(filepath::String)
         end
     catch e
         println("Something went wrong in reading the file. Version 1.\n")
-        rethrow(e)
+        #rethrow(e)
     end
 
     for i ∈ newGraph.nodes
