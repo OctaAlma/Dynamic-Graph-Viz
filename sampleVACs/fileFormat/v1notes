@@ -11,6 +11,8 @@ lines starting with an 'e' represent an edge)
 
 example node line: 
 n -l label -x xCoord -y yCoord -f fillColor -o outlineColor -lc labelColor -s nodeSize
+ - label is mandatory
 
 example weighted edge line:
 e -s sourceLabel -d destLabel -w weight -c color
+ - sourceLabel and destLabel are mandatory options

@@ -18,11 +18,12 @@ function printHelp()
     println("\tmove NODE_LABEL AXIS UNITS - Moves the node specified by NODE_LABEL in the AXIS direction by UNITS units")
     println("\trandomEdges                - regenerates random edges")
     println("\tcompleteEdges              - Adds one edge for every pair of nodes")
-    println("\tcircularCoords             - Places all nodes in a cirlce")
+    println("\tcircularCoords             - Places all nodes in a circle")
     println("\tdegreeDependent            - Re-draws the graph for a degree-dependant radius approach")
+    println("\tload FILENAME.vac          - Loads a Graph from a .vac file, IN PROGRESS")
     println()
     println("\tCOMING SOON:")
-    println("\tload FILENAME")
+    
     println("\tsaveGraph FILENAME ")
     println("\tremoveNode NODE_LABEL")
     println("\taddNode NODE_LABEL")
@@ -58,9 +59,21 @@ while true
             # move NODE_LABEL X_OR_Y UNITS
 
             nodeLabel = parse(Int64, commands[2])
-            xOrY = commands[3] 
+            xOrY = lowercase(commands[3]) 
             units = parse(Float64, commands[4])
-
+            
+            if (xOrY == "left")
+                xOrY = "x"
+                units = -1 * units
+            elseif (xOrY ==  "right")
+                xOrY = "x"
+            elseif (xOrY == "up")
+                xOrY = "y"
+            elseif (xOrY == "down")
+                xOrY = "y"
+                units = -1 * units
+            end
+            
             if (nodeLabel ∈ range(1,n))
                 
                 if (lowercase(xOrY) == "x")
@@ -72,6 +85,7 @@ while true
                     xy[nodeLabel, 2] = xy[nodeLabel, 2] + units
                     print("Moved node $nodeLabel by $units units in $xOrY direction\n")
                 end
+
                 drawGraph(xy, edges)
             end 
 
