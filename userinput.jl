@@ -134,7 +134,7 @@ while true
             println("Command $notFound was not found. Enter \"help\" to view valid commands")
         end
     catch e
-        # rethrow(e)
+        #rethrow(e)
         println("Something went wrong. Be careful with the syntax")
     end
 end

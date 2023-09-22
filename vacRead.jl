@@ -65,18 +65,8 @@ function parseNode(lineArgs::Vector{SubString{String}}, currIndex)
     if i != -1
         size = parse(Int64, lineArgs[i+1])
     end
-    
-    newNode = Node()
-    newNode.label = label
-    newNode.key = currIndex
-    newNode.size = size
-    newNode.outlineColor = outlineColor
-    newNode.fillColor = fillColor
-    newNode.labelColor = labelColor
-    newNode.xCoord = xCoord
-    newNode.yCoord = yCoord
 
-    return newNode
+    return Node(String(label), currIndex, size, outlineColor, fillColor, labelColor, xCoord, yCoord)
 end
 
 function findKey(label::SubString{String}, allNodes::Vector{Node})
@@ -115,8 +105,7 @@ function parseEdge(lineArgs::Vector{SubString{String}}, allNodes::Vector{Node})
         color = lineArgs[i + 1]
     end
 
-    newEdge = Edge(weight, color, sourceKey, destKey)
-    return newEdge
+    return Edge(weight, color, sourceKey, destKey)
 end
 
 # Parse a version 1 .vac file and return a graph object
@@ -169,7 +158,7 @@ function vacReadv1(filepath::String)
         end
     catch e
         println("Something went wrong in reading the file. Version 1.\n")
-        # rethrow(e)
+        #rethrow(e)
     end
 
     for i ∈ newGraph.nodes
