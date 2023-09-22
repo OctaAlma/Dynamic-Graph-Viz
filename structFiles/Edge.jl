@@ -1,5 +1,4 @@
 mutable struct Edge
-    directed::Bool
     weight::Float64
 
     color::String
@@ -8,6 +7,6 @@ mutable struct Edge
     destKey::Int64 #
 end
 
-Edge(directed=false, weight=1., color="black", sourceKey=-1, destKey=-1) = Edge(directed, weight, color, sourceKey, destKey)
-Edge(;directed=false, weight=1., color="black", sourceKey=-1, destKey=-1) = Edge(directed, weight, color, sourceKey, destKey)
+Edge(weight=1., color="black", sourceKey=-1, destKey=-1) = Edge(weight, color, sourceKey, destKey)
+Edge(;weight=1., color="black", sourceKey=-1, destKey=-1) = Edge(weight, color, sourceKey, destKey)
 

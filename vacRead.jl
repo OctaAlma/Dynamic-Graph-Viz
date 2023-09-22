@@ -115,7 +115,7 @@ function parseEdge(lineArgs::Vector{SubString{String}}, allNodes::Vector{Node})
         color = lineArgs[i + 1]
     end
 
-    newEdge = Edge(false, weight, color, sourceKey, destKey)
+    newEdge = Edge(weight, color, sourceKey, destKey)
     return newEdge
 end
 
@@ -158,18 +158,18 @@ function vacReadv1(filepath::String)
                     
                     if lineArgs[1] == "n"
                         push!(newGraph.nodes, parseNode(lineArgs, index))
+                        index = index + 1
 
                     elseif lineArgs[1] == "e"
                         push!(newGraph.edges, parseEdge(lineArgs, newGraph.nodes))
                     end
                 end
                 lineNo = lineNo + 1
-                index = index + 1
             end
         end
     catch e
         println("Something went wrong in reading the file. Version 1.\n")
-        rethrow(e)
+        # rethrow(e)
     end
 
     for i ∈ newGraph.nodes
