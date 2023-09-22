@@ -73,7 +73,7 @@ function findKey(label::SubString{String}, allNodes::Vector{Node})
     
     for i in 1:length(allNodes)
         if allNodes[i].label == label
-            return allNodes[i].key
+            return allNodes[i].index
         end
     end
 
@@ -146,8 +146,11 @@ function vacReadv1(filepath::String)
                     lineArgs = split(currLine, " ")
                     
                     if lineArgs[1] == "n"
-                        push!(newGraph.nodes, parseNode(lineArgs, index))
+                        newNode = parseNode(lineArgs, index)
+                        push!(newGraph.nodes, newNode)
+                        newGraph.labelToIndex[newNode.label] = newNode.index
                         index = index + 1
+
 
                     elseif lineArgs[1] == "e"
                         push!(newGraph.edges, parseEdge(lineArgs, newGraph.nodes))
@@ -158,7 +161,7 @@ function vacReadv1(filepath::String)
         end
     catch e
         println("Something went wrong in reading the file. Version 1.\n")
-        #rethrow(e)
+        rethrow(e)
     end
 
     for i ∈ newGraph.nodes

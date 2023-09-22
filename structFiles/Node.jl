@@ -1,6 +1,6 @@
 mutable struct Node
     label::String # How the node will actually appear on the graph
-    key::Int64 # The "key" associated with the node
+    index::Int64 # The "key" associated with the node
     size::Int64 # How big the node will appear on the graph
     
     outlineColor::String 
@@ -12,5 +12,5 @@ mutable struct Node
 end
 
 
-Node(label="", key=0, size=1, outlineColor="black", fillColor="white", labelColor="black", xCoord=0., yCoord=0.) = Node(label, key, size, outlineColor, fillColor, labelColor, xCoord, yCoord)
-Node(;label="", key=0, size=1, outlineColor="black", fillColor="white", labelColor="black", xCoord=0., yCoord=0.) = Node(label, key, size, outlineColor, fillColor, labelColor, xCoord, yCoord)
+Node(label="", index=0, size=1, outlineColor="black", fillColor="white", labelColor="black", xCoord=0., yCoord=0.) = Node(label, index, size, outlineColor, fillColor, labelColor, xCoord, yCoord)
+Node(;label="", index=0, size=1, outlineColor="black", fillColor="white", labelColor="black", xCoord=0., yCoord=0.) = Node(label, index, size, outlineColor, fillColor, labelColor, xCoord, yCoord)
