@@ -1,5 +1,5 @@
 using Plots 
-
+include("./structFiles/Edge.jl")
 ## Nodes
 n = 14  # number of nodes in the graph
 
@@ -53,6 +53,7 @@ push!(edges,[10;13])
 push!(edges,[11;9])
 push!(edges,[8;12])
 push!(edges,[6;9])
+print(edges)
 
 
 ## Here is how to plot the edges

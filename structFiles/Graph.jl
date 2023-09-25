@@ -1,7 +1,7 @@
 using Plots
 include("Node.jl")
 include("Edge.jl")
-include("../createEdges.jl")
+#include("../createEdges.jl")
 
 mutable struct Graph
     edges::Vector{Edge}
@@ -18,7 +18,24 @@ Graph(edges=Vector{Edge}(undef,1), nodes=Vector{Node}(undef,1), directed=false, 
 Graph(;edges=Vector{Edge}(undef,1), nodes=Vector{Node}(undef, 1), directed=false, weighted=false, versionNo=1, labelToIndex=Dict()) = Graph(edges, nodes, directed, weighted, versionNo, labelToIndex)
 
 # The display function returns a plot object containing the visualization of the graph object g
-function displayGraph(g::Graph, showTicks::Bool)#::Plots.Plot{Plots.GRBackend} 
+function makePlot(g::Graph, showTicks::Bool)::Plots.Plot{Plots.GRBackend} 
+    graphPlot = plot()
+
+    plot!(graphPlot, xlim = [-10,10], ylim = [-10,10])
+    plot!(graphPlot, aspect_ratio=:equal)
+    plot!(graphPlot, grid = showTicks, legend = false)
+    plot!(graphPlot, axis = showTicks, xticks = showTicks, yticks = showTicks) 
+
+    if isempty(g.nodes)
+        return graphPlot
+    end
+    
+    if !isassigned(g.nodes,1)
+        empty!(g.nodes)
+        empty!(g.edges)
+        return graphPlot
+    end
+
     n = length(g.nodes)
     xy = zeros(n, 2)
     edges = Vector{Vector{Int64}}()
@@ -30,12 +47,10 @@ function displayGraph(g::Graph, showTicks::Bool)#::Plots.Plot{Plots.GRBackend}
         push!(labels, "")
     end
 
-    graphPlot = plot()
-
     plot!(graphPlot, xlim = [-10,10], ylim = [-10,10])
     plot!(graphPlot, aspect_ratio=:equal)
-    plot!(graphPlot, grid = true,legend = false)
-    plot!(graphPlot, axis = false, xticks = showTicks, yticks = showTicks) 
+    plot!(graphPlot, grid = showTicks, legend = false)
+    plot!(graphPlot, axis = showTicks, xticks = showTicks, yticks = showTicks) 
 
     # Populate the xy 2-dimmensional vector
     allZeroes = true # Boolean that checks if the xy coordinates are all 0s
@@ -54,7 +69,7 @@ function displayGraph(g::Graph, showTicks::Bool)#::Plots.Plot{Plots.GRBackend}
     if (allZeroes == true)
         r = 1.5 * n
 
-        xy = createCircularCoords(n, r)
+        xy = createCircularCoords(g)
 
         for currNode in g.nodes
             currNode.xCoord = xy[currNode.index, 1]
@@ -107,13 +122,32 @@ function findNodeLabelFromIndex(g::Graph, index::Int64)::String
     return "" 
 end
 
+function updateGraphEdges(g::Graph, edgeVec::Vector{Edge})
+    g.edges = edgeVec
+end
+
+# VVI is a Vector{Vector{Int64}}, which will be used to create a Vector{Edge}
+function updateGraphEdges(g::Graph, VVI::Vector{Vector{Int64}})
+    newEdges = createEdgeVectorFromVVI(VVI)
+    updateGraphEdges(g, newEdges)
+end 
+
+function updateGraphNodes(g::Graph,nodeVec::Vector{Node})
+    g.nodes = nodeVec
+end
+
+function updateGraphNodes(g::Graph,VVF::Matrix{Float64})
+    updateGraphNodes(g, createNodeVectorFromVVF(VVF))
+end
+
+
 function addEdge(g::Graph, sourceLabel::String, destLabel::String, weight::Float64)
     sourceKey = findNodeIndexFromLabel(g, sourceLabel)
     destKey = findNodeIndexFromLabel(g, destLabel)
     color="black"
     
     if (sourceKey != -1 && destKey != -1)
-        newEdge = Edge(weight, color, sourceKey, destKey)
+        newEdge = Edge(sourceKey, destKey, weight, color)
         push!(g.edges, newEdge)
     else
         println("Please provide valid node labels for the add edge command")
@@ -156,6 +190,30 @@ function moveNode(g::Graph, label::String, dir::String, units::Float64)
     elseif (dir == "down")
         g.nodes[index].yCoord -= units
     end
+end
+
+function getInDegrees(g::Graph)::Matrix{Float64}
+    n = length(g.nodes)
+    inDegree = zeros(n,1)
+    
+    for currEdge in g.edges
+        inDegree[currEdge.destKey] += 1
+    end
+
+    return inDegree
+end
+
+function getOutDegrees(g::Graph)::Matrix{Float64}
+    n = length(g.nodes)
+    outDegree = zeros(n,1)
+    for edge ∈ g.edges
+        outDegree[edge.sourceKey] += 1
+    end
+    return outDegree 
+end
+
+function getTotalDegrees(g::Graph)::Matrix{Float64}
+    return getInDegrees(g) + getOutDegrees(g)
 end
 
 function outputGraphToVac(g::Graph, filename::String)
@@ -206,3 +264,85 @@ function outputGraphToVac(g::Graph, filename::String)
         end
     end
 end
+
+
+## BELONGED IN CREATE EDGES FUNCTION ############################################
+function createDegreeDependantCoods(g::Graph)::Matrix{Float64}
+    n = length(g.nodes)
+    r = 1.5 * n
+    degree = getTotalDegrees(g)
+    
+    xy = zeros(n,2)
+    # Updates xy to be degree-dependant
+    for j in 1:n
+        angle = (2π / n) * j;
+        x = round(cos(angle); digits = 5)
+        y = round(sin(angle); digits = 5)
+        xy[j,:] = [(x * r /(degree[j] * 0.5)) (y * r /(degree[j] * 0.5))]
+    end
+
+    return xy
+end
+
+function createCircularCoords(g::Graph)::Matrix{Float64}
+    n = length(g.nodes)
+    r = 1.5 * n
+    xy = zeros(n,2)
+    
+    # Places nodes in a circle:
+    for j in 1:n
+        angle = (2π / n) * j;
+        x = round(cos(angle); digits = 5)
+        y = round(sin(angle); digits = 5)
+        xy[j,:] = [(x * r) (y * r)]
+    end
+
+    return xy
+end
+
+function randomEdges(g::Graph)
+    n = length(g.nodes)
+
+    edges = Vector{Vector{Int64}}()
+
+    maxEdges = n * (n - 1.0) / 2.0
+    randomNumber = rand(1:maxEdges)
+    
+    # Creates random edges and updates the degree array
+    for j in 1:randomNumber
+        u = rand(range(start=1, stop=n, step=1))
+        v = rand(range(start=1, stop=n, step=1))
+        
+        push!(edges, [u;v])
+    end
+
+    return edges
+end
+
+function circleEdges(g::Graph)
+    n = length(g.nodes)
+    edges = Vector{Vector{Int64}}()
+
+    #makes edges for all nodes around 
+    for j in 1:(n-1)
+        push!(edges,[j;((j+1))])
+    end
+    push!(edges, [1;n])    
+
+    return edges
+end
+
+function completeEdges(g::Graph)
+    n = length(g.nodes)
+    edges = Vector{Vector{Int64}}()
+
+    # The following will create a complete graph:
+    for j in 1:n
+        for i in 1:n
+            push!(edges, [j;i])
+        end
+    end
+
+    return edges
+end
+####################################################################

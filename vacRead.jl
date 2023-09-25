@@ -105,7 +105,7 @@ function parseEdge(lineArgs::Vector{SubString{String}}, allNodes::Vector{Node})
         color = lineArgs[i + 1]
     end
 
-    return Edge(weight, color, sourceKey, destKey)
+    return Edge(sourceKey, destKey, weight, color)
 end
 
 # Parse a version 1 .vac file and return a graph object

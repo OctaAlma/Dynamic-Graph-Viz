@@ -1,16 +1,16 @@
-include("createEdges.jl")
 include("varrad.jl")
 include("vacRead.jl")
 
 # NOTE: These are just sample values used for the DEMO
 
-n = 10   # Number of nodes
-r = n * 2    # The radius of the circle
-k = 1.5    # there will be k * n edges in the output graph
-filename::String = ""
-degree = ones(n) # array used to keep track of the degree of each node
 
-function printHelp()
+filename::String = ""
+
+
+global G = Graph()
+global graphTicks = false
+
+function pringtHelp()
     println("Currently supported commands:")
     println("\tdisplay                    - Output the graph to the window")
     println("\tsaveas FILENAME.png        - Saves the current graph to the specified filename")
@@ -26,21 +26,20 @@ function printHelp()
     
     println("\tsaveGraph FILENAME ")
     println("\tremoveNode NODE_LABEL")
-    println("\taddNode NODE_LABEL")
-    println("\taddEdge START_NODE END_NODE")
+    println("\tadd node NODE_LABEL")
+    println("\tadd edge START_NODE END_NODE")
     println("")
 end
 
-global edges = randomEdges(n, k, degree)
-
-global xy = createDegreeDependantCoods(n, r, degree)
 
 # work on user input modifications of graph
 while true
     try
-        test = drawGraph(xy, edges)
-    catch
+        test = makePlot(G, graphTicks)
+        print("Please load a graph (load) or add notes (add)")
+    catch e
         printstyled("Graph could not be displayed.", color=:red)
+        rethrow(e)
     end
     print("\nEnter commands: ")
     
@@ -53,7 +52,7 @@ while true
         
         if commands[1] == "saveas"
             savefig(test, commands[2])
-            display(drawGraph(xy, edges))
+            display(makePlot(G, graphTicks))
 
         elseif commands[1] == "move"
             # move NODE_LABEL X_OR_Y UNITS
@@ -61,72 +60,48 @@ while true
             nodeLabel = parse(Int64, commands[2])
             xOrY = lowercase(commands[3]) 
             units = parse(Float64, commands[4])
+
+            moveNode(G, nodeLabel, xOrY, units)
+            display(makePlot(G, graphTicks))
             
-            if (xOrY == "left")
-                xOrY = "x"
-                units = -1 * units
-            elseif (xOrY ==  "right")
-                xOrY = "x"
-            elseif (xOrY == "up")
-                xOrY = "y"
-            elseif (xOrY == "down")
-                xOrY = "y"
-                units = -1 * units
-            end
-            
-            if (nodeLabel ∈ range(1,n))
-                
-                if (lowercase(xOrY) == "x")
-                    xy[nodeLabel, 1] = xy[nodeLabel, 1] + units
-                    print("Moved node $nodeLabel by $units units in $xOrY direction\n")
-
-                elseif (lowercase(xOrY) == "y")
-
-                    xy[nodeLabel, 2] = xy[nodeLabel, 2] + units
-                    print("Moved node $nodeLabel by $units units in $xOrY direction\n")
-                end
-
-                drawGraph(xy, edges)
-            end 
-
-            display(drawGraph(xy, edges))
-
         elseif occursin("quit",commands[1]) ||  occursin("exit",commands[1])
             exit()
         
-        elseif commands[1] == "display"
-            display(drawGraph(xy, edges))
+        elseif commands[1] == "display" # Will display the current graph object
+            display(makePlot(G, graphTicks))
         
-        elseif commands[1] == "circularcoords"
-            global xy = createCircularCoords(n, r)
-            display(drawGraph(xy, edges))
+        elseif commands[1] == "circularcoords" # will update the xy coordinates for the node in a graph
+            xy = createCircularCoords(G)   
+            updateGraphNodes(G, xy)
+            display(makePlot(G, graphTicks))
         
         elseif commands[1] == "degreedependent"
-            global xy = createDegreeDependantCoods(n, r, degree)
-            display(drawGraph(xy, edges))
+            xy = createDegreeDependantCoods(G)
+            updateGraphNodes(G, xy)
+            display(makePlot(G, graphTicks))
 
         elseif commands[1] == "randomedges"
-            global degree = ones(n)
-            global edges = randomEdges(n, k, degree)
-            display(drawGraph(xy, edges))
+            
+            edges = randomEdges(G)
+            updateGraphEdges(G, edges)
+
+            display(makePlot(G, graphTicks))
         
         elseif commands[1] == "completeedges"
-            global degree = ones(n)
-            global edges = completeEdges(n, degree)
-            
-            display(drawGraph(xy, edges))
+            edges = completeEdges(G)
+            updateGraphEdges(G,edges)
+            display(makePlot(G, graphTicks))
         
         elseif commands[1] == "circularedges"
-            global degree = 2 .* ones(n) 
-
-            global edges = circleEdges(n, xy)
-            
-            display(drawGraph(xy, edges))
+            edges = circleEdges(G)  
+            updateGraphEdges(G, edges)
+            display(makePlot(G, graphTicks))
 
         elseif commands[1] == "load"
             global filename = commands[2]
-            newGraph = vacRead(filename)
-            display(displayGraph(newGraph, true))
+            global G = vacRead(filename)
+            display(makePlot(G, graphTicks))
+
         elseif commands[1] == "help"
             printHelp()
         else
