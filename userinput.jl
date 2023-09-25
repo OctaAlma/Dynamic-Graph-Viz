@@ -125,8 +125,8 @@ while true
 
         elseif commands[1] == "load"
             global filename = commands[2]
-            vacRead(filename)
-        
+            newGraph = vacRead(filename)
+            display(displayGraph(newGraph, true))
         elseif commands[1] == "help"
             printHelp()
         else
@@ -134,7 +134,7 @@ while true
             println("Command $notFound was not found. Enter \"help\" to view valid commands")
         end
     catch e
-        #rethrow(e)
+        rethrow(e)
         println("Something went wrong. Be careful with the syntax")
     end
 end

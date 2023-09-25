@@ -26,5 +26,7 @@ function drawGraph(xy, edges)
         annotate!(plotObject,xy[j,1], xy[j,2],text("$j",plot_font, txtsize))
     end
 
+    display(typeof(plotObject))
+
     return plotObject
 end

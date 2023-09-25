@@ -7,6 +7,6 @@ mutable struct Edge
     destKey::Int64 #
 end
 
-Edge(weight=1., color="black", sourceKey=-1, destKey=-1) = Edge(weight, color, sourceKey, destKey)
+#Edge(weight=1., color="black", sourceKey=-1, destKey=-1) = Edge(weight, color, sourceKey, destKey)
 Edge(;weight=1., color="black", sourceKey=-1, destKey=-1) = Edge(weight, color, sourceKey, destKey)
 

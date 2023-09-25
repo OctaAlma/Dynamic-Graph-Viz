@@ -14,7 +14,7 @@ function vacRead(filepath::String)
     if intS == 1
         return vacReadv1(filepath)
     end
-    println("vacRead version",s,"not found")
+    println("vacRead version",intS,"not found")
 
 end
 
@@ -161,7 +161,7 @@ function vacReadv1(filepath::String)
         end
     catch e
         println("Something went wrong in reading the file. Version 1.\n")
-        #rethrow(e)
+        rethrow(e)
     end
 
     for i ∈ newGraph.nodes
