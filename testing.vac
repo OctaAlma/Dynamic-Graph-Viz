@@ -1,0 +1,14 @@
+1
+u
+u
+n -l a -x 2.31765 -y 7.13295 -f green -o blue -lc red -s 10
+n -l b -x -6.0676499999999995 -y 4.408425 -f white -o black -lc red -s 10
+n -l c -x -6.0676499999999995 -y -4.408425 -f blue -o black -lc black -s 10
+n -l d -x 2.31765 -y -7.13295 -f white -o black -lc black -s 10
+n -l e -x 7.5 -y -0.0 -f white -o yellow -lc black -s 10
+e -s a -d b -w 1.0 -c blue 
+e -s b -d c -w 1.0 -c black 
+e -s c -d e -w 1.0 -c red 
+e -s a -d c -w 1.0 -c black 
+e -s a -d e -w 1.0 -c black 
+e -s d -d b -w 1.0 -c black 

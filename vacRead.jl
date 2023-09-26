@@ -128,14 +128,14 @@ function vacReadv1(filepath::String)
                 if lineNo <= 3
                     if lineNo == 2
                         # Line 2 specifies if the graph is directed or undirected
-                        if currLine[1] == "u"
+                        if currLine[begin] == 'u'
                             newGraph.directed = false
                         else
                             newGraph.directed = true
                         end
                     elseif lineNo == 3
                         # Line 3 specifies if the graph is weighted or unweighted
-                        if currLine[1] == "u"
+                        if currLine[begin] == 'u'
                             newGraph.weighted = false
                         else
                             newGraph.weighted = true

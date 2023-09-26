@@ -26,3 +26,17 @@ function createNodeVectorFromVVF(xy::Matrix{Float64})::Vector{Node}
 
     return nodeVec
 end
+
+function updateNodeColor(n::Node, fc::String, oc::String, lc::String)
+    if (fc != "")
+        n.fillColor = fc
+    end
+
+    if (oc != "")
+        n.outlineColor = oc
+    end
+
+    if (lc != "")
+        n.labelColor = lc
+    end
+end

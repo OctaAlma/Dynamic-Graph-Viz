@@ -90,7 +90,7 @@ f
 nodesize = 12
 txtsize = 12
 plot_font = "computer modern"
-scatter!(f,xy[:,1], xy[:,2],markersize = nodesize, color = :black)
+scatter!(f,xy[:,1], xy[:,2],markersize = nodesize, color = :black, markerstrokecolor = :red)
 
 for j = 1:size(xy,1)
     annotate!(f,xy[j,1], xy[j,2],text("$j",plot_font, txtsize))

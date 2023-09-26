@@ -17,13 +17,13 @@ end
 Graph(edges=Vector{Edge}(undef,1), nodes=Vector{Node}(undef,1), directed=false, weighted=false, versionNo=1, labelToIndex=Dict()) = Graph(edges, nodes, directed, weighted, versionNo,labelToIndex)
 Graph(;edges=Vector{Edge}(undef,1), nodes=Vector{Node}(undef, 1), directed=false, weighted=false, versionNo=1, labelToIndex=Dict()) = Graph(edges, nodes, directed, weighted, versionNo, labelToIndex)
 
-# The display function returns a plot object containing the visualization of the graph object g
+# This function returns a plot object containing the visualization of the graph object g
 function makePlot(g::Graph, showTicks::Bool)::Plots.Plot{Plots.GRBackend} 
     graphPlot = plot()
 
     plot!(graphPlot, xlim = [-10,10], ylim = [-10,10])
     plot!(graphPlot, aspect_ratio=:equal)
-    plot!(graphPlot, grid = showTicks, legend = false)
+    plot!(graphPlot, grid = false, legend = false)
     plot!(graphPlot, axis = showTicks, xticks = showTicks, yticks = showTicks) 
 
     if isempty(g.nodes)
@@ -91,8 +91,8 @@ function makePlot(g::Graph, showTicks::Bool)::Plots.Plot{Plots.GRBackend}
     for currNode in g.nodes
         xyForNode = zeros(1, 2)
         xyForNode[1,:] = [currNode.xCoord, currNode.yCoord]
-        scatter!(graphPlot, xyForNode[:,1], xyForNode[:,2], markersize = currNode.size, color = currNode.fillColor)
-        annotate!(graphPlot, currNode.xCoord, currNode.yCoord, text(currNode.label, plot_font, txtsize))
+        scatter!(graphPlot, xyForNode[:,1], xyForNode[:,2], markersize = currNode.size, color = currNode.fillColor, markerstrokecolor = currNode.outlineColor)
+        annotate!(graphPlot, currNode.xCoord, currNode.yCoord, text(currNode.label, plot_font, txtsize, color=currNode.labelColor))
     end
 
     # println(xy)
@@ -140,6 +140,35 @@ function updateGraphNodes(g::Graph,VVF::Matrix{Float64})
     updateGraphNodes(g, createNodeVectorFromVVF(VVF))
 end
 
+function findEdgeIndex(g::Graph, sourceLabel::String, destLabel::String)::Int64
+    sourceKey = findNodeIndexFromLabel(g, sourceLabel)
+    destKey = findNodeIndexFromLabel(g, destLabel)
+    
+    if ((sourceKey != -1) && (destKey != -1))
+        index = 1
+        if (g.directed == true)
+            # In the case of a directed graph, edge direction specification matters
+            for currEdge in g.edges
+                if ((currEdge.sourceKey == sourceKey) && (currEdge.destKey == destKey))
+                    return index
+                end
+                index = index + 1
+            end
+        else
+            # in the case of an undirected graph, the edge directions do not matter
+            for currEdge in g.edges
+                if (((currEdge.sourceKey == sourceKey) && (currEdge.destKey == destKey)) || ((currEdge.sourceKey == destKey) && (currEdge.destKey == sourceKey)))
+                    return index
+                end
+                index = index + 1
+            end
+        end
+    end
+
+    return -1
+
+end
+
 
 function addEdge(g::Graph, sourceLabel::String, destLabel::String, weight::Float64)
     sourceKey = findNodeIndexFromLabel(g, sourceLabel)
@@ -156,18 +185,12 @@ function addEdge(g::Graph, sourceLabel::String, destLabel::String, weight::Float
 end
 
 function removeEdge(g::Graph, sourceLabel::String, destLabel::String)
-    sourceKey = findNodeIndexFromLabel(g, sourceLabel)
-    destKey = findNodeIndexFromLabel(g, destLabel)
+    
+    edgeInd = findEdgeIndex(g, sourceLabel, destLabel)
 
-    if (sourceKey != -1 && destKey != -1)
-        index = 1
-        for currEdge in g.edges
-            if ((currEdge.sourceKey == sourceKey) && (currEdge.destKey == destKey))
-                deleteat!(g.edges, index)                
-                break
-            end
-            index = index + 1
-        end
+    if (edgeInd != -1)
+        deleteat!(g.edges, edgeInd)
+
     else
         println("Please provide valid node labels for the removeEdge command")
         return
