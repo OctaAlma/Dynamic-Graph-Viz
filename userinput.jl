@@ -1,5 +1,6 @@
 include("varrad.jl")
 include("vacRead.jl")
+include("mtxLoader.jl")
 
 # NOTE: These are just sample values used for the DEMO
 
@@ -9,6 +10,38 @@ filename::String = ""
 
 global G = Graph()
 global graphTicks = true
+global commandsHistory = []
+global lastInputValid = false
+
+function displayGraph()
+    display(makePlot(G, graphTicks))
+end
+
+function genericLoad(filename::String, optFile::String = "")
+    # Check the extension of filename
+    extension = String(split(filename, ".")[end])
+    
+    if (extension == "vac")
+        global G = vacRead(filename)
+    elseif (extension == "mtx")
+        global G = mtxRead(filename)
+    end
+end
+
+function genericSave(filename::String)
+    # Check the extension of filename
+    extension = String(split(filename, ".")[end])
+    
+    if (extension == "png")
+        savefig(makePlot(G, graphTicks), commands[2])
+    elseif (extension == "vac")
+        outputGraphToVac(G, filename)
+    elseif (extension == "mtx")
+        outputGraphToMtx(G, filename)
+    else
+        printstyled("Graph could not be saved with extention ",extension, color=:red)
+    end
+end
 
 function printHelp()
     println("Currently supported commands:")
@@ -32,7 +65,7 @@ function printHelp()
     println("\texportVac FILENAME                         - Saves the current state of the graph into a .vac file")
     println()
     println("\tCOMING SOON:")
-    println("\t   removeNode NODE_LABEL")
+    println("\t   remove node NODE_LABEL")
     println("\t   add node NODE_LABEL")
 
     println("")
@@ -41,6 +74,7 @@ end
 
 # work on user input modifications of graph
 while true
+    global lastInputValid
     try
         print("Please load a graph (load) or add notes (add)")
     catch e
@@ -50,63 +84,82 @@ while true
     print("\n\nEnter commands: ")
     
     try
-        global input = readline()
-        global linput = lowercase(input)
+        global lastInputValid = true
+        #println("Command History is ",commandsHistory)
 
+        global input = readline()
         global commands = split(input, " ")
+        #TODO remove *any number of consecutive whitespace
+        if commands[1] == ""
+            if !isempty(commandsHistory)
+                push!(commandsHistory,last(commandsHistory))
+                commands = split(last(commandsHistory), " ")
+            else
+                println("No Commands in History")
+            end
+        else
+            push!(commandsHistory,input)
+        end
+        
+
+        
         commands[1] = lowercase(commands[1])
         
         if commands[1] == "saveas"
-            savefig(makePlot(G, graphTicks), commands[2])
-            display(makePlot(G, graphTicks))
+            genericSave(String(commands[2]))
+            displayGraph()
 
         elseif commands[1] == "move"
             # move NODE_LABEL X_OR_Y UNITS
 
-            nodeLabel = parse(Int64, commands[2])
+            nodeLabel = String(commands[2])
+
             xOrY = lowercase(commands[3]) 
             units = parse(Float64, commands[4])
 
             moveNode(G, nodeLabel, xOrY, units)
-            display(makePlot(G, graphTicks))
+
+            displayGraph()
             
         elseif occursin("quit",commands[1]) ||  occursin("exit",commands[1])
             exit()
         
         elseif commands[1] == "display" # Will display the current graph object
-            display(makePlot(G, graphTicks))
+            displayGraph()
         
         elseif commands[1] == "circularcoords" # will update the xy coordinates for the node in a graph
-            xy = createCircularCoords(G)   
-            updateGraphNodes(G, xy)
-            display(makePlot(G, graphTicks))
+            # xy = createCircularCoords(G)   
+            # updateGraphNodes(G, xy)
+            applyNewCoords(G, createCircularCoords(G))
+            displayGraph()
         
         elseif commands[1] == "degreedependent"
-            xy = createDegreeDependantCoods(G)
-            updateGraphNodes(G, xy)
-            display(makePlot(G, graphTicks))
+            # xy = createDegreeDependantCoods(G)
+            # updateGraphNodes(G, xy)
+            applyNewCoords(G, createDegreeDependantCoods(G))
+            displayGraph()
 
         elseif commands[1] == "randomedges"
-            
-            edges = randomEdges(G)
-            updateGraphEdges(G, edges)
-
-            display(makePlot(G, graphTicks))
+            updateGraphEdges(G, randomEdges(G))
+            displayGraph()
         
         elseif commands[1] == "completeedges"
-            edges = completeEdges(G)
-            updateGraphEdges(G,edges)
-            display(makePlot(G, graphTicks))
+            updateGraphEdges(G,completeEdges(G))
+            displayGraph()
         
         elseif commands[1] == "circularedges"
-            edges = circleEdges(G)  
-            updateGraphEdges(G, edges)
-            display(makePlot(G, graphTicks))
+            updateGraphEdges(G, circleEdges(G)  )
+            displayGraph()
 
         elseif commands[1] == "load"
             global filename = commands[2]
-            global G = vacRead(filename)
-            display(makePlot(G, graphTicks))
+            print(commands)
+            if length(commands)>2
+                genericLoad(filename,String(commands[3]))
+            else
+                genericLoad(filename)
+            end
+            displayGraph()
         
         elseif commands[1] == "exportvac"
             outFile = String(commands[2])
@@ -134,7 +187,7 @@ while true
                 println("add node is coming soon...")
             end
 
-            display(makePlot(G, graphTicks))
+            displayGraph()
         elseif commands[1] == "remove"
             if (lowercase(commands[2]) == "edge")
                 sourceLabel = String(commands[3])
@@ -147,7 +200,7 @@ while true
 
             end
 
-            display(makePlot(G, graphTicks))
+            displayGraph()
         
         elseif commands[1] == "setcolor"
             if (lowercase(commands[2]) == "node")
@@ -190,23 +243,38 @@ while true
                 end
             end
 
-            display(makePlot(G, graphTicks))
+            displayGraph()
         
         elseif commands[1] == "toggle"
             if (lowercase(commands[2]) == "grid")
                 global graphTicks = !graphTicks
             end
 
-            display(makePlot(G, graphTicks))
+            displayGraph()
+        elseif commands[1] == "add"
+            if (lowercase(commands[2]) == "node")
+                x = graphTicks #dummy code
+            end
+            if (lowercase(commands[2]) == "edge")
+                x = graphTicks #dummy code
+            end
+
+            displayGraph()
 
         elseif commands[1] == "help"
             printHelp()
         else
             notFound = commands[1]
             println("Command $notFound was not found. Enter \"help\" to view valid commands")
+            lastInputValid = false
         end
     catch e
-        #rethrow(e)
+        rethrow(e)
         println("Something went wrong. Be careful with the syntax")
+        lastInputValid = false
+    end
+    
+    if (!lastInputValid && !isempty(commandsHistory)) 
+        pop!(commandsHistory)
     end
 end

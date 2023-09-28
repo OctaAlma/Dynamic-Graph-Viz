@@ -15,7 +15,7 @@ end
 #Node(label="", index=0, size=1, outlineColor="black", fillColor="white", labelColor="black", xCoord=0., yCoord=0.) = Node(label, index, size, outlineColor, fillColor, labelColor, xCoord, yCoord)
 Node(;label="", index=0, size=1, outlineColor="black", fillColor="white", labelColor="black", xCoord=0., yCoord=0.) = Node(label, index, size, outlineColor, fillColor, labelColor, xCoord, yCoord)
 
-function createNodeVectorFromVVF(xy::Matrix{Float64})::Vector{Node}
+function createNodeVectorFromFM(xy::Matrix{Float64})::Vector{Node}
     nodeVec::Vector{Node} = []
     n = size(xy,1)
     

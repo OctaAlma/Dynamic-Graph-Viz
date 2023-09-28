@@ -20,8 +20,9 @@ Graph(;edges=Vector{Edge}(undef,1), nodes=Vector{Node}(undef, 1), directed=false
 # This function returns a plot object containing the visualization of the graph object g
 function makePlot(g::Graph, showTicks::Bool)::Plots.Plot{Plots.GRBackend} 
     graphPlot = plot()
-
-    plot!(graphPlot, xlim = [-10,10], ylim = [-10,10])
+    limit = length(g.nodes)*2
+    #     plot!(graphPlot, xlim = [-10,10], ylim = [-10,10])
+    plot!(graphPlot, xlim = [-limit,limit], ylim = [-limit,limit])
     plot!(graphPlot, aspect_ratio=:equal)
     plot!(graphPlot, grid = false, legend = false)
     plot!(graphPlot, axis = showTicks, xticks = showTicks, yticks = showTicks) 
@@ -47,7 +48,8 @@ function makePlot(g::Graph, showTicks::Bool)::Plots.Plot{Plots.GRBackend}
         push!(labels, "")
     end
 
-    plot!(graphPlot, xlim = [-10,10], ylim = [-10,10])
+    # plot!(graphPlot, xlim = [-10,10], ylim = [-10,10])
+    plot!(graphPlot, xlim = [-limit,limit], ylim = [-limit,limit])
     plot!(graphPlot, aspect_ratio=:equal)
     plot!(graphPlot, grid = showTicks, legend = false)
     plot!(graphPlot, axis = showTicks, xticks = showTicks, yticks = showTicks) 
@@ -137,7 +139,7 @@ function updateGraphNodes(g::Graph,nodeVec::Vector{Node})
 end
 
 function updateGraphNodes(g::Graph,VVF::Matrix{Float64})
-    updateGraphNodes(g, createNodeVectorFromVVF(VVF))
+    updateGraphNodes(g, createNodeVectorFromFM(VVF))
 end
 
 function findEdgeIndex(g::Graph, sourceLabel::String, destLabel::String)::Int64
@@ -288,12 +290,22 @@ function outputGraphToVac(g::Graph, filename::String)
     end
 end
 
+function applyNewCoords(g::Graph, xy::Matrix{Float64})
+    if length(g.nodes) != (size(xy)[1])
+        println("Number of nodes in graph ", g.nodes, " != ", (size(xy)[1]))
+        return
+    end
+    for nodeIndex in 1:length(g.nodes)
+        g.nodes[nodeIndex].xCoord = xy[nodeIndex,1]
+        g.nodes[nodeIndex].yCoord = xy[nodeIndex,2]
+    end
+end
 
 ## BELONGED IN CREATE EDGES FUNCTION ############################################
 function createDegreeDependantCoods(g::Graph)::Matrix{Float64}
     n = length(g.nodes)
-    r = 1.5 * n
-    degree = getTotalDegrees(g)
+    r = .9 * n
+    degree = getTotalDegrees(g) .+ 1
     
     xy = zeros(n,2)
     # Updates xy to be degree-dependant
