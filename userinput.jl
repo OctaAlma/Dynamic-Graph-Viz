@@ -7,7 +7,7 @@ include("mtxLoader.jl")
 
 filename::String = ""
 
-
+debug = false
 global G = Graph()
 global graphTicks = true
 global commandsHistory = []
@@ -75,12 +75,6 @@ end
 # work on user input modifications of graph
 while true
     global lastInputValid
-    try
-        print("Please load a graph (load) or add notes (add)")
-    catch e
-        printstyled("Graph could not be displayed.", color=:red)
-        rethrow(e)
-    end
     print("\n\nEnter commands: ")
     
     try
@@ -153,7 +147,6 @@ while true
 
         elseif commands[1] == "load"
             global filename = commands[2]
-            print(commands)
             if length(commands)>2
                 genericLoad(filename,String(commands[3]))
             else
@@ -269,7 +262,9 @@ while true
             lastInputValid = false
         end
     catch e
-        rethrow(e)
+        if debug
+            rethrow(e)
+        end
         println("Something went wrong. Be careful with the syntax")
         lastInputValid = false
     end
