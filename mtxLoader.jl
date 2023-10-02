@@ -6,7 +6,7 @@ function mtxRead(filepath::String)::Graph
     newGraph.versionNo = 1
 
     #For MTX, assume the input graph is directed
-    newGraph.directed = true
+    newGraph.directed = false
     
     # Empty the vectors for nodes and edges
     empty!(newGraph.edges)
