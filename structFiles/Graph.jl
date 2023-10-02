@@ -12,17 +12,58 @@ mutable struct Graph
 
     versionNo::Int64
     labelToIndex::Dict
+
+    xMin::Float64
+    xMax::Float64
+    yMin::Float64
+    yMax::Float64
 end
 
-Graph(edges=Vector{Edge}(undef,1), nodes=Vector{Node}(undef,1), directed=false, weighted=false, versionNo=1, labelToIndex=Dict()) = Graph(edges, nodes, directed, weighted, versionNo,labelToIndex)
-Graph(;edges=Vector{Edge}(undef,1), nodes=Vector{Node}(undef, 1), directed=false, weighted=false, versionNo=1, labelToIndex=Dict()) = Graph(edges, nodes, directed, weighted, versionNo, labelToIndex)
+Graph(edges=Vector{Edge}(undef,1), nodes=Vector{Node}(undef,1), directed=false, weighted=false, versionNo=1, labelToIndex=Dict(), xMin = Inf, xMax = -Inf , yMin = Inf, yMax = -Inf ) = Graph(edges, nodes, directed, weighted, versionNo,labelToIndex, xMin, xMax, yMin,yMax)
+Graph(;edges=Vector{Edge}(undef,1), nodes=Vector{Node}(undef, 1), directed=false, weighted=false, versionNo=1, labelToIndex=Dict(), xMin = Inf, xMax = -Inf , yMin = Inf, yMax = -Inf  ) = Graph(edges, nodes, directed, weighted, versionNo, labelToIndex, xMin, xMax, yMin,yMax)
+
+# Computes a the Graph's limits as a bounding box of the graph's nodes
+function setGraphLimits(g::Graph)
+    println(g.xMin, " ", g.xMax, " ", g.yMin, " ", g.yMax)
+    g.xMin = Inf
+    g.xMax = -Inf
+    g.yMin = Inf
+    g.yMax = -Inf
+    if (length(g.nodes) == 0)
+        return
+    end
+    
+    for node ∈ g.nodes
+        if (node.xCoord < g.xMin)
+            g.xMin = node.xCoord
+        end
+
+        if (node.xCoord > g.xMax)
+            g.xMax = node.xCoord
+        end
+
+        if (node.yCoord < g.yMin)
+            g.yMin = node.yCoord
+        end
+
+        if (node.yCoord > g.yMax)
+            g.yMax = node.yCoord
+        end
+    end
+    println(g.xMin, " ", g.xMax, " ", g.yMin, " ", g.yMax)
+end
 
 # This function returns a plot object containing the visualization of the graph object g
 function makePlot(g::Graph, showTicks::Bool)::Plots.Plot{Plots.GRBackend} 
     graphPlot = plot()
     limit = length(g.nodes)*2
+    k = 0.25
     #     plot!(graphPlot, xlim = [-10,10], ylim = [-10,10])
-    plot!(graphPlot, xlim = [-limit,limit], ylim = [-limit,limit])
+
+    deltaX = (g.xMax - g.xMin) * k
+    deltaY = (g.yMax - g.yMin) * k
+    
+    plot!(graphPlot, xlim = [g.xMin - deltaX,g.xMax + deltaX], ylim = [g.yMin - deltaY, g.yMax + deltaY])
     plot!(graphPlot, aspect_ratio=:equal)
     plot!(graphPlot, grid = false, legend = false)
     plot!(graphPlot, axis = showTicks, xticks = showTicks, yticks = showTicks) 
@@ -49,7 +90,7 @@ function makePlot(g::Graph, showTicks::Bool)::Plots.Plot{Plots.GRBackend}
     end
 
     # plot!(graphPlot, xlim = [-10,10], ylim = [-10,10])
-    plot!(graphPlot, xlim = [-limit,limit], ylim = [-limit,limit])
+    plot!(graphPlot, xlim = [g.xMin - deltaX,g.xMax + deltaX], ylim = [g.yMin - deltaY, g.yMax + deltaY])
     plot!(graphPlot, aspect_ratio=:equal)
     plot!(graphPlot, grid = showTicks, legend = false)
     plot!(graphPlot, axis = showTicks, xticks = showTicks, yticks = showTicks) 
@@ -72,11 +113,13 @@ function makePlot(g::Graph, showTicks::Bool)::Plots.Plot{Plots.GRBackend}
         r = 1.5 * n
 
         xy = createCircularCoords(g)
-
         for currNode in g.nodes
             currNode.xCoord = xy[currNode.index, 1]
             currNode.yCoord = xy[currNode.index, 2]
         end
+
+        setGraphLimits(g)
+        plot!(graphPlot, xlim = [g.xMin*k,g.xMax*k], ylim = [g.yMin*k,g.yMax*k])
     end
 
     # Populate the edges vector and plot the edges
@@ -203,18 +246,22 @@ end
 function moveNode(g::Graph, label::String, dir::String, units::Float64)
     index = findNodeIndexFromLabel(g, label)
 
-    if (dir == "left")
+    if (dir == "left" || dir == "l")
         g.nodes[index].xCoord -= units 
     
-    elseif (dir == "right" || dir == "x")
+    elseif (dir == "right" || dir == "x" ||  dir == "r")
         g.nodes[index].xCoord += units
     
-    elseif (dir == "up" || dir == "y")
+    elseif (dir == "up" || dir == "y" ||  dir == "u")
         g.nodes[index].yCoord += units     
     
-    elseif (dir == "down")
+    elseif (dir == "down" || dir == "d")
         g.nodes[index].yCoord -= units
+    else
+        print("Invalid Direction in moveNode")
     end
+
+    setGraphLimits(g)
 end
 
 function getInDegrees(g::Graph)::Matrix{Float64}

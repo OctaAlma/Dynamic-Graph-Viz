@@ -109,7 +109,7 @@ function parseEdge(lineArgs::Vector{SubString{String}}, allNodes::Vector{Node})
 end
 
 # Parse a version 1 .vac file and return a graph object
-function vacReadv1(filepath::String)
+function vacReadv1(filepath::String)::Graph
     newGraph = Graph()
 
     newGraph.versionNo = 1
@@ -174,5 +174,6 @@ function vacReadv1(filepath::String)
 
     println("New Graph has been created")
 
+    setGraphLimits(newGraph)
     return newGraph
 end

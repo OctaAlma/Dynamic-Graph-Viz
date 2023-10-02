@@ -1,13 +1,14 @@
 include("varrad.jl")
-include("vacRead.jl")
+include("vacLoader.jl")
 include("mtxLoader.jl")
+include("txtLoader.jl")
 
 # NOTE: These are just sample values used for the DEMO
 
 
 filename::String = ""
 
-debug = false
+debug = true
 global G = Graph()
 global graphTicks = true
 global commandsHistory = []
@@ -43,7 +44,7 @@ function genericSave(filename::String)
     end
 end
 
-function printHelp()
+function printHelp(category="")
     println("Currently supported commands:")
     println("\tdisplay                                    - Output the graph to the window")
     println("\tsaveas FILENAME.png                        - Saves the current graph to the specified filename")
@@ -105,17 +106,21 @@ while true
 
         elseif commands[1] == "move"
             # move NODE_LABEL X_OR_Y UNITS
+            moveCoord = 2
+            if "node" == commands[2]
+                moveCoord = 3
+            end
 
-            nodeLabel = String(commands[2])
+            nodeLabel = String(commands[moveCoord])
 
-            xOrY = lowercase(commands[3]) 
-            units = parse(Float64, commands[4])
+            xOrY = lowercase(commands[moveCoord+1]) 
+            units = parse(Float64, commands[moveCoord+2])
 
             moveNode(G, nodeLabel, xOrY, units)
 
             displayGraph()
             
-        elseif occursin("quit",commands[1]) ||  occursin("exit",commands[1])
+        elseif occursin("quit",commands[1]) ||  occursin("exit",commands[1]) || commands[1] == "q"
             exit()
         
         elseif commands[1] == "display" # Will display the current graph object
@@ -154,6 +159,12 @@ while true
             end
             displayGraph()
         
+        elseif commands[1] == "loadxy"
+            xyFile = String(commands[2])
+            txtReadXY(G, xyFile)
+            
+            displayGraph()
+
         elseif commands[1] == "exportvac"
             outFile = String(commands[2])
             outputGraphToVac(G, outFile)

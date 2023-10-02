@@ -67,6 +67,8 @@ function mtxRead(filepath::String)::Graph
         println(filepath, " could not be loaded.")
     end
 
+    setGraphLimits(newGraph)
+    
     return newGraph
 end
 
