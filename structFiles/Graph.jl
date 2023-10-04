@@ -64,7 +64,7 @@ function makePlot(g::Graph, showTicks::Bool)::Plots.Plot{Plots.GRBackend}
     deltaY = (g.yMax - g.yMin) * k
     
     plot!(graphPlot, xlim = [g.xMin - deltaX,g.xMax + deltaX], ylim = [g.yMin - deltaY, g.yMax + deltaY])
-    plot!(graphPlot, aspect_ratio=:equal)
+    #plot!(graphPlot, aspect_ratio=:equal)
     plot!(graphPlot, grid = false, legend = false)
     plot!(graphPlot, axis = showTicks, xticks = showTicks, yticks = showTicks) 
 
@@ -91,7 +91,7 @@ function makePlot(g::Graph, showTicks::Bool)::Plots.Plot{Plots.GRBackend}
 
     # plot!(graphPlot, xlim = [-10,10], ylim = [-10,10])
     plot!(graphPlot, xlim = [g.xMin - deltaX,g.xMax + deltaX], ylim = [g.yMin - deltaY, g.yMax + deltaY])
-    plot!(graphPlot, aspect_ratio=:equal)
+    #plot!(graphPlot, aspect_ratio=:equal)
     plot!(graphPlot, grid = showTicks, legend = false)
     plot!(graphPlot, axis = showTicks, xticks = showTicks, yticks = showTicks) 
 

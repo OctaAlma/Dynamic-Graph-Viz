@@ -2,6 +2,7 @@ include("varrad.jl")
 include("vacLoader.jl")
 include("mtxLoader.jl")
 include("txtLoader.jl")
+include("matLoader.jl")
 
 # NOTE: These are just sample values used for the DEMO
 
@@ -26,7 +27,12 @@ function genericLoad(filename::String, optFile::String = "")
         global G = vacRead(filename)
     elseif (extension == "mtx")
         global G = mtxRead(filename)
+    elseif (extension == "mat")
+        global G = MATRead(filename)
     end
+    setGraphLimits(G)
+    displayGraph()
+
 end
 
 function genericSave(filename::String)
@@ -95,8 +101,6 @@ while true
         else
             push!(commandsHistory,input)
         end
-        
-
         
         commands[1] = lowercase(commands[1])
         

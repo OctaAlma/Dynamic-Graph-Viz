@@ -1,10 +1,10 @@
 using LinearAlgebra, Plots, MAT, SparseArrays
 include("graph_visualizations.jl")
-M = matread("ash85.mat")
+M = matread("Karate.mat")
 print(M)
-print(M["Problem"]["A"])
-A = M["Problem"]["A"]
-xy = M["Problem"]["xy"]
+
+A = M["A"]
+xy = M["xy"]
 
 
 ## Plot the graph

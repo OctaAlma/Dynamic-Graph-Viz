@@ -5,7 +5,7 @@ function mtxRead(filepath::String)::Graph
 
     newGraph.versionNo = 1
 
-    #For MTX, assume the input graph is directed
+    #For MTX, assume the input graph is undirected
     newGraph.directed = false
     
     # Empty the vectors for nodes and edges
