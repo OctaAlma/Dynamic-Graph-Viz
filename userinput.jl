@@ -9,7 +9,7 @@ include("matLoader.jl")
 
 filename::String = ""
 
-debug = true
+debug = false
 global G = Graph()
 global graphTicks = true
 global commandsHistory = []

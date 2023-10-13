@@ -428,3 +428,105 @@ function completeEdges(g::Graph)
     return edges
 end
 ####################################################################
+
+# The following functions are used to create a Force-Directed Layout
+
+function f_rep(node1::Node, node2::Node)::Vector{Float64}
+    return [-1.0, -1.0]
+end
+
+function f_attr(node1::Node, node2::Node)::Vector{Float64}
+    return [1.0, 1.0]
+end
+
+function getCoolingFactor(t)::Float64
+    # Note: This is just an arbitrary function. Could be tweaked later
+    return (1.0 / Float64(t))
+end
+
+# Returns a COPY of the Node in the graph with the specified index/key
+function getNode(g::Graph, key::Int64)
+    for node ∈ g.nodes
+        if (node.key == key)
+            return Node(label=node.label, index=node.index, size=node.size, outlineColor=node.outlineColor, fillColor=node.fillColor, labelColor=node.labelColor, xCoord=node.xCoord, yCoord=node.yCoord)
+        end
+    end
+
+    println("Could not find node with key ", key)
+end
+
+# Returns a vector of Nodes that are adjacent to the Node v
+# - If g is directed, it will return only nodes of the form (v,u)
+# - If g is undirected, it will return nodes of the form (v,u) and (u,v)
+function getAdjacentNodes(g::Graph, v::Node)
+    adjacentNodes = Vector{Node}()
+    for edge ∈ g.edges
+        if (edge.sourceKey == v.index)
+            push!(adjacentNodes, getNode(g, edge.destKey))
+        end
+
+        if (!g.directed)
+            if (edge.destKey == v.index)
+                push!(adjacentNodes, getNode(g, edge.sourceKey))
+            end
+        end
+    end
+
+    print("the adjacent nodes are ", adjacentNodes)
+
+    return adjacentNodes
+end
+
+function magnitude(f::Vector{Float64})::Float64
+    return sqrt(f[1]^2 + f[2]^2)
+end
+
+
+# The following function updates the coordinates of the nodes to meet a force-directed layout
+# g is the graph object containing the initial layout
+# ε is the threshold. ε > 0. Once forces get smaller than epsilon, we stop the algorithm
+# K is the maximum number of iterations
+function forceDirectedCoords(g::Graph, ε::Float64, K::Int64)
+    t = 1
+
+    # We can keep track of the position of each variable in a vector of float64 tuples
+    maxForce = -Inf
+
+    # Store the positions and forces of each node in a matrix of size nx2
+    position = zeros(length(g.nodes), 2)
+    forces = zeros(length(g.nodes), 2)
+
+    # Condition 1: the number of iterations so far is less than K
+    # Condition 2: The maximum force we computed in the previous iteration is greater than epsilon
+    while (t < K) && (maxForce > ε)
+        for u ∈ g.nodes
+            f_rep_u = [0.0, 0.0]
+            # Repellent force must be computed with all vertices
+            for v ∈ g.nodes
+                # some way to add f_rep_u with the result of f_rep(u,v)
+
+            end
+
+            # Attractive force must ONLY be computed with adjacent vertices
+            f_attr_u = [0.0, 0.0]
+            adjacentNodes = getAdjacentNodes(g, u)
+            for v ∈ adjacentNodes
+                # some way to add f_attr_u with the result of f_attr(u,v)
+            end
+
+            # find some way to store f_u so that we can update the node's coordinates later
+            f_u = f_rep_u + f_attr_u
+
+            if (magnitude(f_u) > maxForce)
+                maxForce = f_u
+            end
+        end
+
+        for u ∈ g.nodes
+            pos_u = [u.xCoord, u.yCoord] + getCoolingFactor(t) .* [0.0, 0.0] # SOME WAY TO FETCH f_u
+
+        end
+
+        t = t + 1
+    end
+end
