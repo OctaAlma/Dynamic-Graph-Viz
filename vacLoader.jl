@@ -164,16 +164,6 @@ function vacReadv1(filepath::String)::Graph
         rethrow(e)
     end
 
-    for i ∈ newGraph.nodes
-        println("Node ",i, " has been added to graph.")
-    end
-
-    for i ∈ newGraph.edges
-        println("Edge ",i, " has been added to graph.")
-    end
-
-    println("New Graph has been created")
-
     setGraphLimits(newGraph)
     return newGraph
 end

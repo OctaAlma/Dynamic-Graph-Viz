@@ -320,10 +320,30 @@ while true
             if (lowercase(commands[2]) == "grid")
                 global showTicks = !showTicks
             
-            elseif (commands[2] == "label")
+            elseif (commands[2] == "labels")
                 global showLabels = !showLabels
+            elseif (commands[2] == "debug")
+                global debug = !debug
+                if (debug)
+                    println("Debug mode ON")
+                else
+                    println("Debug mode OFF")
+                end
             end
             
+            displayGraph()
+        elseif commands[majorCommand] == "view"
+            if majorCommand == 2
+
+                continue
+            end
+            
+            centerX = parse(Float64, commands[2])
+            centerY = parse(Float64, commands[3])
+            radius = parse(Float64, commands[4])
+
+            applyView(G, centerX, centerY, radius)
+
             displayGraph()
 
         elseif majorCommand == 2

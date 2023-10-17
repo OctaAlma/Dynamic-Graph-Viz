@@ -10,14 +10,17 @@
 =#
 
 loadhelpStr = 
-"""\tload FILENAME.txt                          - Loads a Graph from an .mtx file containing edge connections
+"""
+---------- Load functions ----------------------------------------------------------------------------------
+\tload FILENAME.txt                          - Loads a Graph from an .mtx file containing edge connections
 \tload FILENAME.mxt                          - Loads a Graph from a .txt file containing edge connections
 \tload FILENAME.mat                          - Loads a Graph from a .mat file containing edge connections and (optionally) node coordinates
 \tload FILENAME.vac                          - Loads a Graph from a .vac file
-
 \tloadxy FILENAME.vac                          - Loads node xy coordinates from a .txt file"""
 
-savehelpStr = """\tsaveas FILENAME.pdf                        - Saves the current graph to an image PNG file"
+savehelpStr = """
+---------- Save functions ----------------------------------------------------------------------------------
+\tsaveas FILENAME.pdf                        - Saves the current graph to an image PNG file"
 \tsaveas FILENAME.png                        - Saves the current graph to an image PNG file
 \tsaveas FILENAME.txt                        - Saves the current graph edge information to a .txt file
 \tsaveas FILENAME.vac                        - Saves the current graph state into a .vac file"""
@@ -81,8 +84,10 @@ end
 "Commands that do not affect the xy positions of nodes or the edges of th graph object, but can affect the visuliaztion of the graph object."
 function printDisplayCommands()
     println("\tdisplay                                    - Output the graph to the window")
+    println("\tview CENTERx CENTERy RADIUS                - Output the graph to the window")
+
     println("\ttoggle grid                                - Will toggle the grid to be on/off")
-    println("\ttoggle labels                              - Will toggle the grid to be on/off")
+    println("\ttoggle labels                              - Will toggle the labels to be on/off")
     printsetColorCommands()
 
 end

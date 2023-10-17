@@ -53,6 +53,13 @@ function setGraphLimits(g::Graph)
     println(g.xMin, " ", g.xMax, " ", g.yMin, " ", g.yMax)
 end
 
+function applyView(g::Graph, centerX::Float64, centerY::Float64, radius::Float64)
+    g.xMax = centerX + radius
+    g.yMax = centerY + radius
+    g.xMin = centerX - radius
+    g.yMin = centerY - radius
+end
+
 # This function returns a plot object containing the visualization of the graph object g
 function makePlot(g::Graph, showTicks::Bool, showLabels::Bool)::Plots.Plot{Plots.GRBackend} 
     graphPlot = plot()
