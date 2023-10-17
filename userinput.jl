@@ -243,6 +243,7 @@ while true
 
             elseif (lowercase(commands[2]) == "node")
                 addNode(G, commands)
+                displayGraph()
             end
 
             displayGraph()

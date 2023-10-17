@@ -363,6 +363,11 @@ end
 
 function addEdge(g::Graph, sourceLabel::String, destLabel::String, weight::Float64)
     
+    if (sourceLabel == destLabel)
+        println("Self loops are not allowed")
+        return
+    end
+
     if (findEdgeIndex(g, sourceLabel, destLabel) != -1)
         println("Edge from ", sourceLabel, " to ", destLabel, " already exists.")
         return

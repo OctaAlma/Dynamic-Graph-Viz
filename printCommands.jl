@@ -11,18 +11,19 @@
 
 loadhelpStr = 
 """
----------- Load functions ----------------------------------------------------------------------------------
+\n---------- Load functions ----------------------------------------------------------------------------------
 \tload FILENAME.txt                          - Loads a Graph from an .mtx file containing edge connections
 \tload FILENAME.mxt                          - Loads a Graph from a .txt file containing edge connections
 \tload FILENAME.mat                          - Loads a Graph from a .mat file containing edge connections and (optionally) node coordinates
 \tload FILENAME.vac                          - Loads a Graph from a .vac file
-\tloadxy FILENAME.vac                          - Loads node xy coordinates from a .txt file"""
+\tloadxy FILENAME.txt                        - Loads node xy coordinates from a .txt file"""
 
 savehelpStr = """
----------- Save functions ----------------------------------------------------------------------------------
+\n---------- Save functions ----------------------------------------------------------------------------------
 \tsaveas FILENAME.pdf                        - Saves the current graph to an image PNG file"
 \tsaveas FILENAME.png                        - Saves the current graph to an image PNG file
 \tsaveas FILENAME.txt                        - Saves the current graph edge information to a .txt file
+\tsaveas FILENAME.mtx                        - Saves the current graph edge information to a .mtx file
 \tsaveas FILENAME.vac                        - Saves the current graph state into a .vac file"""
 
 randomEdgeshelpStr = """\trandomEdges                                - regenerates random edges"""
