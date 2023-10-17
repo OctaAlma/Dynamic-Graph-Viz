@@ -54,7 +54,7 @@ function setGraphLimits(g::Graph)
 end
 
 # This function returns a plot object containing the visualization of the graph object g
-function makePlot(g::Graph, showTicks::Bool)::Plots.Plot{Plots.GRBackend} 
+function makePlot(g::Graph, showTicks::Bool, showLabels::Bool)::Plots.Plot{Plots.GRBackend} 
     graphPlot = plot()
     limit = length(g.nodes)*2
     k = 0.25
@@ -137,7 +137,10 @@ function makePlot(g::Graph, showTicks::Bool)::Plots.Plot{Plots.GRBackend}
         xyForNode = zeros(1, 2)
         xyForNode[1,:] = [currNode.xCoord, currNode.yCoord]
         scatter!(graphPlot, xyForNode[:,1], xyForNode[:,2], markersize = currNode.size, color = currNode.fillColor, markerstrokecolor = currNode.outlineColor)
-        annotate!(graphPlot, currNode.xCoord, currNode.yCoord, text(currNode.label, plot_font, txtsize, color=currNode.labelColor))
+        
+        if (showLabels == true)
+            annotate!(graphPlot, currNode.xCoord, currNode.yCoord, text(currNode.label, plot_font, txtsize, color=currNode.labelColor))
+        end
     end
 
     # println(xy)
@@ -148,6 +151,16 @@ function makePlot(g::Graph, showTicks::Bool)::Plots.Plot{Plots.GRBackend}
 end
 
 function findNodeIndexFromLabel(g::Graph, label::String)::Int64
+    for currNode in g.nodes
+        if (currNode.label == label)
+            return currNode.index
+        end
+    end
+
+    return -1
+end
+
+function findNodeArrayIndexFromLabel(g::Graph, label::String)::Int64
     for currNode in g.nodes
         if (currNode.label == label)
             return currNode.index
@@ -214,6 +227,86 @@ function findEdgeIndex(g::Graph, sourceLabel::String, destLabel::String)::Int64
 
 end
 
+"""
+Adds a new Node object to the graph from the provided parameters
+"""
+function addNode(g::Graph, label::String, size=1, outlineColor="black", fillColor="white", labelColor="black", xCoord=0., yCoord=0.) 
+    newIndex = length(g.nodes) + 1
+    newNode = Node(label, newIndex, size, outlineColor, fillColor, labelColor, xCoord, yCoord)
+    push!(g.nodes, newNode)
+end
+
+"""
+Adds a new node constructed from the arguments in `commands`.
+Assumes commands is of the form:
+\t\t add node -l label -s size - oc outlineColor -fc fillColor -lc labelColor -x xCoord -y yCoords
+
+"""
+function addNode(g::Graph, commands::Vector{SubString{String}})
+    newIndex = length(g.nodes) + 1
+    newNode = parseNode(commands, length(G.nodes) + 1)
+    push!(g.nodes, newNode)
+end
+
+"""
+Removes the node at index string and all the edges associated with it
+Goes through `g.nodes` and finds the node with the label `label`
+Will save the index from the found node and remove/pop! that node from `g.nodes`.
+It will then traverse `g.nodes` and decrement the index of every node with an `index` > the popped node's index.
+Finally, it will traverse `g.edges` and decrement 
+"""
+function removeNode(g::Graph, label::String)
+    index = -1
+    
+    # Iterate through all the nodes in the graph and modify appropriately
+    i = 1
+    n = length(g.nodes)
+    while (i <= n)
+        # do stuff
+        node = g.nodes[i]
+
+        if index == -1
+            if node.label == label
+                index = i
+                deleteat!(g.nodes, i)
+                i = i - 1
+                n = n - 1
+            end        
+        else 
+            g.nodes[i].index = i
+        end
+
+        i = i + 1
+    end
+    
+    if (index == -1)
+        println("A node with label", label, " was not found.")
+        return
+    end
+
+    # Iterate through all of the edges in the graph and modify appropriately
+    i = 1
+    n = length(g.edges)
+    while (i <= n)
+        # if either the source or dest is index, then we remove the edge!
+        if (g.edges[i].sourceKey == index) || (g.edges[i].destKey == index)
+            deleteat!(g.edges, i)
+            n = n - 1
+            continue
+        end
+        
+        # Then, if either one of its dest or source is greater than index
+        if (g.edges[i].sourceKey > index)
+            g.edges[i].sourceKey = g.edges[i].sourceKey -1
+        end
+
+        if (g.edges[i].destKey > index)
+            g.edges[i].destKey = g.edges[i].destKey - 1
+        end
+
+        i = i + 1
+    end
+end
 
 function addEdge(g::Graph, sourceLabel::String, destLabel::String, weight::Float64)
     sourceKey = findNodeIndexFromLabel(g, sourceLabel)
@@ -336,7 +429,7 @@ function outputGraphToVac(g::Graph, filename::String)
         end
     end
 end
-
+#TODO change so that the work after deletions
 function applyNewCoords(g::Graph, xy::Matrix{Float64})
     if length(g.nodes) != (size(xy)[1])
         println("Number of nodes in graph ", g.nodes, " != ", (size(xy)[1]))
@@ -346,6 +439,8 @@ function applyNewCoords(g::Graph, xy::Matrix{Float64})
         g.nodes[nodeIndex].xCoord = xy[nodeIndex,1]
         g.nodes[nodeIndex].yCoord = xy[nodeIndex,2]
     end
+
+    setGraphLimits(g)
 end
 
 ## BELONGED IN CREATE EDGES FUNCTION ############################################

@@ -3,6 +3,7 @@ include("vacLoader.jl")
 include("mtxLoader.jl")
 include("txtLoader.jl")
 include("matLoader.jl")
+include("printCommands.jl")
 
 # NOTE: These are just sample values used for the DEMO
 
@@ -11,12 +12,15 @@ filename::String = ""
 
 debug = false
 global G = Graph()
-global graphTicks = true
+
+global showTicks = true
+global showLabels = true
+
 global commandsHistory = []
 global lastInputValid = false
 
 function displayGraph()
-    display(makePlot(G, graphTicks))
+    display(makePlot(G, showTicks, showLabels))
 end
 
 function genericLoad(filename::String, optFile::String = "")
@@ -25,7 +29,7 @@ function genericLoad(filename::String, optFile::String = "")
     
     if (extension == "vac")
         global G = vacRead(filename)
-    elseif (extension == "mtx")
+    elseif (extension == "mtx") || (extension == "txt")
         global G = mtxRead(filename)
     elseif (extension == "mat")
         global G = MATRead(filename)
@@ -39,11 +43,11 @@ function genericSave(filename::String)
     # Check the extension of filename
     extension = String(split(filename, ".")[end])
     
-    if (extension == "png")
-        savefig(makePlot(G, graphTicks), commands[2])
+    if (extension == "png" || extension == "pdf")
+        savefig(makePlot(G, showTicks, showLabels), commands[2])
     elseif (extension == "vac")
         outputGraphToVac(G, filename)
-    elseif (extension == "mtx")
+    elseif (extension == "mtx" || extension == "txt")
         outputGraphToMtx(G, filename)
     else
         printstyled("Graph could not be saved with extention ",extension, color=:red)
@@ -51,38 +55,30 @@ function genericSave(filename::String)
 end
 
 function printHelp(category="")
-    println("Currently supported commands:")
-    println("\tdisplay                                    - Output the graph to the window")
-    println("\tsaveas FILENAME.png                        - Saves the current graph to the specified filename")
-    println("\texit                                       - quits the program and the Julia repl")
-    println("\tmove NODE_LABEL AXIS UNITS                 - Moves the node specified by NODE_LABEL in the AXIS direction by UNITS units")
-    println("\trandomEdges                                - regenerates random edges")
-    println("\tcompleteEdges                              - Adds one edge for every pair of nodes")
-    println("\tcircularCoords                             - Places all nodes in a circle")
-    println("\tdegreeDependent                            - Re-draws the graph for a degree-dependant radius approach")
-    println("\tload FILENAME.vac                          - Loads a Graph from a .vac file, IN PROGRESS")
-    println("\tadd edge SOURCE DEST WEIGHT                - Adds an edge from START_NODE to END_NODE")   
-    println("\tsaveGraphState FILENAME                    - Saves the graph into FILENAME so it can be loaded in at a later session")
-    println("\ttoggle GRID                                - Will toggle the grid to be on/off")
-    
-    println("\tsetColor node NODE fill NEW_COLOR          - Updates the fill color of specified NODE")
-    println("\tsetColor node NODE OL NEW_COLOR            - Updates the outline color of the specified NODE")
-    println("\tsetColor node NODE label NEW_COLOR         - Updates the color of the specified NODE label")
-    println("\tsetColor edge SOURCE DEST NEW_COLOR        - Updates the color of the edge between the SOURCE and DEST")
-    println("\texportVac FILENAME                         - Saves the current state of the graph into a .vac file")
-    println()
-    println("\tCOMING SOON:")
-    println("\t   remove node NODE_LABEL")
-    println("\t   add node NODE_LABEL")
+    # There are 4 categories: load/save Graph, edit Graph, edit Coords, display
+    category = lowercase(category)
+    print(category)
+    if category == ""
+        printAll()
 
-    println("")
+    elseif category == "load"
+        printLoadCommands()
+    elseif category == "save"
+        printSaveCommands()
+
+    elseif category == "edit graph"
+        printEditGraphCommands()
+
+    elseif category == "edit xy"
+        printEditCoordCommands()
+    end
 end
 
 
 # work on user input modifications of graph
 while true
     global lastInputValid
-    print("\n\nEnter commands: ")
+    print("\nEnter commands: ")
     
     try
         global lastInputValid = true
@@ -103,13 +99,32 @@ while true
         end
         
         commands[1] = lowercase(commands[1])
+
+        majorCommand = 1
+        if commands[1] == "help"
+            if length(commands) < 2
+                printHelp()
+                continue
+            else
+                majorCommand = 2
+            end
+        end
         
-        if commands[1] == "saveas"
+        if commands[majorCommand] == "saveas" || commands[majorCommand] == "save"
+            if majorCommand == 2
+                printSaveommands()
+                continue
+            end
             genericSave(String(commands[2]))
             displayGraph()
+            
 
-        elseif commands[1] == "move"
+        elseif commands[majorCommand] == "move"
             # move NODE_LABEL X_OR_Y UNITS
+            if majorCommand == 2
+                
+                continue
+            end
             moveCoord = 2
             if "node" == commands[2]
                 moveCoord = 3
@@ -124,37 +139,69 @@ while true
 
             displayGraph()
             
-        elseif occursin("quit",commands[1]) ||  occursin("exit",commands[1]) || commands[1] == "q"
+        elseif occursin("quit",commands[majorCommand]) ||  occursin("exit",commands[majorCommand]) || commands[majorCommand] == "q"
+            if majorCommand == 2
+                printexitCommand()
+                continue
+            end
             exit()
         
-        elseif commands[1] == "display" # Will display the current graph object
+        elseif commands[majorCommand] == "display" # Will display the current graph object
+            if majorCommand == 2
+
+                continue
+            end
             displayGraph()
         
-        elseif commands[1] == "circularcoords" # will update the xy coordinates for the node in a graph
+        elseif commands[majorCommand] == "circularcoords" # will update the xy coordinates for the node in a graph
+            if majorCommand == 2
+
+                continue
+            end
             # xy = createCircularCoords(G)   
             # updateGraphNodes(G, xy)
             applyNewCoords(G, createCircularCoords(G))
             displayGraph()
         
-        elseif commands[1] == "degreedependent"
+        elseif commands[majorCommand] == "degreedependent"
+            if majorCommand == 2
+
+                continue
+            end
             # xy = createDegreeDependantCoods(G)
             # updateGraphNodes(G, xy)
             applyNewCoords(G, createDegreeDependantCoods(G))
             displayGraph()
 
-        elseif commands[1] == "randomedges"
+        elseif commands[majorCommand] == "randomedges"
+            if majorCommand == 2
+
+                continue
+            end
             updateGraphEdges(G, randomEdges(G))
             displayGraph()
         
-        elseif commands[1] == "completeedges"
+        elseif commands[majorCommand] == "completeedges"
+            if majorCommand == 2
+
+                continue
+            end
             updateGraphEdges(G,completeEdges(G))
             displayGraph()
         
-        elseif commands[1] == "circularedges"
+        elseif commands[majorCommand] == "circularedges"
+            if majorCommand == 2
+
+                continue
+            end
             updateGraphEdges(G, circleEdges(G)  )
             displayGraph()
 
-        elseif commands[1] == "load"
+        elseif commands[majorCommand] == "load"
+            if majorCommand == 2
+
+                continue
+            end
             global filename = commands[2]
             if length(commands)>2
                 genericLoad(filename,String(commands[3]))
@@ -163,17 +210,21 @@ while true
             end
             displayGraph()
         
-        elseif commands[1] == "loadxy"
+        elseif commands[majorCommand] == "loadxy"
+            if majorCommand == 2
+
+                continue
+            end
             xyFile = String(commands[2])
             txtReadXY(G, xyFile)
             
             displayGraph()
 
-        elseif commands[1] == "exportvac"
-            outFile = String(commands[2])
-            outputGraphToVac(G, outFile)
+        elseif commands[majorCommand] == "add"
+            if majorCommand == 2
 
-        elseif commands[1] == "add"
+                continue
+            end
             if (lowercase(commands[2]) == "edge")
                 sourceLabel = String(commands[3])
                 destLabel = String(commands[4])
@@ -191,12 +242,15 @@ while true
                 addEdge(G, sourceLabel, destLabel, weight)
 
             elseif (lowercase(commands[2]) == "node")
-                # IMPLEMENT ME
-                println("add node is coming soon...")
+                addNode(G, commands)
             end
 
             displayGraph()
-        elseif commands[1] == "remove"
+        elseif commands[majorCommand] == "remove"
+            if majorCommand == 2
+
+                continue
+            end
             if (lowercase(commands[2]) == "edge")
                 sourceLabel = String(commands[3])
                 destLabel = String(commands[4])
@@ -204,13 +258,17 @@ while true
                 removeEdge(G, sourceLabel, destLabel)
 
             elseif (lowercase(commands[2]) == "node")
-                println("remove node is coming soon...")
-
+                label = String(commands[3])
+                removeNode(G, label)
             end
 
             displayGraph()
         
-        elseif commands[1] == "setcolor"
+        elseif commands[majorCommand] == "setcolor"
+            if majorCommand == 2
+
+                continue
+            end
             if (lowercase(commands[2]) == "node")
 
                 nodeLabel = String(commands[3])
@@ -253,24 +311,25 @@ while true
 
             displayGraph()
         
-        elseif commands[1] == "toggle"
+        elseif commands[majorCommand] == "toggle"
+            if majorCommand == 2
+
+                continue
+            end
+
             if (lowercase(commands[2]) == "grid")
-                global graphTicks = !graphTicks
+                global showTicks = !showTicks
+            
+            elseif (commands[2] == "label")
+                global showLabels = !showLabels
             end
-
-            displayGraph()
-        elseif commands[1] == "add"
-            if (lowercase(commands[2]) == "node")
-                x = graphTicks #dummy code
-            end
-            if (lowercase(commands[2]) == "edge")
-                x = graphTicks #dummy code
-            end
-
+            
             displayGraph()
 
-        elseif commands[1] == "help"
-            printHelp()
+        elseif majorCommand == 2
+                printHelp(String(commands[2]))
+        
+        
         else
             notFound = commands[1]
             println("Command $notFound was not found. Enter \"help\" to view valid commands")
