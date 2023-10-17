@@ -10,9 +10,11 @@ include("printCommands.jl")
 
 filename::String = ""
 
-debug = false
 global G = Graph()
+empty!(G.edges)
+empty!(G.nodes)
 
+global debug = false
 global showTicks = true
 global showLabels = true
 
@@ -75,14 +77,12 @@ function printHelp(category="")
 end
 
 
-# work on user input modifications of graph
 while true
     global lastInputValid
     print("\nEnter commands: ")
     
     try
         global lastInputValid = true
-        #println("Command History is ",commandsHistory)
 
         global input = readline()
         global commands = split(input, " ")
@@ -355,6 +355,19 @@ while true
                     
                     applyView(G, nodeLabel, radius)
                 end
+            end
+
+            displayGraph()
+        
+        elseif commands[majorCommand] == "cleargraph"
+            println("THIS COMMAND WILL CLEAR THE CURRENT GRAPH. THERE IS NO WAY TO RECOVER IT.")
+            print("Please type \"YES\" to confirm you want the graph cleared: ")
+            confirmation = readline()
+
+            if lowercase(confirmation) == "yes"
+                global G = Graph()
+                empty!(G.nodes)
+                empty!(G.edges)
             end
 
             displayGraph()

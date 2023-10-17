@@ -49,6 +49,27 @@ function setGraphLimits(g::Graph)
             g.yMax = node.yCoord
         end
     end
+
+    # Set valid parameters in the case the graph has no nodes:
+    if length(g.nodes) == 0
+        g.xMax = 1
+        g.yMax = 1
+        g.xMin = -1
+        g.yMin = -1
+    end
+
+    # There may be cases where coordinates are not well defined
+    # Check that the xCoordinates are not the same
+    if (g.xMax == g.xMin)
+        g.xMax += 1
+        g.xMin -= 1
+    end
+
+    if (g.yMax == g.yMin)
+        g.yMax += 1
+        g.yMin -= 1
+    end
+    
 end
 
 function applyView(g::Graph, centerX::Float64, centerY::Float64, radius::Float64)
@@ -265,7 +286,19 @@ Assumes commands is of the form:
 function addNode(g::Graph, commands::Vector{SubString{String}})
     newIndex = length(g.nodes) + 1
     newNode = parseNode(commands, length(G.nodes) + 1)
-    push!(g.nodes, newNode)
+
+    # We need some way for the user to interact with the node
+    # Give it a label equal to its number in the node vector
+    if (newNode.label == "")
+        newNode.label = string(newNode.index)
+    end
+
+    # Check if a node with the same label is already in the graph
+    if (findNodeIndexFromLabel(g, newNode.label) != -1)
+        println("Node with label ", newNode.label, " already exists in the graph.")
+    else
+        push!(g.nodes, newNode)
+    end
 end
 
 """
@@ -329,6 +362,12 @@ function removeNode(g::Graph, label::String)
 end
 
 function addEdge(g::Graph, sourceLabel::String, destLabel::String, weight::Float64)
+    
+    if (findEdgeIndex(g, sourceLabel, destLabel) != -1)
+        println("Edge from ", sourceLabel, " to ", destLabel, " already exists.")
+        return
+    end
+    
     sourceKey = findNodeIndexFromLabel(g, sourceLabel)
     destKey = findNodeIndexFromLabel(g, destLabel)
     color="black"
