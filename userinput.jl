@@ -338,11 +338,24 @@ while true
                 continue
             end
             
-            centerX = parse(Float64, commands[2])
-            centerY = parse(Float64, commands[3])
-            radius = parse(Float64, commands[4])
-
-            applyView(G, centerX, centerY, radius)
+            if (lowercase(commands[2]) == "default")
+                setGraphLimits(G)
+            else
+                if (length(commands) == 4)
+                    # view CENTERx CENTERy RADIUS
+                    centerX = parse(Float64, commands[2])
+                    centerY = parse(Float64, commands[3])
+                    radius = parse(Float64, commands[4])
+                    applyView(G, centerX, centerY, radius)
+                
+                elseif (length(commands) == 3)
+                    # view NODE_ID RADIUS
+                    nodeLabel = String(commands[2])
+                    radius = parse(Float64, commands[3])
+                    
+                    applyView(G, nodeLabel, radius)
+                end
+            end
 
             displayGraph()
 

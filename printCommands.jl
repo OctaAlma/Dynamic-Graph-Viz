@@ -84,7 +84,11 @@ end
 "Commands that do not affect the xy positions of nodes or the edges of th graph object, but can affect the visuliaztion of the graph object."
 function printDisplayCommands()
     println("\tdisplay                                    - Output the graph to the window")
-    println("\tview CENTERx CENTERy RADIUS                - Output the graph to the window")
+    
+    println("\tview default                               - Restores the view of the graph to the default view")
+    println("\tview LABEL RADIUS                          - Centers the window view to the specified node")
+    println("\tview CENTERx CENTERy RADIUS                - Centers the window view to (CENTERx, CENTERy)")
+
 
     println("\ttoggle grid                                - Will toggle the grid to be on/off")
     println("\ttoggle labels                              - Will toggle the labels to be on/off")

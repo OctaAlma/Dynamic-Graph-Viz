@@ -24,7 +24,6 @@ Graph(;edges=Vector{Edge}(undef,1), nodes=Vector{Node}(undef, 1), directed=false
 
 # Computes a the Graph's limits as a bounding box of the graph's nodes
 function setGraphLimits(g::Graph)
-    println(g.xMin, " ", g.xMax, " ", g.yMin, " ", g.yMax)
     g.xMin = Inf
     g.xMax = -Inf
     g.yMin = Inf
@@ -50,7 +49,6 @@ function setGraphLimits(g::Graph)
             g.yMax = node.yCoord
         end
     end
-    println(g.xMin, " ", g.xMax, " ", g.yMin, " ", g.yMax)
 end
 
 function applyView(g::Graph, centerX::Float64, centerY::Float64, radius::Float64)
@@ -58,6 +56,25 @@ function applyView(g::Graph, centerX::Float64, centerY::Float64, radius::Float64
     g.yMax = centerY + radius
     g.xMin = centerX - radius
     g.yMin = centerY - radius
+end
+
+function applyView(g::Graph, label::String, radius::Float64)
+    centerX = Inf
+    centerY = Inf
+
+    for node ∈ g.nodes
+        if node.label == label
+            centerX = node.xCoord
+            centerY = node.yCoord
+            break
+        end
+    end
+
+    if (centerX != Inf)
+        return applyView(g, centerX, centerY, radius)
+    else
+        println("No node with label ", label, " was found.")
+    end
 end
 
 # This function returns a plot object containing the visualization of the graph object g
@@ -149,10 +166,6 @@ function makePlot(g::Graph, showTicks::Bool, showLabels::Bool)::Plots.Plot{Plots
             annotate!(graphPlot, currNode.xCoord, currNode.yCoord, text(currNode.label, plot_font, txtsize, color=currNode.labelColor))
         end
     end
-
-    # println(xy)
-    # println(labels)
-    # println(edges)
 
     return graphPlot
 end
