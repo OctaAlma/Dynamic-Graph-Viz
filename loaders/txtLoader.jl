@@ -1,4 +1,4 @@
-include("./structFiles/Graph.jl")
+include(".././structFiles/Graph.jl")
 
 #The following function takes in a graph and updates the nodes'
 #XY coordinates. It assumes that the text file passed in has a line for each node in the graph
@@ -41,8 +41,17 @@ function txtReadXY(g::Graph, filepath::String)
 
         lineNo = lineNo + 1
     end
-
-
     setGraphLimits(g)
+end
 
+function outputXY(g::Graph, filename::String)
+    open(filename, "w") do file
+        for node in g.nodes
+            currX = node.xCoord
+            currY = node.yCoord
+
+            coordString = "$currX $currY\n"
+            write(file, coordString)
+        end
+    end
 end

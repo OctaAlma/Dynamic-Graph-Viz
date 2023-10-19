@@ -9,98 +9,148 @@
     
 =#
 
-loadhelpStr = 
-"""
+
+printLoadCommands() = println("""
 \n---------- Load functions ----------------------------------------------------------------------------------
 \tload FILENAME.txt                          - Loads a Graph from an .mtx file containing edge connections
 \tload FILENAME.mxt                          - Loads a Graph from a .txt file containing edge connections
 \tload FILENAME.mat                          - Loads a Graph from a .mat file containing edge connections and (optionally) node coordinates
 \tload FILENAME.vac                          - Loads a Graph from a .vac file
-\tloadxy FILENAME.txt                        - Loads node xy coordinates from a .txt file"""
+\tloadxy FILENAME.txt                        - Loads node xy coordinates from a .txt file
+""")
 
-savehelpStr = """
+printSaveCommands() = println("""
 \n---------- Save functions ----------------------------------------------------------------------------------
-\tsaveas FILENAME.pdf                        - Saves the current graph to an image PNG file"
+\tsaveas FILENAME.pdf                        - Saves the current graph to a PDF file"
 \tsaveas FILENAME.png                        - Saves the current graph to an image PNG file
 \tsaveas FILENAME.txt                        - Saves the current graph edge information to a .txt file
 \tsaveas FILENAME.mtx                        - Saves the current graph edge information to a .mtx file
-\tsaveas FILENAME.vac                        - Saves the current graph state into a .vac file"""
+\tsaveas FILENAME.vac                        - Saves the current graph state information into a .vac file
 
-randomEdgeshelpStr = """\trandomEdges                                - regenerates random edges"""
+\tsavexy FILENAME                            - Saves the XY coordinates of all nodes to the specified file
+""")
 
-completeEdgeshelpStr = """\tcompleteEdges                              - Adds one edge for every pair of nodes"""
+printRandomEdgesCommand() = println("""\trandomEdges                                - regenerates random edges""")
 
-circularEdgeshelpStr = """\tcircularEdges                              - Changes edge structure so nodes are placed in circle"""
+printCompleteEdgesCommand() = println("""\tcompleteEdges                              - Adds one edge for every pair of nodes""")
 
-setColorhelpStr = """\tsetColor node NODE fill NEW_COLOR          - Updates the fill color of specified NODE
+printCircularEdgesCommand() = println("""\tcircularEdges                              - Changes edge structure so nodes are placed in circle""")
+
+printsetColorCommands() = println("""\tsetColor node NODE fill NEW_COLOR          - Updates the fill color of specified NODE
 \tsetColor node NODE OL NEW_COLOR            - Updates the outline color of the specified NODE
 \tsetColor node NODE label NEW_COLOR         - Updates the color of the specified NODE label
 \tsetColor edge SOURCE DEST NEW_COLOR        - Updates the color of the edge between the SOURCE and DEST
+""")
+
+printexitCommand() = println("""\texit                                       - quits the program and the Julia repl""")
+
+viewCommandhelpStr ="""\tview default                               - Restores the view of the graph to the default view
+\tview LABEL RADIUS                          - Centers the window view to the specified node
+\tview CENTERx CENTERy RADIUS                - Centers the window view to (CENTERx, CENTERy)
 """
-exitCommandhelpStr = """\texit                                       - quits the program and the Julia repl"""
+printviewCommands() = println(viewCommandhelpStr)
 
-function printLoadCommands()
-    println(loadhelpStr)
-end
+moveCommandhelpStr = """\tmove NODE_LABEL AXIS UNITS                 - Moves the node specified by NODE_LABEL in the AXIS direction by UNITS units
+\tmove node NODE_LABEL AXIS UNITS            - Alias of move command above
+\tmove NODE_LABEL to XCoord Ycoord           - Moves the node specified by NODE_LABEL to the position XCoord,Ycoord. One of XCoord and YCoord may be left blank to preserve that coordinate.
+\tmove node NODE_LABEL to XCoord Ycoord      - Alias of move command above
+"""
+printmoveCommands() = println(moveCommandhelpStr)
 
-function printSaveommands()
-    println(savehelpStr)
-end
+addCommandhelpStr = """\tadd edge SOURCE DEST WEIGHT                - Adds an edge from START_NODE to END_NODE
+\tadd node                                   - Adds a node to the graph. Options: -l LABEL -s SIZE - oc OUTLINECOLOR -fc FILLCOLOR -lc LABELCOLOR -x xCOORD -y yCOORD
+"""
+printAddCommands() = println(addCommandhelpStr)
+
+removeCommandhelpStr = """\tremove edge SOURCE DEST                    - Removes the edge connecting the nodes labeled SOURCE and DEST
+\tremove node LABEL                          - Removes the node with the label LABEL
+"""
+printRemoveCommands() = println(removeCommandhelpStr)
+
+CommandhelpStr = """"""
+CommandhelpStr = """"""
+
+
+
+
+
+
+
+
+
+
 
 "Commands that interact with the filesystem to load edges, xy coordinates or both as well as saving graphs in various formats"
 function printLoadSaveCommands()
     # Load commands
     printLoadCommands()
     # Save graph attribute commands or plot commands
-    printSaveommands()
+    printSaveCommands()
 end
+
+
+
+
+
+
 
 "Commands that affect the edges of nodes of the graph object"
 function printEditGraphCommands()
-    println(randomEdgeshelpStr)
-    println(completeEdgeshelpStr)
-    println(circularEdgeshelpStr)
-
+    printRandomEdgesCommand()
+    printCompleteEdgesCommand()
+    printCircularEdgesCommand()
     # Commands that add elements to the graph
-    println("\tadd edge SOURCE DEST WEIGHT                  - Adds an edge from START_NODE to END_NODE")   
-    println("\tadd node -l label -s size - oc outlineColor -fc fillColor -lc labelColor -x xCoord -y yCoords")
+    printAddCommands()
+    printRemoveCommands()
+end
+circularCommandhelpStr= "\tlayout circular                            - Places all nodes in a circle"
+printCircularLayoutCommand() = println(circularCommandhelpStr)
 
-    println("\tremove edge SOURCE DEST                       - Removes the edge connecting the nodes labeled SOURCE and DEST")   
-    println("\tremove node LABEL                             - Removes the node with the label LABEL")
+degreeCommandhelpStr= """\tlayout degree                              - Places all nodes with a radius proportional to their degree
+\tlayout degreedependent                     - Alias of the above command
+"""
+printDegreeLayoutCommand() = println(degreeCommandhelpStr)
+
+forceCommandhelpStr = """\tlayout force                               - Updates the xy coordinates of all nodes in the graph according to a force-fdirected layout
+\tlayout force kRep kAttr                    - Alias of the layout force command that sets the repulsive and attractive factor between two nodes
+\tlayout force-directed                      - Alias of the layout force command
+\tlayout forcedirected                       - Alias of the layout force command
+"""
+printForceLayoutCommand() = println(forceCommandhelpStr)
+
+spectralCommandhelpStr = """\tlayout spectral                            - Updates the xy coordinates of all nodes in the graph according to a spectral layout
+"""
+printSpectralLayoutCommand() = println(spectralCommandhelpStr)
+
+""
+function printLayoutCommands()
+    printCircularLayoutCommand()
+    printDegreeLayoutCommand()
+    printForceLayoutCommand()
+    printSpectralLayoutCommand()
+    
 end
 
 "Commands that affect the xy coordinatse of nodes in the graph"
 function printEditCoordCommands()
-    println("\tmove NODE_LABEL AXIS UNITS                 - Moves the node specified by NODE_LABEL in the AXIS direction by UNITS units")
-    println("\tmove node NODE_LABEL AXIS UNITS            - Alias of move command above")
-    
-    println("\tcircularCoords                             - Places all nodes in a circle")
-    println("\tdegreeDependent                            - Re-draws the graph for a degree-dependant radius approach")
+    printmoveCommands()
+    printLayoutCommands()
 end
 
-function printsetColorCommands()
-    println(setColorhelpStr)
-end
+
 
 "Commands that do not affect the xy positions of nodes or the edges of th graph object, but can affect the visuliaztion of the graph object."
 function printDisplayCommands()
     println("\tdisplay                                    - Output the graph to the window")
     println("\tclearGraph                                 - Clears the currently displayed graph")
-
-    
-    println("\tview default                               - Restores the view of the graph to the default view")
-    println("\tview LABEL RADIUS                          - Centers the window view to the specified node")
-    println("\tview CENTERx CENTERy RADIUS                - Centers the window view to (CENTERx, CENTERy)")
-
+    printviewCommands()
     println("\ttoggle grid                                - Will toggle the grid to be on/off")
     println("\ttoggle labels                              - Will toggle the labels to be on/off")
     printsetColorCommands()
 
 end
 
-function printexitCommand()
-    println(exitCommandhelpStr)
-end
+
 
 function printSystemCommands()
     printexitCommand()
@@ -112,5 +162,5 @@ function printAll()
     printEditCoordCommands()
     printDisplayCommands()
     printSystemCommands()
-    printComingSoon()
+    #printComingSoon()
 end

@@ -1,5 +1,5 @@
 using LinearAlgebra, Plots, MAT, SparseArrays
-include("./structFiles/Graph.jl")
+include("../structFiles/Graph.jl")
 
 # This code was obtained from the provided graph_visualizations.jl file
 function display_graph(A::SparseMatrixCSC{Float64,Int64},xy::Matrix{Float64},grayscale = 0.0,ms = 6,lw = 1)
@@ -96,7 +96,6 @@ function MATRead(filepath::String)::Graph
                 newNode.yCoord = xy[sourceNode, 2]
             end
             push!(newGraph.nodes, newNode)
-            println(newNode)
         end
 
         if findNodeIndexFromLabel(newGraph, "$destNode") == -1
@@ -109,7 +108,6 @@ function MATRead(filepath::String)::Graph
                 newNode.xCoord = xy[destNode, 1]
                 newNode.yCoord = xy[destNode, 2]            
             end
-            println(newNode)
             push!(newGraph.nodes, newNode)
         end
 

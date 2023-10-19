@@ -1,4 +1,4 @@
-include("./structFiles/Graph.jl")
+include(".././structFiles/Graph.jl")
 
 function vacRead(filepath::String)
     intS = 0
@@ -9,13 +9,13 @@ function vacRead(filepath::String)
             intS = parse(Int64, s)  
         end
     catch
-         println("Something went wrong in vacRead")
+        println("Could not open file")
+        return
     end
     if intS == 1
         return vacReadv1(filepath)
     end
-    println("vacRead version",intS,"not found")
-
+    println("vacRead version", intS, "not found")
 end
 
 # returns the index of a string in a vector. Returns -1 if not found

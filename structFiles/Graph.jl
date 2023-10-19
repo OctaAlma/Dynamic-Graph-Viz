@@ -145,7 +145,7 @@ function makePlot(g::Graph, showTicks::Bool, showLabels::Bool)::Plots.Plot{Plots
     for currNode in g.nodes
         # NOTE: we use the index of the node to identify it
         
-        if (currNode.xCoord != 0) || (currNode.yCoord != 0)
+        if (!allZeroes) || (currNode.xCoord != 0) || (currNode.yCoord != 0)
             allZeroes = false
         end
 
@@ -284,13 +284,22 @@ Assumes commands is of the form:
 
 """
 function addNode(g::Graph, commands::Vector{SubString{String}})
-    newIndex = length(g.nodes) + 1
     newNode = parseNode(commands, length(G.nodes) + 1)
 
     # We need some way for the user to interact with the node
     # Give it a label equal to its number in the node vector
     if (newNode.label == "")
-        newNode.label = string(newNode.index)
+        
+        labelNo = 1
+        while (true)
+            if (findNodeIndexFromLabel(g, string(labelNo)) == -1)
+                break
+            end
+            labelNo += 1
+        end
+        
+        newNode.label = string(labelNo)
+        #newNode.label = string(newNode.index)
     end
 
     # Check if a node with the same label is already in the graph
@@ -398,6 +407,15 @@ function removeEdge(g::Graph, sourceLabel::String, destLabel::String)
         return
     end
 
+end
+
+function moveNode(g::Graph, label::String, xUnits::Float64, yUnits::Float64)
+    index = findNodeIndexFromLabel(g, label)
+
+    g.nodes[index].xCoord = xUnits
+    g.nodes[index].yCoord = yUnits
+
+    setGraphLimits(g)
 end
 
 function moveNode(g::Graph, label::String, dir::String, units::Float64)
@@ -590,17 +608,39 @@ end
 
 # The following functions are used to create a Force-Directed Layout
 
-function f_rep(node1::Node, node2::Node)::Vector{Float64}
-    return [-1.0, -1.0]
+function magnitude(f::Vector{Float64})::Float64
+    return sqrt(f[1]^2 + f[2]^2)
 end
 
-function f_attr(node1::Node, node2::Node)::Vector{Float64}
-    return [1.0, 1.0]
+# u is the node experiencing the force
+# v is the node exerting the force
+function f_rep(u::Node, v::Node, k::Float64 = 2.0)::Vector{Float64}
+    uPos = [u.xCoord, u.yCoord]
+    vPos = [v.xCoord, v.yCoord]
+
+    dir = (uPos - vPos)
+    dist = magnitude(dir)
+
+    rep = k .* dir ./ (dist)
+
+    return rep
+end
+
+function f_attr(u::Node, v::Node, k::Float64 = 1.25)::Vector{Float64}
+    uPos = [u.xCoord, u.yCoord]
+    vPos = [v.xCoord, v.yCoord]
+
+    dir = (uPos - vPos)
+    dist = magnitude(dir)
+
+    att = k .* dir ./ (dist)
+
+    return -1 .* att
 end
 
 function getCoolingFactor(t)::Float64
     # Note: This is just an arbitrary function. Could be tweaked later
-    return (1.0 / Float64(t))
+    return (2.0 / Float64(t))
 end
 
 # Returns a COPY of the Node in the graph with the specified index/key
@@ -636,56 +676,60 @@ function getAdjacentNodes(g::Graph, v::Node)
     return adjacentNodes
 end
 
-function magnitude(f::Vector{Float64})::Float64
-    return sqrt(f[1]^2 + f[2]^2)
-end
-
 
 # The following function updates the coordinates of the nodes to meet a force-directed layout
 # g is the graph object containing the initial layout
 # ε is the threshold. ε > 0. Once forces get smaller than epsilon, we stop the algorithm
 # K is the maximum number of iterations
-function forceDirectedCoords(g::Graph, ε::Float64, K::Int64)
+function forceDirectedCoords(g::Graph, ε::Float64, K::Int64, kRep::Float64 = 1.5, kAttr::Float64 = 3.0)
     t = 1
-
-    # We can keep track of the position of each variable in a vector of float64 tuples
-    maxForce = -Inf
+    n = length(g.nodes)
 
     # Store the positions and forces of each node in a matrix of size nx2
-    position = zeros(length(g.nodes), 2)
-    forces = zeros(length(g.nodes), 2)
+    #positions = [(n .* rand(2) .- (n / 2.0)) for i in 1:n]
+    positions = [(n .* rand(2) .- n) for i in 1:n] 
+    nodeForces = [zeros(2) for i in 1:n]
+    maxForce = -Inf
 
     # Condition 1: the number of iterations so far is less than K
     # Condition 2: The maximum force we computed in the previous iteration is greater than epsilon
     while (t < K) && (maxForce > ε)
         for u ∈ g.nodes
-            f_rep_u = [0.0, 0.0]
             # Repellent force must be computed with all vertices
             for v ∈ g.nodes
-                # some way to add f_rep_u with the result of f_rep(u,v)
+                if (u.index == v.index)
+                    continue # we are in the same node
+                end
+
+                nodeForces[u.index] += f_rep(u, v, kRep) 
 
             end
 
             # Attractive force must ONLY be computed with adjacent vertices
-            f_attr_u = [0.0, 0.0]
-            adjacentNodes = getAdjacentNodes(g, u)
             for v ∈ adjacentNodes
-                # some way to add f_attr_u with the result of f_attr(u,v)
+                if (u.index == v.index)
+                    continue # we are in the same node
+                end
+
+                nodeForces[u.index] += f_attr(u, v, kAttr)
             end
 
-            # find some way to store f_u so that we can update the node's coordinates later
-            f_u = f_rep_u + f_attr_u
-
-            if (magnitude(f_u) > maxForce)
+            if (magnitude(nodeForces[u.index]) > maxForce)
                 maxForce = f_u
             end
         end
 
         for u ∈ g.nodes
-            pos_u = [u.xCoord, u.yCoord] + getCoolingFactor(t) .* [0.0, 0.0] # SOME WAY TO FETCH f_u
+            positions[u.index] += (getCoolingFactor(t) .* nodeForces[u.index])
 
         end
 
         t = t + 1
+    end
+
+    # Apply the new coordinates
+    for node ∈ g.nodes
+        node.xCoord = positions[node.index][1]
+        node.yCoord = positions[node.index][2]
     end
 end

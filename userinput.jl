@@ -1,8 +1,8 @@
 include("varrad.jl")
-include("vacLoader.jl")
-include("mtxLoader.jl")
-include("txtLoader.jl")
-include("matLoader.jl")
+include("./loaders/vacLoader.jl")
+include("./loaders/mtxLoader.jl")
+include("./loaders/txtLoader.jl")
+include("./loaders/matLoader.jl")
 include("printCommands.jl")
 
 # NOTE: These are just sample values used for the DEMO
@@ -14,6 +14,7 @@ global G = Graph()
 empty!(G.edges)
 empty!(G.nodes)
 
+resourceDir = ""
 global debug = false
 global showTicks = true
 global showLabels = true
@@ -22,12 +23,19 @@ global commandsHistory = []
 global lastInputValid = false
 
 function displayGraph()
+    if (isnothing(G))
+        println("There is nothing to plot")
+        return
+    end
     display(makePlot(G, showTicks, showLabels))
 end
 
 function genericLoad(filename::String, optFile::String = "")
     # Check the extension of filename
     extension = String(split(filename, ".")[end])
+
+    # if on debug mode, should append ./resources/ to the filename
+    filename = resourceDir * filename
     
     if (extension == "vac")
         global G = vacRead(filename)
@@ -45,6 +53,8 @@ function genericSave(filename::String)
     # Check the extension of filename
     extension = String(split(filename, ".")[end])
     
+    filename = resourceDir * filename
+
     if (extension == "png" || extension == "pdf")
         savefig(makePlot(G, showTicks, showLabels), commands[2])
     elseif (extension == "vac")
@@ -121,22 +131,45 @@ while true
 
         elseif commands[majorCommand] == "move"
             # move NODE_LABEL X_OR_Y UNITS
+            # move node NODE_LABEL X_OR_Y UNITS
+            
+            # move LABEL to X Y
+            # move node LABEL to X Y
             if majorCommand == 2
                 
                 continue
             end
             moveCoord = 2
+            
             if "node" == commands[2]
                 moveCoord = 3
             end
 
             nodeLabel = String(commands[moveCoord])
+            index = findNodeIndexFromLabel(G, nodeLabel)
 
-            xOrY = lowercase(commands[moveCoord+1]) 
-            units = parse(Float64, commands[moveCoord+2])
+            if "to" == commands[moveCoord+1]
+                xUnits = 0.0
+                if commands[moveCoord+2] == "-"
+                    xUnits = G.nodes[index].xCoord 
+                else
+                    xUnits = parse(Float64, commands[moveCoord+2])
+                end
+                
+                yUnits = 0.0
 
-            moveNode(G, nodeLabel, xOrY, units)
-
+                if commands[moveCoord+3] == "-"
+                    yUnits = G.nodes[index].yCoord
+                else
+                    yUnits = parse(Float64, commands[moveCoord+3])
+                end
+                
+                moveNode(G, nodeLabel, xUnits, yUnits)
+            else
+                xOrY = lowercase(commands[moveCoord+1]) 
+                units = parse(Float64, commands[moveCoord+2])
+                moveNode(G, nodeLabel, xOrY, units)
+            end
             displayGraph()
             
         elseif occursin("quit",commands[majorCommand]) ||  occursin("exit",commands[majorCommand]) || commands[majorCommand] == "q"
@@ -152,25 +185,36 @@ while true
                 continue
             end
             displayGraph()
-        
-        elseif commands[majorCommand] == "circularcoords" # will update the xy coordinates for the node in a graph
+        elseif commands[majorCommand] == "layout"
             if majorCommand == 2
-
+                printLayoutCommands()
                 continue
             end
-            # xy = createCircularCoords(G)   
-            # updateGraphNodes(G, xy)
-            applyNewCoords(G, createCircularCoords(G))
-            displayGraph()
-        
-        elseif commands[majorCommand] == "degreedependent"
-            if majorCommand == 2
+            
+            layoutType = lowercase(commands[2])
 
-                continue
+            if (layoutType == "circular")
+                applyNewCoords(G, createCircularCoords(G))
+
+            elseif (layoutType == "degree" || layoutType == "degreedependent")
+                applyNewCoords(G, createDegreeDependantCoods(G))
+
+            elseif (layoutType == "force-directed" || layoutType == "force" || layoutType == "forcedirected")
+                
+                if (length(commands) == 4)
+                    kMin = parse(Float64, commands[3])
+                    kMax = parse(Float64, commands[4])
+                    forceDirectedCoords(G, 1e-2, 15, kMin, kMax)
+                else
+                    forceDirectedCoords(G, 1e-2, 15)
+                end
+
+            elseif (layoutType == "spectral")
+
+                println("coming soon...")
+                
             end
-            # xy = createDegreeDependantCoods(G)
-            # updateGraphNodes(G, xy)
-            applyNewCoords(G, createDegreeDependantCoods(G))
+
             displayGraph()
 
         elseif commands[majorCommand] == "randomedges"
@@ -215,24 +259,47 @@ while true
 
                 continue
             end
-            xyFile = String(commands[2])
-            txtReadXY(G, xyFile)
+            # File containing the new XY values
+            filenamexy = resourceDir * String(commands[2])
+            txtReadXY(G, filenamexy)
             
             displayGraph()
+        
+        elseif commands[majorCommand] == "savexy"
+            filename = resourceDir * String(commands[2])
+            outputXY(G, filename)
 
         elseif commands[majorCommand] == "add"
             if majorCommand == 2
-
+                printAddCommands()
                 continue
             end
-            if (lowercase(commands[2]) == "edge")
-                sourceLabel = String(commands[3])
-                destLabel = String(commands[4])
+            # if (length(commands) == 2)
+            #     println(commands)
+            #     commands = split("add node "*commands[2])
+            #     println(commands)
+            # end
+                
+            if (lowercase(commands[2]) == "node")
+                if (length(commands) == 3)
+                    commands[2] = "-l"
+                end
+                addNode(G, commands)
+                displayGraph()
+                setGraphLimits(G)
+            
+            elseif (lowercase(commands[2]) == "edge" || length(commands) == 3)
+                sourceNum = 3
+                if (length(commands) == 3)
+                    sourceNum = 2
+                end
+                sourceLabel = String(commands[sourceNum])
+                destLabel = String(commands[sourceNum+1])
                 weight = 1.
                 
                 if (G.weighted == true)
                     try
-                        weight = parse(commands[5], Float64)
+                        weight = parse(commands[sourceNum+2], Float64)
                     catch
                         println("Please specify edge weight after NODE_LABEL")
                         continue;
@@ -240,27 +307,28 @@ while true
                 end
 
                 addEdge(G, sourceLabel, destLabel, weight)
-
-            elseif (lowercase(commands[2]) == "node")
-                addNode(G, commands)
-                displayGraph()
             end
 
             displayGraph()
         elseif commands[majorCommand] == "remove"
             if majorCommand == 2
-
+                printRemoveCommands() 
                 continue
             end
-            if (lowercase(commands[2]) == "edge")
-                sourceLabel = String(commands[3])
-                destLabel = String(commands[4])
-
-                removeEdge(G, sourceLabel, destLabel)
-
+            if (length(commands) == 2)
+                label = String(commands[2])
+                removeNode(G, label)
             elseif (lowercase(commands[2]) == "node")
                 label = String(commands[3])
                 removeNode(G, label)
+            elseif (length(commands) == 3)
+                sourceLabel = String(commands[2])
+                destLabel = String(commands[3])
+                removeEdge(G, sourceLabel, destLabel) 
+            elseif (lowercase(commands[2]) == "edge" )
+                sourceLabel = String(commands[3])
+                destLabel = String(commands[4])
+                removeEdge(G, sourceLabel, destLabel)
             end
 
             displayGraph()
@@ -323,11 +391,15 @@ while true
             
             elseif (commands[2] == "labels")
                 global showLabels = !showLabels
+
             elseif (commands[2] == "debug")
-                global debug = !debug
-                if (debug)
+                if (debug == false)
+                    global resourceDir = "./resources/"
+                    global debug = true
                     println("Debug mode ON")
                 else
+                    global resourceDir = ""
+                    global debug = false
                     println("Debug mode OFF")
                 end
             end
@@ -372,6 +444,9 @@ while true
             end
 
             displayGraph()
+        elseif commands[majorCommand] == "repl"
+            println("repl")
+            
 
         elseif majorCommand == 2
                 printHelp(String(commands[2]))
@@ -384,7 +459,7 @@ while true
         end
     catch e
         if debug
-            rethrow(e)
+            showerror(stdout, e)
         end
         println("Something went wrong. Be careful with the syntax")
         lastInputValid = false

@@ -1,4 +1,4 @@
-include("./structFiles/Graph.jl")
+include("../structFiles/Graph.jl")
 
 function mtxRead(filepath::String)::Graph
     newGraph = Graph()
