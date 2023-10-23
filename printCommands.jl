@@ -88,14 +88,14 @@ function printLoadSaveCommands()
     printSaveCommands()
 end
 
-printNodeEditCommands() = """updateNode LABEL                       Updates nodes to match any options provided. Options: Options: -l LABEL -s SIZE - oc OUTLINECOLOR -fc FILLCOLOR -lc LABELCOLOR -x xCOORD -y yCOORD
+printNodeEditCommands() = """updateNode LABEL                       Updates nodes to match any options provided. Options: Options: -s SIZE - oc OUTLINECOLOR -fc FILLCOLOR -lc LABELCOLOR -x xCOORD -y yCOORD
 getNode LABEL                        Returns requested node information. Options: -l LABEL -s SIZE - oc OUTLINECOLOR -fc FILLCOLOR -lc LABELCOLOR -x xCOORD -y yCOORD
 """
 
 
 
 
-
+ 
 "Commands that affect the edges of nodes of the graph object"
 function printEditGraphCommands()
     printRandomEdgesCommand()

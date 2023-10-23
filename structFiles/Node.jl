@@ -86,10 +86,11 @@ function parseNode(lineArgs::Vector{SubString{String}}, currIndex)
 end
 
 function updateNode(n::Node, lineArgs::Vector{SubString{String}})
-    i = findIndex(lineArgs, "-l")
-    if i != -1
-        n.label = lineArgs[i+1]
-    end
+    # NOTE: USERS SHOULD NOT BE ABLE TO MODIFY NODE LABELS
+    # i = findIndex(lineArgs, "-l")
+    # if i != -1
+    #     n.label = lineArgs[i+1]
+    # end
     i = findIndex(lineArgs, "-x")
     if i != -1
         n.xCoord = parse(Float64, lineArgs[i+1])
