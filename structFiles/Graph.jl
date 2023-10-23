@@ -1,4 +1,4 @@
-using Plots
+using Plots, KrylovKit
 include("Node.jl")
 include("Edge.jl")
 #include("../createEdges.jl")
@@ -370,6 +370,21 @@ function removeNode(g::Graph, label::String)
     end
 end
 
+# Functions to edit the size of nodes in a graph
+function setNodeSize(g::Graph, label::String, newSize::Int64)
+    nodeInd = findNodeArrayIndexFromLabel(g, label);
+    g.nodes[nodeInd].size = newSize
+end
+
+function setGlobalNodeSize(g::Graph, newSize::Int64)
+    for currNode ∈ g.nodes
+        currNode.size = newSize
+    end
+end
+
+# Functions to edit the bounds explicitly
+
+
 function addEdge(g::Graph, sourceLabel::String, destLabel::String, weight::Float64)
     
     if (sourceLabel == destLabel)
@@ -463,54 +478,6 @@ function getTotalDegrees(g::Graph)::Matrix{Float64}
     return getInDegrees(g) + getOutDegrees(g)
 end
 
-function outputGraphToVac(g::Graph, filename::String)
-    open(filename, "w") do file
-        # Write the .vac version number:
-        write(file, "1\n")
-
-        # Write whether the graph is directed
-        if (g.directed == true)
-            write(file, "d\n")
-        else
-            write(file, "u\n")
-        end
-
-        # Write whether the graph is weighted
-        if (g.weighted == true)
-            write(file, "w\n")
-        else
-            write(file, "u\n")
-        end
-
-        # Write all the node information
-        for currNode in g.nodes
-            label = currNode.label
-            nodeSize = currNode.size
-
-            outlineColor = currNode.outlineColor
-            fillColor = currNode.fillColor
-            labelColor = currNode.labelColor
-
-            xCoord = currNode.xCoord
-            yCoord = currNode.yCoord
-
-            nodeLine = "n -l $label -x $xCoord -y $yCoord -f $fillColor -o $outlineColor -lc $labelColor -s $nodeSize\n"
-            write(file, nodeLine)
-        end
-
-        # Write all the edge information
-        for edge in g.edges
-            weight = edge.weight
-            color = edge.color
-
-            sourceLabel = findNodeLabelFromIndex(g, edge.sourceKey)
-            destLabel = findNodeLabelFromIndex(g, edge.destKey)
-
-            edgeLine = "e -s $sourceLabel -d $destLabel -w $weight -c $color \n"
-            write(file, edgeLine)
-        end
-    end
-end
 #TODO change so that the work after deletions
 function applyNewCoords(g::Graph, xy::Matrix{Float64})
     if length(g.nodes) != (size(xy)[1])
@@ -640,7 +607,7 @@ end
 
 function getCoolingFactor(t)::Float64
     # Note: This is just an arbitrary function. Could be tweaked later
-    return (2.0 / Float64(t))
+    return (200 / Float64(t))
 end
 
 # Returns a COPY of the Node in the graph with the specified index/key
@@ -674,6 +641,54 @@ function getAdjacentNodes(g::Graph, v::Node)
     print("the adjacent nodes are ", adjacentNodes)
 
     return adjacentNodes
+end
+
+# returns the index of a string in a vector. Returns -1 if not found
+function findIndex(lineArgs, substr)
+    numArgs = length(lineArgs)
+
+    for i in 1:numArgs
+        if lineArgs[i] == substr
+            return i
+        end
+    end
+    return -1
+end
+
+function parseForceDirectedArgs(commands::Vector{SubString{String}})
+    # ε::Float64, K::Int64, kRep::Float64 = 1.5, kAttr::Float64 = 3.0
+    ε = 1e-2
+    K = 20
+    rep = 1.5
+    attr = 2.0
+
+    for str in commands
+        str = lowercase(str)
+    end
+    
+    # epsilon
+    i = findIndex(commands, "-e")
+    if i != -1
+        ε = parse(Float64, commands[i + 1])
+    end
+
+    # K
+    i = findIndex(commands, "-iters")
+    if i != -1
+        K = parse(Int64, commands[i + 1])
+    end
+
+    i = findIndex(commands, "-rep")
+    if i != -1
+        rep = parse(Float64, commands[i + 1])
+    end
+
+    i = findIndex(commands, "-attr")
+    if i != -1
+        attr = parse(Float64, commands[i + 1])
+    end
+    
+    return [ε, K, rep, attr]
 end
 
 
@@ -732,4 +747,90 @@ function forceDirectedCoords(g::Graph, ε::Float64, K::Int64, kRep::Float64 = 1.
         node.xCoord = positions[node.index][1]
         node.yCoord = positions[node.index][2]
     end
+end
+
+
+# The following functions enable spectral layout
+
+# The following function will create a sparse matrix representing the graph
+function createSparseMatrix(g::Graph)::SparseArrays.SparseMatrixCSC{Float64, Int64}
+    ei = []
+    ej = []
+    w = []
+
+    if (g.directed)
+        for edge in g.edges
+            push!(ei, edge.sourceKey)
+            push!(ej, edge.destKey)
+
+            if (g.weighted) 
+                push!(w, edge.weight) 
+            else 
+                push!(w, 1.0) 
+            end
+        end
+    else
+        for edge in g.edges
+            push!(ei, edge.sourceKey)
+            push!(ej, edge.destKey)
+
+            push!(ej, edge.sourceKey)
+            push!(ei, edge.destKey)
+
+            if (g.weighted) 
+                push!(w, edge.weight) 
+                push!(w, edge.weight) 
+            else 
+                push!(w, 1.0) 
+                push!(w, 1.0) 
+            end
+        end
+    end
+
+    A = sparse(ei, ej, w)
+    
+    return A
+end
+
+# The following function will take in a Matrix and return a set of xy coordinates representing the nodes' spectral layout
+function spectral_layout(A)
+    d = vec(sum(A,dims = 2))
+    Dhalf = Diagonal(d.^(-1/2))
+    L = I - Dhalf*A*Dhalf
+    # Lam, E = eigs(L; nev = 3, which=:SM)
+
+    sc = size(L,1)
+    Vl,Vc,convinfo = eigsolve(L + sc*LinearAlgebra.I, 3, :SR; tol = 1e-8, maxiter = 1000, verbosity = 0)
+    lam2 = Real(Vl[2])-sc
+    E = [Vc[2] Vc[3]] 
+
+    return E
+end
+
+# The following function takes in a 
+function makeRealMatrix(xy::Matrix{ComplexF64})
+    rows = size(xy,1)
+    cols = size(xy,2)
+
+    M = zeros(rows, cols)
+    
+    for i in 1:rows
+        for j in 1:cols
+            M[i, j] = real(xy[i, j])
+            println("M[i, :][j] = ", M[i, :][j])
+        end
+    end
+
+    return M
+end
+
+function spectralCoords(g::Graph)
+    A = createSparseMatrix(g)
+    xy = spectral_layout(A)
+
+    if (typeof(xy) == Matrix{ComplexF64})
+        xy = makeRealMatrix(xy)
+    end
+
+    applyNewCoords(g, xy)
 end

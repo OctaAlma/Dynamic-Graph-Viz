@@ -200,19 +200,22 @@ while true
                 applyNewCoords(G, createDegreeDependantCoods(G))
 
             elseif (layoutType == "force-directed" || layoutType == "force" || layoutType == "forcedirected")
-                
-                if (length(commands) == 4)
-                    kMin = parse(Float64, commands[3])
-                    kMax = parse(Float64, commands[4])
-                    forceDirectedCoords(G, 1e-2, 15, kMin, kMax)
-                else
-                    forceDirectedCoords(G, 1e-2, 15)
-                end
+                # returns a vector containing [ε, K, rep, attr]
+                forceDirArgs = parseForceDirectedArgs(commands)
+                ε = forceDirArgs[1]
+                K = floor(Int64, forceDirArgs[2])
+                rep = forceDirArgs[3]
+                attr = forceDirArgs[4]
+                println("""Applying force-directed layout with parameters:
+                   ⬗ Minimum force magnitude / ε = $ε
+                   ⬗ Max Iterations = $K
+                   ⬗ Repulsive factor = $rep
+                   ⬗ Attractive factor = $attr """)
+
+                forceDirectedCoords(G, ε, K, rep, attr)
 
             elseif (layoutType == "spectral")
-
-                println("coming soon...")
-                
+                spectralCoords(G)
             end
 
             displayGraph()
@@ -252,6 +255,13 @@ while true
             else
                 genericLoad(filename)
             end
+
+            if (isnothing(G))
+                global G = Graph()
+                empty!(G.nodes)
+                empty!(G.edges)
+            end
+
             displayGraph()
         
         elseif commands[majorCommand] == "loadxy"
@@ -332,7 +342,35 @@ while true
             end
 
             displayGraph()
-        
+        elseif commands[majorCommand] == "getnode"
+            if majorCommand == 2
+                
+                continue
+            end
+            
+            label = String(commands[majorCommand + 1])
+            nodeInd = findNodeIndexFromLabel(G, label)
+
+            if (nodeInd != -1)
+                getNodeInfo(G.nodes[nodeInd], commands)
+            end
+
+        elseif commands[majorCommand] == "updatenode"
+            if majorCommand == 2
+                
+                continue
+            end
+            
+            label = String(commands[majorCommand + 1])
+            nodeInd = findNodeIndexFromLabel(G, label)
+
+            if (nodeInd != -1)
+                updateNode(G.nodes[nodeInd], commands)
+                displayGraph()
+            else
+                println("Please enter a valid node label.")
+            end
+
         elseif commands[majorCommand] == "setcolor"
             if majorCommand == 2
 
@@ -433,8 +471,10 @@ while true
             displayGraph()
         
         elseif commands[majorCommand] == "cleargraph"
-            println("THIS COMMAND WILL CLEAR THE CURRENT GRAPH. THERE IS NO WAY TO RECOVER IT.")
-            print("Please type \"YES\" to confirm you want the graph cleared: ")
+            printstyled("THIS COMMAND WILL CLEAR THE CURRENT GRAPH. THERE IS NO WAY TO RECOVER IT.\n"; color = :red)
+            print("Please type ") 
+            printstyled("\"YES\""; color = :green) 
+            print(" to confirm you want the graph cleared: ")
             confirmation = readline()
 
             if lowercase(confirmation) == "yes"
@@ -459,7 +499,7 @@ while true
         end
     catch e
         if debug
-            showerror(stdout, e)
+            rethrow(e)
         end
         println("Something went wrong. Be careful with the syntax")
         lastInputValid = false

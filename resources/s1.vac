@@ -6,6 +6,8 @@ n -l b
 n -l c
 n -l d
 n -l e
+n -l f
+n -l g
 e -s a -d b
 e -s b -d c
 e -s d -d c
@@ -14,3 +16,7 @@ e -s a -d c
 e -s a -d e
 e -s b -d e
 e -s d -d b
+e -s f -d e
+e -s f -d b
+e -s g -d e
+e -s g -d b

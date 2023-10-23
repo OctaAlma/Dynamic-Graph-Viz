@@ -18,56 +18,6 @@ function vacRead(filepath::String)
     println("vacRead version", intS, "not found")
 end
 
-# returns the index of a string in a vector. Returns -1 if not found
-function findIndex(lineArgs, substr)
-    for i in 1:length(lineArgs)
-        if lineArgs[i] == substr
-            return i
-        end
-    end
-    return -1
-end
-
-function parseNode(lineArgs::Vector{SubString{String}}, currIndex)
-    label = ""
-    size = 10
-    outlineColor = "black"
-    fillColor = "white"
-    labelColor = "black"
-    xCoord = 0.0
-    yCoord = 0.0
-
-    i = findIndex(lineArgs, "-l")
-    if i != -1
-        label = lineArgs[i+1]
-    end
-    i = findIndex(lineArgs, "-x")
-    if i != -1
-        xCoord = parse(Float64, lineArgs[i+1])
-    end
-    i = findIndex(lineArgs, "-y")
-    if i != -1
-        yCoord = parse(Float64, lineArgs[i+1])
-    end
-    i = findIndex(lineArgs, "-f")
-    if i != -1
-        fillColor = lineArgs[i+1]
-    end
-    i = findIndex(lineArgs, "-o")
-    if i != -1
-        outlineColor = lineArgs[i+1]
-    end
-    i = findIndex(lineArgs, "-lc")
-    if i != -1
-        labelColor = lineArgs[i+1]
-    end
-    i = findIndex(lineArgs, "-s")
-    if i != -1
-        size = parse(Int64, lineArgs[i+1])
-    end
-
-    return Node(String(label), currIndex, size, outlineColor, fillColor, labelColor, xCoord, yCoord)
-end
 
 function findKey(label::SubString{String}, allNodes::Vector{Node})
     
@@ -78,34 +28,6 @@ function findKey(label::SubString{String}, allNodes::Vector{Node})
     end
 
     return -1
-end
-
-function parseEdge(lineArgs::Vector{SubString{String}}, allNodes::Vector{Node})
-    weight = 1.0
-    color = "black"
-    sourceKey = -1
-    destKey = -1
-
-    i = findIndex(lineArgs, "-s")
-    if (i != -1)
-        label = lineArgs[i + 1]
-        sourceKey = findKey(label, allNodes)
-    end
-    i = findIndex(lineArgs, "-d")
-    if (i != -1)
-        label = lineArgs[i + 1]
-        destKey = findKey(label, allNodes)
-    end
-    i = findIndex(lineArgs, "-w")
-    if (i != -1)
-        weight = parse(Float64, lineArgs[i+1])
-    end
-    i = findIndex(lineArgs, "-c")
-    if (i != -1)
-        color = lineArgs[i + 1]
-    end
-
-    return Edge(sourceKey, destKey, weight, color)
 end
 
 # Parse a version 1 .vac file and return a graph object
@@ -166,4 +88,53 @@ function vacReadv1(filepath::String)::Graph
 
     setGraphLimits(newGraph)
     return newGraph
+end
+
+function outputGraphToVac(g::Graph, filename::String)
+    open(filename, "w") do file
+        # Write the .vac version number:
+        write(file, "1\n")
+
+        # Write whether the graph is directed
+        if (g.directed == true)
+            write(file, "d\n")
+        else
+            write(file, "u\n")
+        end
+
+        # Write whether the graph is weighted
+        if (g.weighted == true)
+            write(file, "w\n")
+        else
+            write(file, "u\n")
+        end
+
+        # Write all the node information
+        for currNode in g.nodes
+            label = currNode.label
+            nodeSize = currNode.size
+
+            outlineColor = currNode.outlineColor
+            fillColor = currNode.fillColor
+            labelColor = currNode.labelColor
+
+            xCoord = currNode.xCoord
+            yCoord = currNode.yCoord
+
+            nodeLine = "n -l $label -x $xCoord -y $yCoord -f $fillColor -o $outlineColor -lc $labelColor -s $nodeSize\n"
+            write(file, nodeLine)
+        end
+
+        # Write all the edge information
+        for edge in g.edges
+            weight = edge.weight
+            color = edge.color
+
+            sourceLabel = findNodeLabelFromIndex(g, edge.sourceKey)
+            destLabel = findNodeLabelFromIndex(g, edge.destKey)
+
+            edgeLine = "e -s $sourceLabel -d $destLabel -w $weight -c $color \n"
+            write(file, edgeLine)
+        end
+    end
 end

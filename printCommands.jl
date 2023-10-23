@@ -88,7 +88,9 @@ function printLoadSaveCommands()
     printSaveCommands()
 end
 
-
+printNodeEditCommands() = """updateNode LABEL                       Updates nodes to match any options provided. Options: Options: -l LABEL -s SIZE - oc OUTLINECOLOR -fc FILLCOLOR -lc LABELCOLOR -x xCOORD -y yCOORD
+getNode LABEL                        Returns requested node information. Options: -l LABEL -s SIZE - oc OUTLINECOLOR -fc FILLCOLOR -lc LABELCOLOR -x xCOORD -y yCOORD
+"""
 
 
 
@@ -102,6 +104,7 @@ function printEditGraphCommands()
     # Commands that add elements to the graph
     printAddCommands()
     printRemoveCommands()
+    printNodeEditCommands()
 end
 circularCommandhelpStr= "\tlayout circular                            - Places all nodes in a circle"
 printCircularLayoutCommand() = println(circularCommandhelpStr)
@@ -111,8 +114,7 @@ degreeCommandhelpStr= """\tlayout degree                              - Places a
 """
 printDegreeLayoutCommand() = println(degreeCommandhelpStr)
 
-forceCommandhelpStr = """\tlayout force                               - Updates the xy coordinates of all nodes in the graph according to a force-fdirected layout
-\tlayout force kRep kAttr                    - Alias of the layout force command that sets the repulsive and attractive factor between two nodes
+forceCommandhelpStr = """\tlayout force                               - Updates the xy coordinates of all nodes in the graph according to a force-fdirected layout. Options: -e -iters -rep -attr
 \tlayout force-directed                      - Alias of the layout force command
 \tlayout forcedirected                       - Alias of the layout force command
 """
