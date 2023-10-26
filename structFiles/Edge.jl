@@ -4,10 +4,11 @@ mutable struct Edge
 
     weight::Float64
     color::String
+    lineWidth::Float64
 end
 
 #Edge(weight=1., color="black", sourceKey=-1, destKey=-1) = Edge(weight, color, sourceKey, destKey)
-Edge(;sourceKey=-1, destKey=-1, weight=1., color="black") = Edge(sourceKey, destKey ,weight, color)
+Edge(;sourceKey=-1, destKey=-1, weight=1., color="black", lineWidth=1.0) = Edge(sourceKey, destKey, weight, color, lineWidth)
 
 #takes in a vector of edges, and returns a vector of edges
 function createEdgeVectorFromVVI(edges::Vector{Vector{Int64}})
@@ -15,7 +16,7 @@ function createEdgeVectorFromVVI(edges::Vector{Vector{Int64}})
     n = length(edges)
     
     for edge in edges
-        newEdge = Edge(edge[1], edge[2],1,"black")
+        newEdge = Edge(edge[1], edge[2], 1, "black", 1.0)
         push!(edgeVec, newEdge)
     end
 
@@ -28,6 +29,7 @@ function parseEdge(lineArgs::Vector{SubString{String}}, allNodes::Vector{Node})
     color = "black"
     sourceKey = -1
     destKey = -1
+    lineWidth = 1.0
 
     i = findIndex(lineArgs, "-s")
     if (i != -1)
@@ -47,7 +49,11 @@ function parseEdge(lineArgs::Vector{SubString{String}}, allNodes::Vector{Node})
     if (i != -1)
         color = lineArgs[i + 1]
     end
+    i = findIndex(lineArgs, "-lw")
+    if (i != -1)
+        lineWidth = parse(Float64, lineArgs[i+1])
+    end
 
-    return Edge(sourceKey, destKey, weight, color)
+    return Edge(sourceKey, destKey, weight, color, lineWidth)
 end
 

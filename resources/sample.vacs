@@ -1,0 +1,16 @@
+add node
+add node
+add node
+add node
+add node
+edges random
+layout circular
+setall nodes -oc green -fc lightblue
+sleep 2
+setall nodes -oc black -fc red
+sleep 2
+setall nodes -oc green -fc lightblue
+sleep 2
+setall nodes -oc black -fc red
+sleep 2
+setall nodes -oc green -fc lightblue

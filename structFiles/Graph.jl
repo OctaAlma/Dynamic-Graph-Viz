@@ -141,42 +141,48 @@ function makePlot(g::Graph, showTicks::Bool, showLabels::Bool)::Plots.Plot{Plots
     plot!(graphPlot, axis = showTicks, xticks = showTicks, yticks = showTicks) 
 
     # Populate the xy 2-dimmensional vector
-    allZeroes = true # Boolean that checks if the xy coordinates are all 0s
+    # allZeroes = true # Boolean that checks if the xy coordinates are all 0s
     for currNode in g.nodes
         # NOTE: we use the index of the node to identify it
         
-        if (!allZeroes) || (currNode.xCoord != 0) || (currNode.yCoord != 0)
-            allZeroes = false
-        end
+        # if (!allZeroes) || (currNode.xCoord != 0) || (currNode.yCoord != 0)
+        #     allZeroes = false
+        # end
 
         xy[currNode.index, :] = [currNode.xCoord, currNode.yCoord]
         labels[currNode.index] = currNode.label
     end
 
     # In the case the coordinates are all zeroes, plot them in a circle
-    if (allZeroes == true)
-        r = 1.5 * n
+    # if (allZeroes == true)
+    #     r = 1.5 * n
 
-        xy = createCircularCoords(g)
-        for currNode in g.nodes
-            currNode.xCoord = xy[currNode.index, 1]
-            currNode.yCoord = xy[currNode.index, 2]
-        end
+    #     xy = createCircularCoords(g)
+    #     for currNode in g.nodes
+    #         currNode.xCoord = xy[currNode.index, 1]
+    #         currNode.yCoord = xy[currNode.index, 2]
+    #     end
 
-        setGraphLimits(g)
-        plot!(graphPlot, xlim = [g.xMin*k,g.xMax*k], ylim = [g.yMin*k,g.yMax*k])
-    end
+    #     setGraphLimits(g)
+    #     plot!(graphPlot, xlim = [g.xMin*k,g.xMax*k], ylim = [g.yMin*k,g.yMax*k])
+    # end
 
     # Populate the edges vector and plot the edges
     for currEdge in g.edges
-        push!(edges, [currEdge.sourceKey, currEdge.destKey])
+        #push!(edges, [currEdge.sourceKey, currEdge.destKey])
 
         u = currEdge.sourceKey
         v = currEdge.destKey
 
-        plot!(graphPlot,[xy[u,1]; xy[v,1]], [xy[u,2]; xy[v,2]],color = currEdge.color, linewidth = 1)
+        plot!(graphPlot,[xy[u,1]; xy[v,1]], [xy[u,2]; xy[v,2]],color = currEdge.color, linewidth = currEdge.lineWidth)
+        midx = (xy[u,1] + xy[v,1]) / 2
+        midy = (xy[u,2] + xy[v,2]) / 2
+        
+        if (g.weighted)
+            annotate!(graphPlot, midx, midy, text(currEdge.weight, plot_font, txtsize, color="black"))
+        end
     end
-
+    
     #Plot the xy circles and node labels
     for currNode in g.nodes
         xyForNode = zeros(1, 2)
@@ -402,7 +408,7 @@ function addEdge(g::Graph, sourceLabel::String, destLabel::String, weight::Float
     color="black"
     
     if (sourceKey != -1 && destKey != -1)
-        newEdge = Edge(sourceKey, destKey, weight, color)
+        newEdge = Edge(sourceKey, destKey, weight, color, 1.0)
         push!(g.edges, newEdge)
     else
         println("Please provide valid node labels for the add edge command")
@@ -833,4 +839,114 @@ function spectralCoords(g::Graph)
     end
 
     applyNewCoords(g, xy)
+end
+
+
+# setAll edges -c -t -w 
+function setAllEdges(g::Graph, commands::Vector{SubString{String}})
+    c = undef
+    lw = undef
+    w = undef
+
+    numCommands = length(commands)
+
+    for i in 2:numCommands
+        currCommand = lowercase(String(commands[i]))
+
+        if (currCommand == "-c")
+            c = String(commands[i+1])
+            i = i + 1
+            println("Setting all edges to color ", c)
+            continue
+
+        elseif (currCommand == "-lw" || currCommand == "-t")
+            lw = parse(Float64, commands[i+1])
+            i = i + 1
+            println("Setting all edges to width ", lw)
+            continue
+
+        elseif (currCommand == "-w")
+            w = parse(Float64, commands[i+1])
+            i = i + 1
+            println("Setting all weights to ", w)
+            continue
+        end
+    end
+
+    for edge in g.edges
+        if (c != undef)
+            edge.color = c
+        end
+        
+        if (lw != undef)
+            edge.lineWidth = lw
+        end
+
+        if (w != undef)
+            edge.weight = w
+        end
+    end
+end
+
+# setAll nodes -fc -lc -oc -size
+function setAllNodes(g::Graph, commands::Vector{SubString{String}})
+    fc = undef
+    lc = undef
+    oc = undef
+    size = undef
+
+    # Parse the user node inputs
+    numCommands = length(commands)
+
+    for i in 2:numCommands
+
+        currCommand = lowercase(String(commands[i]))
+
+        if (currCommand == "-fc")
+            fc = String(commands[i+1])
+            println("Setting node fill color to ", fc)
+            i = i + 1
+            continue
+
+        elseif (currCommand == "-lc")
+            lc = String(commands[i+1])
+            println("Setting node label color to ", lc)
+            i = i + 1
+            continue
+
+        elseif (currCommand == "-oc")
+            oc = String(commands[i+1])
+            println("Setting node outline color to ", oc)
+            i = i + 1
+            continue
+
+        elseif (currCommand == "-s")
+            size = parse(Int64, String(commands[i+1]))
+
+            if (size < 1)
+                println("Cannot set size to ", size,". Please enter a positive integer.")
+                size = undef
+            end
+            i = i + 1
+            continue
+        end
+    end
+
+    for node in g.nodes
+        if (fc != undef)
+            node.fillColor = fc
+        end
+
+        if (oc != undef)
+            node.outlineColor = oc
+        end
+
+        if (lc != undef)
+            node.labelColor = lc
+        end
+
+        if (size != undef)
+            node.size = size
+        end
+    end
 end

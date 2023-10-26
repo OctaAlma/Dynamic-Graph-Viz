@@ -129,11 +129,12 @@ function outputGraphToVac(g::Graph, filename::String)
         for edge in g.edges
             weight = edge.weight
             color = edge.color
+            lineWidth = edge.lineWidth
 
             sourceLabel = findNodeLabelFromIndex(g, edge.sourceKey)
             destLabel = findNodeLabelFromIndex(g, edge.destKey)
 
-            edgeLine = "e -s $sourceLabel -d $destLabel -w $weight -c $color \n"
+            edgeLine = "e -s $sourceLabel -d $destLabel -w $weight -c $color -lw $lineWidth\n"
             write(file, edgeLine)
         end
     end

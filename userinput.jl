@@ -7,7 +7,6 @@ include("printCommands.jl")
 
 # NOTE: These are just sample values used for the DEMO
 
-
 filename::String = ""
 
 global G = Graph()
@@ -18,9 +17,27 @@ resourceDir = ""
 global debug = false
 global showTicks = true
 global showLabels = true
-
 global commandsHistory = []
+global commandQueue = []
 global lastInputValid = false
+
+if ("debug" in ARGS)
+    global resourceDir = "./resources/"
+    global debug = true
+    println("Debug mode ON")
+end
+
+function scriptloader(filepath::String)
+    try
+        open(filepath) do file
+            for currLine in readlines(file)
+                push!(commandQueue,String(currLine))
+            end
+        end
+    catch e
+        println(filepath, " could not be loaded.")
+    end
+end
 
 function displayGraph()
     if (isnothing(G))
@@ -39,6 +56,8 @@ function genericLoad(filename::String, optFile::String = "")
     
     if (extension == "vac")
         global G = vacRead(filename)
+    elseif (extension == "vacs")
+        scriptloader(filename)
     elseif (extension == "mtx") || (extension == "txt")
         global G = mtxRead(filename)
     elseif (extension == "mat")
@@ -94,7 +113,8 @@ while true
     try
         global lastInputValid = true
 
-        global input = readline()
+        global input = if isempty(commandQueue) readline() else popfirst!(commandQueue)  end
+        
         global commands = split(input, " ")
         #TODO remove *any number of consecutive whitespace
         if commands[1] == ""
@@ -119,7 +139,6 @@ while true
                 majorCommand = 2
             end
         end
-        
         if commands[majorCommand] == "saveas" || commands[majorCommand] == "save"
             if majorCommand == 2
                 printSaveommands()
@@ -219,30 +238,22 @@ while true
             end
 
             displayGraph()
-
-        elseif commands[majorCommand] == "randomedges"
-            if majorCommand == 2
-
-                continue
-            end
-            updateGraphEdges(G, randomEdges(G))
-            displayGraph()
         
-        elseif commands[majorCommand] == "completeedges"
+        elseif commands[majorCommand] == "edges"
             if majorCommand == 2
-
+                printEdgesCommands()
                 continue
             end
-            updateGraphEdges(G,completeEdges(G))
-            displayGraph()
-        
-        elseif commands[majorCommand] == "circularedges"
-            if majorCommand == 2
-
-                continue
+            if (commands[majorCommand+1] == "circle" || commands[majorCommand+1] == "circular" || commands[majorCommand+1] == "circ" || commands[majorCommand+1] == "cir")
+                updateGraphEdges(G, circleEdges(G))
+            elseif (commands[majorCommand+1] == "complete" || commands[majorCommand+1] == "comp" || commands[majorCommand+1] == "com")
+                updateGraphEdges(G,completeEdges(G))
+            elseif (commands[majorCommand+1] == "random" || commands[majorCommand+1] == "rand" || commands[majorCommand+1] == "ran" || commands[majorCommand+1] == "r")
+                updateGraphEdges(G, randomEdges(G))
             end
-            updateGraphEdges(G, circleEdges(G)  )
-            displayGraph()
+            
+            displayGraph()    
+            
 
         elseif commands[majorCommand] == "load"
             if majorCommand == 2
@@ -418,6 +429,30 @@ while true
 
             displayGraph()
         
+        elseif commands[majorCommand] == "setall"
+            if majorCommand == 2
+                
+                continue
+            end
+
+            if (length(commands) >= 2)
+                whatToSet = lowercase(String(commands[2]))
+
+                if (whatToSet == "node" || whatToSet == "nodes")
+                    setAllNodes(G, commands)
+
+                elseif (whatToSet == "edge" || whatToSet == "edges")
+                    setAllEdges(G, commands)
+
+                else
+                    println("Second command must be \"nodes\" or \"edges\" followed by the options.")
+                end
+            else
+                println("Not enough commands provided for setall. Please enter \"help\" for documentation.")
+            end
+
+            displayGraph()
+
         elseif commands[majorCommand] == "toggle"
             if majorCommand == 2
 
@@ -427,8 +462,11 @@ while true
             if (lowercase(commands[2]) == "grid")
                 global showTicks = !showTicks
             
-            elseif (commands[2] == "labels")
+            elseif (lowercase(commands[2]) == "labels")
                 global showLabels = !showLabels
+
+            elseif (lowercase(commands[2]) == "weights")
+                G.weighted = !G.weighted
 
             elseif (commands[2] == "debug")
                 if (debug == false)
@@ -469,6 +507,12 @@ while true
             end
 
             displayGraph()
+        elseif commands[majorCommand] == "sleep"
+            if majorCommand == 2
+                print("sleep help")
+                continue
+            end
+            sleep(parse(Float64,commands[majorCommand+1]))
         
         elseif commands[majorCommand] == "cleargraph"
             printstyled("THIS COMMAND WILL CLEAR THE CURRENT GRAPH. THERE IS NO WAY TO RECOVER IT.\n"; color = :red)

@@ -29,12 +29,11 @@ printSaveCommands() = println("""
 
 \tsavexy FILENAME                            - Saves the XY coordinates of all nodes to the specified file
 """)
+printEdgesCommands() = println("""\tcircularEdges                              - Changes edge structure so nodes are placed in circle
+\tcompleteEdges                              - Adds one edge for every pair of nodes
+\trandomEdges                                - regenerates random edges"
+""")
 
-printRandomEdgesCommand() = println("""\trandomEdges                                - regenerates random edges""")
-
-printCompleteEdgesCommand() = println("""\tcompleteEdges                              - Adds one edge for every pair of nodes""")
-
-printCircularEdgesCommand() = println("""\tcircularEdges                              - Changes edge structure so nodes are placed in circle""")
 
 printsetColorCommands() = println("""\tsetColor node NODE fill NEW_COLOR          - Updates the fill color of specified NODE
 \tsetColor node NODE OL NEW_COLOR            - Updates the outline color of the specified NODE
@@ -98,9 +97,7 @@ getNode LABEL                        Returns requested node information. Options
  
 "Commands that affect the edges of nodes of the graph object"
 function printEditGraphCommands()
-    printRandomEdgesCommand()
-    printCompleteEdgesCommand()
-    printCircularEdgesCommand()
+    printEdgesCommands()
     # Commands that add elements to the graph
     printAddCommands()
     printRemoveCommands()
@@ -114,7 +111,7 @@ degreeCommandhelpStr= """\tlayout degree                              - Places a
 """
 printDegreeLayoutCommand() = println(degreeCommandhelpStr)
 
-forceCommandhelpStr = """\tlayout force                               - Updates the xy coordinates of all nodes in the graph according to a force-fdirected layout. Options: -e -iters -rep -attr
+forceCommandhelpStr = """\tlayout force                               - Updates the xy coordinates of all nodes in the graph according to a force-directed layout. Options: -e -iters -rep -attr
 \tlayout force-directed                      - Alias of the layout force command
 \tlayout forcedirected                       - Alias of the layout force command
 """
