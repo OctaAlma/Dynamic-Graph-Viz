@@ -41,8 +41,9 @@ end
 
 function displayGraph()
     if (isnothing(G))
-        println("There is nothing to plot")
-        return
+        global G = Graph()
+        empty!(G.nodes)
+        empty!(G.edges)
     end
     display(makePlot(G, showTicks, showLabels))
 end
@@ -155,7 +156,7 @@ while true
             # move LABEL to X Y
             # move node LABEL to X Y
             if majorCommand == 2
-                
+                printmoveCommands() 
                 continue
             end
             moveCoord = 2
@@ -200,7 +201,7 @@ while true
         
         elseif commands[majorCommand] == "display" # Will display the current graph object
             if majorCommand == 2
-
+                printDisplayCommands()
                 continue
             end
             displayGraph()
@@ -257,7 +258,7 @@ while true
 
         elseif commands[majorCommand] == "load"
             if majorCommand == 2
-
+                printLoadCommands()
                 continue
             end
             global filename = commands[2]
@@ -277,7 +278,7 @@ while true
         
         elseif commands[majorCommand] == "loadxy"
             if majorCommand == 2
-
+                printLoadxy()
                 continue
             end
             # File containing the new XY values
@@ -287,6 +288,10 @@ while true
             displayGraph()
         
         elseif commands[majorCommand] == "savexy"
+            if majorCommand == 2
+                printSavexy()
+                continue
+            end
             filename = resourceDir * String(commands[2])
             outputXY(G, filename)
 
@@ -353,34 +358,56 @@ while true
             end
 
             displayGraph()
-        elseif commands[majorCommand] == "getnode"
+        elseif commands[majorCommand] == "get"
             if majorCommand == 2
-                
+                printGetCommands()
                 continue
             end
-            
-            label = String(commands[majorCommand + 1])
-            nodeInd = findNodeIndexFromLabel(G, label)
+            getWhat = lowercase(String(commands[majorCommand + 1]))
+            if (getWhat == "node")
+                label = String(commands[majorCommand + 2])
+                nodeInd = findNodeIndexFromLabel(G, label)
 
-            if (nodeInd != -1)
-                getNodeInfo(G.nodes[nodeInd], commands)
-            end
-
-        elseif commands[majorCommand] == "updatenode"
-            if majorCommand == 2
-                
-                continue
-            end
-            
-            label = String(commands[majorCommand + 1])
-            nodeInd = findNodeIndexFromLabel(G, label)
-
-            if (nodeInd != -1)
-                updateNode(G.nodes[nodeInd], commands)
-                displayGraph()
+                if (nodeInd != -1)
+                    println("Requested Info for node: ",label)
+                    getNodeInfo(G.nodes[nodeInd], commands)
+                end
+            elseif (getWhat == "edge")
+                src = String(commands[majorCommand + 2]) #should these be pasred 
+                dst = String(commands[majorCommand + 3])
+                #nodeInd = findNodeIndexFromLabel(G, label) #figure out how to get edge
+                #TODO add a function to Graph.jl that takes 2 node labels and returns an edge
+                if (nodeInd != -1)
+                    println("Requested Info for edge: ",src,dst)
+                    println("Not yet Implemented")
+                    #getNodeInfo(G.nodes[nodeInd], commands) # change getNodeInfo to getEdgeInfo
+                end
             else
-                println("Please enter a valid node label.")
+                println("Please specify whether you want to set node or set edge.")
             end
+
+        elseif commands[majorCommand] == "set"
+            if majorCommand == 2
+                printSetCommands()
+                continue
+            end
+
+            # did they write "set node ..." or "set edge ..."?
+            editMe = lowercase(String(commands[majorCommand + 1]))
+
+            if (editMe == "node")
+                # set node LABEL -lc -fc -oc -s
+                setNode(G, commands)
+
+            elseif (editMe == "edge")
+                # set edge SOURCE DEST -c -w -t/-lw
+                setEdge(G, commands)
+
+            else
+                println("Please specify whether you want to set node or set edge.")
+            end
+
+            displayGraph()
 
         elseif commands[majorCommand] == "setcolor"
             if majorCommand == 2

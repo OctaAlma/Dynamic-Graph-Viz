@@ -841,14 +841,10 @@ function spectralCoords(g::Graph)
     applyNewCoords(g, xy)
 end
 
-
-# setAll edges -c -t -w 
-function setAllEdges(g::Graph, commands::Vector{SubString{String}})
+function parseSetEdgeCommand(commands::Vector{SubString{String}})
     c = undef
     lw = undef
     w = undef
-
-    numCommands = length(commands)
 
     for i in 2:numCommands
         currCommand = lowercase(String(commands[i]))
@@ -856,22 +852,32 @@ function setAllEdges(g::Graph, commands::Vector{SubString{String}})
         if (currCommand == "-c")
             c = String(commands[i+1])
             i = i + 1
-            println("Setting all edges to color ", c)
+            #println("Setting all edges to color ", c)
             continue
 
         elseif (currCommand == "-lw" || currCommand == "-t")
             lw = parse(Float64, commands[i+1])
             i = i + 1
-            println("Setting all edges to width ", lw)
+            #println("Setting all edges to width ", lw)
             continue
 
         elseif (currCommand == "-w")
             w = parse(Float64, commands[i+1])
             i = i + 1
-            println("Setting all weights to ", w)
+            #println("Setting all weights to ", w)
             continue
         end
     end
+
+    return c, lw, w
+end
+
+# setAll edges -c -t -w 
+function setAllEdges(g::Graph, commands::Vector{SubString{String}})
+
+    c, lw, w = parseSetCommand(commands)
+
+    numCommands = length(commands)
 
     for edge in g.edges
         if (c != undef)
@@ -888,8 +894,34 @@ function setAllEdges(g::Graph, commands::Vector{SubString{String}})
     end
 end
 
-# setAll nodes -fc -lc -oc -size
-function setAllNodes(g::Graph, commands::Vector{SubString{String}})
+function setEdge(g::Graph, commands::Vector{SubString{String}})
+    # Check if the labels provided exist
+    sourceLabel = commands[3]
+    destLabel = commands[4]
+
+    edgeInd = findEdgeIndex(g, sourceLabel, destLabel)
+
+    if (edgeInd == -1)
+        println("An edge with source ", sourceLabel, " and destination ", destLabel, " could not be found.")
+        return
+    end
+
+    c, lw, w = parseSetEdgeCommand(commands)
+
+    if (c != undef)
+        g.edges[edgeInd].color = c
+    end
+    
+    if (lw != undef)
+        g.edges[edgeInd].lineWidth = lw
+    end
+
+    if (w != undef)
+        g.edges[edgeInd].weight = w
+    end
+end
+
+function parseSetNodeCommand(commands::Vector{SubString{String}})
     fc = undef
     lc = undef
     oc = undef
@@ -904,19 +936,16 @@ function setAllNodes(g::Graph, commands::Vector{SubString{String}})
 
         if (currCommand == "-fc")
             fc = String(commands[i+1])
-            println("Setting node fill color to ", fc)
             i = i + 1
             continue
 
         elseif (currCommand == "-lc")
             lc = String(commands[i+1])
-            println("Setting node label color to ", lc)
             i = i + 1
             continue
 
         elseif (currCommand == "-oc")
             oc = String(commands[i+1])
-            println("Setting node outline color to ", oc)
             i = i + 1
             continue
 
@@ -931,6 +960,61 @@ function setAllNodes(g::Graph, commands::Vector{SubString{String}})
             continue
         end
     end
+
+    return fc, lc, oc, size
+end
+
+function setNode(g::Graph, commands::Vector{SubString{String}})
+    
+    nodeLabel = String(commands[3])
+    nodeInd = findNodeIndexFromLabel(g, nodeLabel)
+    if (nodeInd == -1)
+        println("Could not find a node with the label ", nodeInd)
+        return
+    end
+
+    fc, lc, oc, size = parseSetNodeCommand(commands)
+
+    if (fc != undef)
+        println("Setting node fill color to ", fc)
+        g.nodes[nodeInd].fillColor = fc
+    end
+
+    if (oc != undef)
+        println("Setting node outline color to ", oc)
+        g.nodes[nodeInd].outlineColor = oc
+    end
+
+    if (lc != undef)
+        println("Setting node label color to ", lc)
+        g.nodes[nodeInd].labelColor = lc
+    end
+
+    if (size != undef)
+        println("Setting node size to ", size)
+        g.nodes[nodeInd].size = size
+    end
+
+    i = findIndex(commands, "-x")
+    if (i != -1)
+        print("Changing node x from ",g.nodes[nodeInd].xCoord)
+        g.nodes[nodeInd].xCoord = parse(Float64, String(commands[i + 1]))
+        println("Setting node x to ", g.nodes[nodeInd].xCoord)
+    end
+
+    i = findIndex(commands, "-y")
+    if (i != -1)
+        print("Changing node y from ",g.nodes[nodeInd].yCoord)
+        g.nodes[nodeInd].yCoord = parse(Float64,String(commands[i + 1]))
+        println(" y to ", g.nodes[nodeInd].yCoord)
+    end
+    
+end
+
+# setAll nodes -fc -lc -oc -size
+function setAllNodes(g::Graph, commands::Vector{SubString{String}})
+
+    fc, lc, oc, size = parseSetNodeCommand(commands)
 
     for node in g.nodes
         if (fc != undef)

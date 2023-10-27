@@ -117,33 +117,44 @@ function updateNode(n::Node, lineArgs::Vector{SubString{String}})
     end
 end
 
-function getNodeInfo(n::Node, lineArgs::Vector{SubString{String}})
+function getNodeInfo(n::Node, lineArgs::Vector{SubString{String}}, override::Bool=false)
+    anyCommand = false
     i = findIndex(lineArgs, "-l")
-    if i != -1
-        println(n.label)
+    if i != -1 || override == true
+        println("label: ",n.label)
+        anyCommand = true
     end
     i = findIndex(lineArgs, "-x")
-    if i != -1
-        println(n.xCoord)
+    if i != -1 || override == true
+        println("x: ",n.xCoord)
+        anyCommand = true
     end
     i = findIndex(lineArgs, "-y")
-    if i != -1
-        println(n.yCoord)
+    if i != -1 || override == true
+        println("y: ",n.yCoord)
+        anyCommand = true
     end
-    i = findIndex(lineArgs, "-f")
-    if i != -1
-        println(n.fillColor)
+    i = findIndex(lineArgs, "-fc")
+    if i != -1 || override == true
+        println("fill Color: ",n.fillColor)
+        anyCommand = true
     end
-    i = findIndex(lineArgs, "-o")
-    if i != -1
-        println(n.outlineColor)
+    i = findIndex(lineArgs, "-oc")
+    if i != -1 || override == true
+        println("outline Color: ",n.outlineColor)
+        anyCommand = true
     end
     i = findIndex(lineArgs, "-lc")
-    if i != -1
-        println(n.labelColor)
+    if i != -1 || override == true
+        println("label Color: ",n.labelColor)
+        anyCommand = true
     end
     i = findIndex(lineArgs, "-s")
-    if i != -1
-        println("", n.size)
+    if i != -1 || override == true
+        println("node Size: ", n.size)
+        anyCommand = true
+    end
+    if anyCommand == false
+        getNodeInfo(n,lineArgs,true)
     end
 end

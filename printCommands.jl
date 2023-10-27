@@ -16,8 +16,8 @@ printLoadCommands() = println("""
 \tload FILENAME.mxt                          - Loads a Graph from a .txt file containing edge connections
 \tload FILENAME.mat                          - Loads a Graph from a .mat file containing edge connections and (optionally) node coordinates
 \tload FILENAME.vac                          - Loads a Graph from a .vac file
-\tloadxy FILENAME.txt                        - Loads node xy coordinates from a .txt file
 """)
+printLoadxy() = println("\tloadxy FILENAME.txt                        - Loads node xy coordinates from a .txt file")
 
 printSaveCommands() = println("""
 \n---------- Save functions ----------------------------------------------------------------------------------
@@ -26,9 +26,9 @@ printSaveCommands() = println("""
 \tsaveas FILENAME.txt                        - Saves the current graph edge information to a .txt file
 \tsaveas FILENAME.mtx                        - Saves the current graph edge information to a .mtx file
 \tsaveas FILENAME.vac                        - Saves the current graph state information into a .vac file
-
-\tsavexy FILENAME                            - Saves the XY coordinates of all nodes to the specified file
 """)
+printSavexy() = println("\tsavexy FILENAME                            - Saves the XY coordinates of all nodes to the specified file")
+
 printEdgesCommands() = println("""\tcircularEdges                              - Changes edge structure so nodes are placed in circle
 \tcompleteEdges                              - Adds one edge for every pair of nodes
 \trandomEdges                                - regenerates random edges"
@@ -38,7 +38,7 @@ printEdgesCommands() = println("""\tcircularEdges                              -
 printsetColorCommands() = println("""\tsetColor node NODE fill NEW_COLOR          - Updates the fill color of specified NODE
 \tsetColor node NODE OL NEW_COLOR            - Updates the outline color of the specified NODE
 \tsetColor node NODE label NEW_COLOR         - Updates the color of the specified NODE label
-\tsetColor edge SOURCE DEST NEW_COLOR        - Updates the color of the edge between the SOURCE and DEST
+\tsetColor edge SRC DST NEW_COLOR        - Updates the color of the edge between the SOURCE and DEST
 """)
 
 printexitCommand() = println("""\texit                                       - quits the program and the Julia repl""")
@@ -56,12 +56,12 @@ moveCommandhelpStr = """\tmove NODE_LABEL AXIS UNITS                 - Moves the
 """
 printmoveCommands() = println(moveCommandhelpStr)
 
-addCommandhelpStr = """\tadd edge SOURCE DEST WEIGHT                - Adds an edge from START_NODE to END_NODE
+addCommandhelpStr = """\tadd edge SRC DST WEIGHT                - Adds an edge from START_NODE to END_NODE
 \tadd node                                   - Adds a node to the graph. Options: -l LABEL -s SIZE - oc OUTLINECOLOR -fc FILLCOLOR -lc LABELCOLOR -x xCOORD -y yCOORD
 """
 printAddCommands() = println(addCommandhelpStr)
 
-removeCommandhelpStr = """\tremove edge SOURCE DEST                    - Removes the edge connecting the nodes labeled SOURCE and DEST
+removeCommandhelpStr = """\tremove edge SRC DST                    - Removes the edge connecting the nodes labeled SOURCE and DEST
 \tremove node LABEL                          - Removes the node with the label LABEL
 """
 printRemoveCommands() = println(removeCommandhelpStr)
@@ -83,13 +83,30 @@ CommandhelpStr = """"""
 function printLoadSaveCommands()
     # Load commands
     printLoadCommands()
+    printLoadxy()
     # Save graph attribute commands or plot commands
     printSaveCommands()
+    printSavexy()
 end
 
-printNodeEditCommands() = """updateNode LABEL                       Updates nodes to match any options provided. Options: Options: -s SIZE - oc OUTLINECOLOR -fc FILLCOLOR -lc LABELCOLOR -x xCOORD -y yCOORD
-getNode LABEL                        Returns requested node information. Options: -l LABEL -s SIZE - oc OUTLINECOLOR -fc FILLCOLOR -lc LABELCOLOR -x xCOORD -y yCOORD
-"""
+function printSetCommands()
+    printsetNodeCommand()
+    printsetEdgeCommand()
+end
+
+function printGetCommands()
+    printgetNodeCommand()
+    printgetEdgeCommand()  
+end
+
+printsetNodeCommand() = print("""\tset node LABEL [OPTIONS]              Updates nodes to match any options provided.  Options: -l LABEL -s SIZE - oc OUTLINECOLOR -fc FILLCOLOR -lc LABELCOLOR -x xCOORD -y yCOORD
+""")
+printgetNodeCommand() = print("""\tget node LABEL [OPTIONS]               Returns requested node information. Options: -l LABEL -s SIZE -oc OUTLINECOLOR -fc FILLCOLOR -lc LABELCOLOR -x xCOORD -y yCOORD
+""")
+printsetEdgeCommand() = print("""\tset edge SRC DST [OPTIONS]              Updates the edge to match any options provided. Options: -c COLOR -t LINETHICKNESS -w EDGEWEIGHT (-lw is an allias for -t) 
+""")
+printgetEdgeCommand() = print("""get edge SRC DST [OPTIONS]               Returns requested edge information. Options: -c COLOR -t LINETHICKNESS -w EDGEWEIGHT (-lw is an allias for -t)
+""")
 
 
 

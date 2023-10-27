@@ -56,4 +56,3 @@ function parseEdge(lineArgs::Vector{SubString{String}}, allNodes::Vector{Node})
 
     return Edge(sourceKey, destKey, weight, color, lineWidth)
 end
-

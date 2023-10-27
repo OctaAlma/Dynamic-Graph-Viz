@@ -13,4 +13,4 @@ setall nodes -oc green -fc lightblue
 sleep 2
 setall nodes -oc black -fc red
 sleep 2
-setall nodes -oc green -fc lightblue
+setall nodes -oc green -fc lightblue -s 20
