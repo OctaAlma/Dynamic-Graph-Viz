@@ -846,6 +846,8 @@ function parseSetEdgeCommand(commands::Vector{SubString{String}})
     lw = undef
     w = undef
 
+    numCommands = length(commands)
+
     for i in 2:numCommands
         currCommand = lowercase(String(commands[i]))
 
@@ -875,7 +877,7 @@ end
 # setAll edges -c -t -w 
 function setAllEdges(g::Graph, commands::Vector{SubString{String}})
 
-    c, lw, w = parseSetCommand(commands)
+    c, lw, w = parseSetEdgeCommand(commands)
 
     numCommands = length(commands)
 

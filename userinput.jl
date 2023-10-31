@@ -18,13 +18,40 @@ global debug = false
 global showTicks = true
 global showLabels = true
 global commandsHistory = []
+global sessionCommands = []
 global commandQueue = []
 global lastInputValid = false
+global sleepInterval = 0
 
-if ("debug" in ARGS)
+if ("debug" in ARGS || "-d" in ARGS )
     global resourceDir = "./resources/"
     global debug = true
     println("Debug mode ON")
+end
+
+if ("load" in ARGS || "-l" in ARGS )
+    println("Load not yet implemented")
+end
+
+if ("tiggle-grod" in ARGS)
+    println("Tiggle Grod")
+    #do something
+end
+
+function outputGraphToVacs(filepath::String)
+    try
+        open(filepath, "w") do file
+            println("Saving command history to ", filepath, "...")
+            for command in sessionCommands
+                if !occursin("save",command) && !occursin("saveas",command) 
+                    writeMe = "$command\n"
+                    write(file, writeMe)
+                end
+            end
+        end
+    catch e
+        println(filepath, " could not be created.")
+    end
 end
 
 function scriptloader(filepath::String)
@@ -48,7 +75,7 @@ function displayGraph()
     display(makePlot(G, showTicks, showLabels))
 end
 
-function genericLoad(filename::String, optFile::String = "")
+function genericLoad(filename::String)
     # Check the extension of filename
     extension = String(split(filename, ".")[end])
 
@@ -81,6 +108,8 @@ function genericSave(filename::String)
         outputGraphToVac(G, filename)
     elseif (extension == "mtx" || extension == "txt")
         outputGraphToMtx(G, filename)
+    elseif (extension == "vacs")
+        outputGraphToVacs(filename)
     else
         printstyled("Graph could not be saved with extention ",extension, color=:red)
     end
@@ -92,41 +121,56 @@ function printHelp(category="")
     print(category)
     if category == ""
         printAll()
+    
+    # elseif category == "load"
+    #     printLoadCommands()
+    # elseif category == "save"
+    #     printSaveCommands()
 
-    elseif category == "load"
-        printLoadCommands()
-    elseif category == "save"
-        printSaveCommands()
+    # elseif category == "edit graph"
+    #     printEditGraphCommands()
 
-    elseif category == "edit graph"
-        printEditGraphCommands()
-
-    elseif category == "edit xy"
-        printEditCoordCommands()
+    # elseif category == "edit xy"
+    #     printEditCoordCommands()
     end
 end
 
-
+global executingScript = false
 while true
+    global executingScript
     global lastInputValid
-    print("\nEnter commands: ")
+    global sleepInterval
+    
+    executingScript = false
+    if !isempty(commandQueue)
+        executingScript = true
+    end
+
+    if !executingScript
+        print("\nEnter a command: ")
+    else
+        sleep(sleepInterval)
+    end
     
     try
-        global lastInputValid = true
+        global lastInputValid = true        
 
-        global input = if isempty(commandQueue) readline() else popfirst!(commandQueue)  end
+        global input = if executingScript popfirst!(commandQueue)  else readline() end
         
         global commands = split(input, " ")
+    
         #TODO remove *any number of consecutive whitespace
         if commands[1] == ""
             if !isempty(commandsHistory)
                 push!(commandsHistory,last(commandsHistory))
+                push!(sessionCommands,last(commandsHistory))
                 commands = split(last(commandsHistory), " ")
             else
                 println("No Commands in History")
             end
-        else
+        elseif !executingScript
             push!(commandsHistory,input)
+            push!(sessionCommands,input)
         end
         
         commands[1] = lowercase(commands[1])
@@ -142,7 +186,7 @@ while true
         end
         if commands[majorCommand] == "saveas" || commands[majorCommand] == "save"
             if majorCommand == 2
-                printSaveommands()
+                printSaveCommands()
                 continue
             end
             genericSave(String(commands[2]))
@@ -201,7 +245,7 @@ while true
         
         elseif commands[majorCommand] == "display" # Will display the current graph object
             if majorCommand == 2
-                printDisplayCommands()
+                printDisplayHelp() 
                 continue
             end
             displayGraph()
@@ -238,6 +282,7 @@ while true
                 spectralCoords(G)
             end
 
+            setGraphLimits(G)
             displayGraph()
         
         elseif commands[majorCommand] == "edges"
@@ -262,11 +307,11 @@ while true
                 continue
             end
             global filename = commands[2]
-            if length(commands)>2
-                genericLoad(filename,String(commands[3]))
-            else
-                genericLoad(filename)
+            if length(commands) > 2
+                global sleepInterval = parse(Float64, commands[3])
             end
+            genericLoad(filename)
+            
 
             if (isnothing(G))
                 global G = Graph()
@@ -325,7 +370,7 @@ while true
                 
                 if (G.weighted == true)
                     try
-                        weight = parse(commands[sourceNum+2], Float64)
+                        weight = parse(Float64, commands[sourceNum+2])
                     catch
                         println("Please specify edge weight after NODE_LABEL")
                         continue;
@@ -411,7 +456,7 @@ while true
 
         elseif commands[majorCommand] == "setcolor"
             if majorCommand == 2
-
+                printsetColorCommands()
                 continue
             end
             if (lowercase(commands[2]) == "node")
@@ -458,7 +503,7 @@ while true
         
         elseif commands[majorCommand] == "setall"
             if majorCommand == 2
-                
+                printSetAllCommand()
                 continue
             end
 
@@ -482,7 +527,7 @@ while true
 
         elseif commands[majorCommand] == "toggle"
             if majorCommand == 2
-
+                printToggleCommands()
                 continue
             end
 
@@ -510,7 +555,7 @@ while true
             displayGraph()
         elseif commands[majorCommand] == "view"
             if majorCommand == 2
-
+                printviewCommands()
                 continue
             end
             
@@ -536,12 +581,16 @@ while true
             displayGraph()
         elseif commands[majorCommand] == "sleep"
             if majorCommand == 2
-                print("sleep help")
+                printSleepCommand()
                 continue
             end
             sleep(parse(Float64,commands[majorCommand+1]))
         
         elseif commands[majorCommand] == "cleargraph"
+            if majorCommand == 2
+                printClearGraphHelp()
+                continue
+            end
             printstyled("THIS COMMAND WILL CLEAR THE CURRENT GRAPH. THERE IS NO WAY TO RECOVER IT.\n"; color = :red)
             print("Please type ") 
             printstyled("\"YES\""; color = :green) 
@@ -555,14 +604,36 @@ while true
             end
 
             displayGraph()
-        elseif commands[majorCommand] == "repl"
-            println("repl")
+        
+        elseif commands[majorCommand] == "clear"
+            if majorCommand == 2
+                printClearHelp()
+                continue
+            end
+            run(Cmd(`clear`, dir="./"))
             
+        elseif commands[majorCommand] == "repl"
+            if majorCommand == 2
+                # printviewCommands()
+                continue
+            end
+            run(Cmd(`julia`, dir="./"))
+        elseif commands[majorCommand] == "instance"
+            if majorCommand == 2
+                printviewCommands()
+                continue
+            end
+            run(Cmd(`julia userinput.jl`, dir="./"))
+        
+        # easter egg:
+        elseif commands[majorCommand] == "tiggle"
+            if commands[majorCommand + 1] == "grod"                
+                run(Cmd(`julia userinput.jl tiggle-grod`, dir="./"))
+            end
 
         elseif majorCommand == 2
-                printHelp(String(commands[2]))
-        
-        
+            printHelp(String(commands[2]))
+    
         else
             notFound = commands[1]
             println("Command $notFound was not found. Enter \"help\" to view valid commands")
@@ -572,7 +643,7 @@ while true
         if debug
             rethrow(e)
         end
-        println("Something went wrong. Be careful with the syntax")
+        println("Something went wrong. Try the help command.")
         lastInputValid = false
     end
     

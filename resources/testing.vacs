@@ -1,0 +1,9 @@
+load karate.mat
+toggle weights
+setall edges -t 3 -c blue
+setall nodes -s 20 -fc black -oc grey -lc white
+sleep 2
+layout force
+sleep 2
+layout spectral
+sleep 2
