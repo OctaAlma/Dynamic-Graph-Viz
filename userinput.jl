@@ -9,19 +9,27 @@ include("printCommands.jl")
 
 filename::String = ""
 
-global G = Graph()
-empty!(G.edges)
-empty!(G.nodes)
-
 resourceDir = ""
-global debug = false
+global debug = false 
 global showTicks = true
 global showLabels = true
 global commandsHistory = []
 global sessionCommands = []
 global commandQueue = []
+global graphStack = []
 global lastInputValid = false
 global sleepInterval = 0
+global maxGraphStackSize = 10
+global G = Graph()
+
+global emptyGraph = Graph()
+empty!(emptyGraph.nodes)
+empty!(emptyGraph.edges)
+global emptyGraphStack = [emptyGraph]
+
+empty!(G.edges)
+empty!(G.nodes)
+push!(graphStack, G)
 
 if ("debug" in ARGS || "-d" in ARGS )
     global resourceDir = "./resources/"
@@ -91,6 +99,14 @@ function genericLoad(filename::String)
     elseif (extension == "mat")
         global G = MATRead(filename)
     end
+
+    if (isnothing(G))
+        println("Load Failed, Constructing empty Graph...")
+        global G = Graph()
+        empty!(G.nodes)
+        empty!(G.edges)
+    end
+
     setGraphLimits(G)
     displayGraph()
 
@@ -151,11 +167,17 @@ while true
     else
         sleep(sleepInterval)
     end
+
+    if (isnothing(G)) # G can sometimes become nothing if any a function returns nothing
+        global G = Graph()
+        empty!(G.nodes)
+        empty!(G.edges)
+    end
     
     try
         global lastInputValid = true        
 
-        global input = if executingScript popfirst!(commandQueue)  else readline() end
+        global input = if executingScript popfirst!(commandQueue) else readline() end
         
         global commands = split(input, " ")
     
@@ -184,6 +206,33 @@ while true
                 majorCommand = 2
             end
         end
+        
+        if (commands[majorCommand] == "undo" || commands[majorCommand] == "z")
+            if majorCommand == 2
+                printUndoCommand()
+                continue
+            end
+            
+            if (!isempty(graphStack))
+                if (graphStack == emptyGraphStack)
+                    global G = deepcopy(emptyGraph)
+                else
+                    global G = pop!(graphStack)
+                end
+            else
+                println("Undo history is empty. ")
+            end
+
+            displayGraph()
+            continue
+            
+        elseif (!isempty(graphStack) && G != graphStack[end])
+            while (length(graphStack) >= maxGraphStackSize)
+                popfirst!(graphStack)
+            end
+            push!(graphStack, deepcopy(G))
+        end
+
         if commands[majorCommand] == "saveas" || commands[majorCommand] == "save"
             if majorCommand == 2
                 printSaveCommands()
@@ -356,8 +405,8 @@ while true
                     commands[2] = "-l"
                 end
                 addNode(G, commands)
-                displayGraph()
                 setGraphLimits(G)
+                displayGraph()
             
             elseif (lowercase(commands[2]) == "edge" || length(commands) == 3)
                 sourceNum = 3
@@ -631,6 +680,8 @@ while true
                 run(Cmd(`julia userinput.jl tiggle-grod`, dir="./"))
             end
 
+       
+        
         elseif majorCommand == 2
             printHelp(String(commands[2]))
     
@@ -650,4 +701,6 @@ while true
     if (!lastInputValid && !isempty(commandsHistory)) 
         pop!(commandsHistory)
     end
+
+    
 end

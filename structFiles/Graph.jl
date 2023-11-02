@@ -24,6 +24,7 @@ Graph(;edges=Vector{Edge}(undef,1), nodes=Vector{Node}(undef, 1), directed=false
 
 # Computes a the Graph's limits as a bounding box of the graph's nodes
 function setGraphLimits(g::Graph)
+
     g.xMin = Inf
     g.xMax = -Inf
     g.yMin = Inf
@@ -141,31 +142,18 @@ function makePlot(g::Graph, showTicks::Bool, showLabels::Bool)::Plots.Plot{Plots
     plot!(graphPlot, axis = showTicks, xticks = showTicks, yticks = showTicks) 
 
     # Populate the xy 2-dimmensional vector
-    # allZeroes = true # Boolean that checks if the xy coordinates are all 0s
+    allZeroes = true # Boolean that checks if the xy coordinates are all 0s
+    
     for currNode in g.nodes
         # NOTE: we use the index of the node to identify it
         
-        # if (!allZeroes) || (currNode.xCoord != 0) || (currNode.yCoord != 0)
-        #     allZeroes = false
-        # end
+        if (!allZeroes) || (currNode.xCoord != 0) || (currNode.yCoord != 0)
+            allZeroes = false
+        end
 
         xy[currNode.index, :] = [currNode.xCoord, currNode.yCoord]
         labels[currNode.index] = currNode.label
     end
-
-    # In the case the coordinates are all zeroes, plot them in a circle
-    # if (allZeroes == true)
-    #     r = 1.5 * n
-
-    #     xy = createCircularCoords(g)
-    #     for currNode in g.nodes
-    #         currNode.xCoord = xy[currNode.index, 1]
-    #         currNode.yCoord = xy[currNode.index, 2]
-    #     end
-
-    #     setGraphLimits(g)
-    #     plot!(graphPlot, xlim = [g.xMin*k,g.xMax*k], ylim = [g.yMin*k,g.yMax*k])
-    # end
 
     # Populate the edges vector and plot the edges
     for currEdge in g.edges
@@ -1036,3 +1024,15 @@ function setAllNodes(g::Graph, commands::Vector{SubString{String}})
         end
     end
 end
+
+Base.:(==)(c1::Graph, c2::Graph) = 
+c1.edges == c2.edges && 
+c1.nodes == c2.nodes && 
+c1.directed == c2.directed && 
+c1.weighted == c2.weighted && 
+c1.versionNo == c2.versionNo && 
+c1.labelToIndex == c2.labelToIndex && 
+c1.xMin == c2.xMin && 
+c1.xMax == c2.xMax && 
+c1.yMin == c2.yMin && 
+c1.yMax == c2.yMax 

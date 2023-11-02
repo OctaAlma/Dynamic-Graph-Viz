@@ -158,3 +158,13 @@ function getNodeInfo(n::Node, lineArgs::Vector{SubString{String}}, override::Boo
         getNodeInfo(n,lineArgs,true)
     end
 end
+
+Base.:(==)(c1::Node, c2::Node) = 
+c1.label == c2.label && 
+c1.index == c2.index && 
+c1.size == c2.size && 
+c1.outlineColor == c2.outlineColor && 
+c1.fillColor == c2.fillColor && 
+c1.labelColor == c2.labelColor && 
+c1.xCoord == c2.xCoord && 
+c1.yCoord == c2.yCoord

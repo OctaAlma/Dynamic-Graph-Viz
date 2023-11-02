@@ -56,3 +56,10 @@ function parseEdge(lineArgs::Vector{SubString{String}}, allNodes::Vector{Node})
 
     return Edge(sourceKey, destKey, weight, color, lineWidth)
 end
+
+Base.:(==)(c1::Edge, c2::Edge) = 
+c1.sourceKey == c2.sourceKey &&
+c1.destKey == c2.destKey &&
+c1.weight == c2.weight &&
+c1.color == c2.color &&
+c1.lineWidth == c2.lineWidth

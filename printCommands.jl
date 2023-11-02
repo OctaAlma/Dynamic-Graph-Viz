@@ -61,9 +61,6 @@ printRemoveCommands() = println("""
 \tremove node LABEL                          - Removes the node with the label LABEL
 """)
 
-CommandhelpStr = """"""
-CommandhelpStr = """"""
-
 
 "Commands that interact with the filesystem to load edges, xy coordinates or both as well as saving graphs in various formats"
 function printLoadSaveCommands()
@@ -97,6 +94,11 @@ printToggleCommands() = println("""
 \ttoggle labels                              - Will toggle the labels to be on/off.
 \ttoggle weights                             - Will toggle the weight view to be on/off. For unweighted graphs, weights are assumed to be 1.0.
 """)
+
+printUndoCommand() = println("""
+\tundo                                       - Undoes the last command that changed the Graph object (not a system command) []
+\tz                                          - Allias for the above command
+""")
  
 "Commands that affect the edges of nodes of the graph object"
 function printEditGraphCommands()
@@ -105,6 +107,7 @@ function printEditGraphCommands()
     # Commands that add elements to the graph
     printAddCommands()
     printRemoveCommands()
+    printUndoCommand()
 end
 
 printCircularLayoutCommand() = println("""
