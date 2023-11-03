@@ -811,7 +811,6 @@ function makeRealMatrix(xy::Matrix{ComplexF64})
     for i in 1:rows
         for j in 1:cols
             M[i, j] = real(xy[i, j])
-            println("M[i, :][j] = ", M[i, :][j])
         end
     end
 
@@ -820,13 +819,20 @@ end
 
 function spectralCoords(g::Graph)
     A = createSparseMatrix(g)
-    xy = spectral_layout(A)
 
-    if (typeof(xy) == Matrix{ComplexF64})
-        xy = makeRealMatrix(xy)
+    try
+        xy = spectral_layout(A)
+
+        if (typeof(xy) == Matrix{ComplexF64})
+            xy = makeRealMatrix(xy)
+        end
+    
+        applyNewCoords(g, xy)
+
+    catch e
+        println("Could not create a spectral layout due to a failed eigenvalue computation.")
+        return
     end
-
-    applyNewCoords(g, xy)
 end
 
 function parseSetEdgeCommand(commands::Vector{SubString{String}})
