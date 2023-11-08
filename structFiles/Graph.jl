@@ -842,27 +842,26 @@ function parseSetEdgeCommand(commands::Vector{SubString{String}})
 
     numCommands = length(commands)
 
-    for i in 2:numCommands
+    i = 2
+    while (i <= numCommands)
         currCommand = lowercase(String(commands[i]))
 
         if (currCommand == "-c")
             c = String(commands[i+1])
             i = i + 1
-            #println("Setting all edges to color ", c)
             continue
 
         elseif (currCommand == "-lw" || currCommand == "-t")
             lw = parse(Float64, commands[i+1])
             i = i + 1
-            #println("Setting all edges to width ", lw)
             continue
 
         elseif (currCommand == "-w")
             w = parse(Float64, commands[i+1])
             i = i + 1
-            #println("Setting all weights to ", w)
             continue
         end
+        i = i + 1
     end
 
     return c, lw, w
@@ -906,18 +905,22 @@ function setEdge(g::Graph, commands::Vector{SubString{String}})
 
     if (c != undef)
         g.edges[edgeInd].color = c
+        println("Setting edge color to ", c)
     end
     
     if (lw != undef)
         g.edges[edgeInd].lineWidth = lw
+        println("Setting edge thickness to ", lw)
     end
 
     if (w != undef)
         g.edges[edgeInd].weight = w
+        println("Setting edge weight to ", w)
     end
 end
 
 function parseSetNodeCommand(commands::Vector{SubString{String}})
+    l = undef
     fc = undef
     lc = undef
     oc = undef
@@ -926,11 +929,15 @@ function parseSetNodeCommand(commands::Vector{SubString{String}})
     # Parse the user node inputs
     numCommands = length(commands)
 
-    for i in 2:numCommands
-
+    i = 2
+    while (i <= numCommands)
         currCommand = lowercase(String(commands[i]))
+        if (currCommand == "-l")
+            l = String(commands[i+1])
+            i = i + 1
+            continue
 
-        if (currCommand == "-fc")
+        elseif (currCommand == "-fc")
             fc = String(commands[i+1])
             i = i + 1
             continue
@@ -955,9 +962,11 @@ function parseSetNodeCommand(commands::Vector{SubString{String}})
             i = i + 1
             continue
         end
+
+        i = i + 1
     end
 
-    return fc, lc, oc, size
+    return l, fc, lc, oc, size
 end
 
 function setNode(g::Graph, commands::Vector{SubString{String}})
@@ -969,7 +978,17 @@ function setNode(g::Graph, commands::Vector{SubString{String}})
         return
     end
 
-    fc, lc, oc, size = parseSetNodeCommand(commands)
+    l, fc, lc, oc, size = parseSetNodeCommand(commands)
+
+    if (l != undef)
+        # Check that there is no node with this label
+        if (findNodeIndexFromLabel(g, l) == -1)
+            println("Setting node label to ", l)
+            g.nodes[nodeInd].label = l        
+        else
+            println("There is already a node with label ", l)
+        end
+    end
 
     if (fc != undef)
         println("Setting node fill color to ", fc)
@@ -991,18 +1010,26 @@ function setNode(g::Graph, commands::Vector{SubString{String}})
         g.nodes[nodeInd].size = size
     end
 
+    coordsChanged = false
+
     i = findIndex(commands, "-x")
     if (i != -1)
-        print("Changing node x from ",g.nodes[nodeInd].xCoord)
+        print("Changing node x from ", g.nodes[nodeInd].xCoord)
         g.nodes[nodeInd].xCoord = parse(Float64, String(commands[i + 1]))
-        println("Setting node x to ", g.nodes[nodeInd].xCoord)
+        println(" to ", g.nodes[nodeInd].xCoord)
+        coordsChanged = true
     end
 
     i = findIndex(commands, "-y")
     if (i != -1)
-        print("Changing node y from ",g.nodes[nodeInd].yCoord)
+        print("Changing node y from ", g.nodes[nodeInd].yCoord)
         g.nodes[nodeInd].yCoord = parse(Float64,String(commands[i + 1]))
-        println(" y to ", g.nodes[nodeInd].yCoord)
+        println(" to ", g.nodes[nodeInd].yCoord)
+        coordsChanged = true
+    end
+
+    if (coordsChanged)
+        setGraphLimits(g)
     end
     
 end
@@ -1010,7 +1037,7 @@ end
 # setAll nodes -fc -lc -oc -size
 function setAllNodes(g::Graph, commands::Vector{SubString{String}})
 
-    fc, lc, oc, size = parseSetNodeCommand(commands)
+    l, fc, lc, oc, size = parseSetNodeCommand(commands)
 
     for node in g.nodes
         if (fc != undef)

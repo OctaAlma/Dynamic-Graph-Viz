@@ -85,7 +85,7 @@ printGetCommands() = println("""
 """)
 
 printSetAllCommand() = println("""
-\tsetall nodes [OPTIONS]                     - Updates all nodes in the graph to match the options provided. Options: s SIZE -oc OUTLINECOLOR -fc FILLCOLOR -lc LABELCOLOR -x xCOORD -y yCOORD
+\tsetall nodes [OPTIONS]                     - Updates all nodes in the graph to match the options provided. Options: -s SIZE -oc OUTLINECOLOR -fc FILLCOLOR -lc LABELCOLOR
 \tsetall edges [OPTIONS]                     - Updates all edges in the graph to match the options provided. Options: -c COLOR -t THICKNESS -w WEIGHT (-lw is an allias for -t)
 """)
 
