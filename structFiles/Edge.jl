@@ -1,5 +1,5 @@
 mutable struct Edge
-    sourceKey::Int64 #access the dictionary to figure out key from lebel.
+    sourceKey::Int64 #access the dictionary to figure out key from label.
     destKey::Int64 #
 
     weight::Float64
@@ -8,7 +8,7 @@ mutable struct Edge
 end
 
 #Edge(weight=1., color="black", sourceKey=-1, destKey=-1) = Edge(weight, color, sourceKey, destKey)
-Edge(;sourceKey=-1, destKey=-1, weight=1., color="black", lineWidth=1.0) = Edge(sourceKey, destKey, weight, color, lineWidth)
+Edge(;sourceKey=-1, destKey=-1, weight=1.0, color="black", lineWidth=1.0) = Edge(sourceKey, destKey, weight, color, lineWidth)
 
 #takes in a vector of edges, and returns a vector of edges
 function createEdgeVectorFromVVI(edges::Vector{Vector{Int64}})

@@ -632,9 +632,26 @@ function getAdjacentNodes(g::Graph, v::Node)
         end
     end
 
-    print("the adjacent nodes are ", adjacentNodes)
-
     return adjacentNodes
+end
+
+# Returns an array of integers containing the node indices of adjacent nodes
+function getAdjacentNodeIndices(g::Graph, vInd::Int64)::Vector{Int64}
+    adj::Vector{Int64} = []
+
+    for edge ∈ g.edges
+        if (edge.sourceKey == vInd && !(edge.destKey in adj))
+            push!(adj, edge.destKey)
+        end
+
+        if (!g.directed)
+            if (edge.destKey == vInd && !(edge.sourceKey in adj))
+                push!(adj, edge.sourceKey)
+            end
+        end
+    end
+
+    return adj
 end
 
 # returns the index of a string in a vector. Returns -1 if not found
