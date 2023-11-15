@@ -20,9 +20,9 @@ Pros:
  - Instant access to a specific graph state
 =#
 
-graphStates::Vector{GraphState} = []
+function runBFS(g::Graph, sLabel::String)::Vector{GraphState}
+    graphStates::Vector{GraphState} = []
 
-function runBFS(g::Graph, sLabel::String)
     sInd = findNodeIndexFromLabel(g, sLabel)
 
     if (sInd == -1)
@@ -56,22 +56,23 @@ function runBFS(g::Graph, sLabel::String)
     while !isempty(Q)
 
         uInd = dequeue!(Q)
-        
+        highlightNode(g, uInd, color="Black")
+
         adjNodes = getAdjacentNodeIndices(g, uInd)
 
         for vInd in adjNodes
-            highlightEdge(g, uInd, vInd, "red")
+            highlightEdge(g, uInd, vInd, color="red")
         end
 
-        desc = "Highlighted the adjacent nodes of node " * g.nodes[uInd].label
+        desc = "Popped the node " * g.nodes[uInd].label * " from the queue and highlighted its neighbors"
         push!(graphStates, GraphState(deepcopy(g), collect(Int64, deepcopy(Q)), desc, deepcopy(nodeLabels), []))
 
         for vInd in adjNodes
-            highlightEdge(g, uInd, vInd, "green")
-            
+            highlightEdge(g, uInd, vInd, color="green")
+
             v = g.nodes[vInd]
 
-            desc = "Visiting node " * v.label * "."
+            desc = "Visiting node " * g.nodes[uInd].label * "'s adjacent node " * v.label * "."
             push!(graphStates, GraphState(deepcopy(g), collect(Int64, deepcopy(Q)), desc, deepcopy(nodeLabels), []))
 
             if v.fillColor == "white"
@@ -85,35 +86,31 @@ function runBFS(g::Graph, sLabel::String)
                 desc = "Updated node " * v.label * "'s color and distance from source."
                 push!(graphStates, GraphState(deepcopy(g), collect(Int64, deepcopy(Q)), desc, deepcopy(nodeLabels), []))
             else
-                desc = "Since node " * v.label * "'s color is not white, we continue."
+                desc = "Since node " * v.label * "'s color is not white, we continue to the next adjacent node."
                 push!(graphStates, GraphState(deepcopy(g), collect(Int64, deepcopy(Q)), desc, deepcopy(nodeLabels), []))
             end
             
             resetEdgeColor(g, uInd, vInd)
         end
-
+        
         g.nodes[uInd].fillColor = "black"
         g.nodes[uInd].labelColor = "white"
         
         desc = "Set node " * g.nodes[uInd].label * " color to black"
         push!(graphStates, GraphState(deepcopy(g), collect(Int64, deepcopy(Q)), desc, deepcopy(nodeLabels), []))
-
+        resetNodeColor(g, uInd)
     end
+
+    return graphStates
 end
 
-# print("Enter filename: ")
-#filename = "../resources/" * readline()
-
-filename = "../resources/test.vac"
+filename = "../resources/testundir.vac"
 G = vacRead(filename)
 source = "1"
 
-runBFS(G, source)
+graphStates = runBFS(G, source)
 
-makegif = true
-iterateThroughGraphState(graphStates, "Queue", 0.2, makegif)
-
-while (true)
-    readline()
-    break
-end
+makegif = false
+dpi = 400
+fps = 2
+iterateThroughGraphState(graphStates, "Queue", makegif, Δt = 0.2, FPS = fps, DPI = dpi)

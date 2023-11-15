@@ -195,16 +195,6 @@ function findNodeIndexFromLabel(g::Graph, label::String)::Int64
     return -1
 end
 
-function findNodeArrayIndexFromLabel(g::Graph, label::String)::Int64
-    for currNode in g.nodes
-        if (currNode.label == label)
-            return currNode.index
-        end
-    end
-
-    return -1
-end
-
 function findNodeLabelFromIndex(g::Graph, index::Int64)::String
     for currNode in g.nodes
         if (currNode.index == index)
@@ -366,7 +356,7 @@ end
 
 # Functions to edit the size of nodes in a graph
 function setNodeSize(g::Graph, label::String, newSize::Int64)
-    nodeInd = findNodeArrayIndexFromLabel(g, label);
+    nodeInd = findNodeIndexFromLabel(g, label);
     g.nodes[nodeInd].size = newSize
 end
 
@@ -908,8 +898,8 @@ end
 
 function setEdge(g::Graph, commands::Vector{SubString{String}})
     # Check if the labels provided exist
-    sourceLabel = commands[3]
-    destLabel = commands[4]
+    sourceLabel = String(commands[3])
+    destLabel = String(commands[4])
 
     edgeInd = findEdgeIndex(g, sourceLabel, destLabel)
 
