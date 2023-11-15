@@ -144,7 +144,6 @@ end
 function makeVizPlot(gs::GraphState, showTicks=false, showLabels=true; DPI=250)::Plots.Plot{Plots.GRBackend} 
     
     graphPlot = plot(dpi=DPI)
-    # plotDataStructure(graphPlot, gs)
     g = gs.G
 
     # Create the delta for the bound padding:
@@ -207,32 +206,72 @@ function makeVizPlot(gs::GraphState, showTicks=false, showLabels=true; DPI=250):
         end
     end
 
+    plotDataStructure(graphPlot, gs)
+
     return graphPlot
 end
 
 rect(w, h, x, y) = Shape(x .+ [0, w, w, 0, 0], y .+ [0, 0, h, h, 0])
 
-function plotDataStructure(p, gs; maxEntries = 6, hlFirstEntry = false)
-
+function plotDataStructure(p, gs; maxEntries = 10, hlFirstEntry = false)
+    
+    maxEntries = min(maxEntries, length(gs.dataStructure))
+    
     # Create and plot the rectangle containing the data structure's elements:
     w = abs(gs.G.xMax - gs.G.xMin)
-    h = abs(gs.G.yMax - gs.G.yMin) * 0.2
+    h = abs(gs.G.yMax - gs.G.yMin) * 0.1
     
-    queueBox = rect(w, h, gs.G.xMin, gs.G.yMin - h)
+    yMaxBox = gs.G.yMin - h
+    yMinBox = gs.G.yMin - 2 * h
+    yMidBox = (yMaxBox + yMinBox) / 2.0
 
+    queueBox = rect(w, h, gs.G.xMin, yMinBox)
     plot!(p, queueBox, fillcolor = "light grey")
+
+    # dividerXs contains an array of equally spaced values, 
+    # which represent where the dividers should be placed on the rectangle
+
+    dividerXs = nothing 
     
-    yMidBox = gs.G.yMin - (h / 2)
-    yMinBox = gs.G.yMin - h
-    yMaxBox = gs.G.yMin
-
-    dividerXs = LinRange(gs.G.xMin, gs.G.xMax, maxEntries)
-    println(collect(dividerXs))
-
-    for i in 1:maxEntries
-        plot!(p, [dividerXs[i]; yMinBox], [dividerXs[i]; yMaxBox], linewidth = 2, color = :black)
+    if (maxEntries <= 1)
+        dividerXs = [gs.G.xMin, gs.G.xMax]
+    else
+        dividerXs = LinRange(gs.G.xMin, gs.G.xMax, maxEntries)
     end
 
-    gs.G.yMin = gs.G.yMin - h
+    # We want to plot a line that goes from the (dividerXs[i], yboxMin) to (dividerXs[i], yboxMax)
+    xyBottom = zeros(length(dividerXs), 2)
+    xyTop = zeros(length(dividerXs), 2)
+    xyMid = []
 
+    # Populate the xy 2-dimmensional vector. The ith entry corresponds to the ith node's (x,y) coordinates    
+    i = 1
+    xPrev = nothing
+    for xi in dividerXs
+        xyBottom[i, :] = [xi, yMinBox]
+        xyTop[i, :] = [xi, yMaxBox]
+
+        if (i > 1)
+            push!(xyMid, (xi + xPrev) / 2.0)
+        end
+
+        xPrev = xi
+        i = i + 1
+    end
+
+    for i in 1:maxEntries
+        plot!(p,[xyBottom[i,1]; xyTop[i,1]], [xyBottom[i,2]; xyTop[i,2]], color = "black", linewidth = 1)
+    end
+
+    if (maxEntries == 0)
+        return
+    end
+
+    plot_font = "computer modern"
+    txtsize = 12
+    i = 1
+    for xi in xyMid
+        annotate!(p, xi, yMidBox, text(gs.dataStructure[i], plot_font, txtsize, color="black"))
+        i = i + 1
+    end
 end

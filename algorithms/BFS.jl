@@ -104,13 +104,13 @@ function runBFS(g::Graph, sLabel::String)::Vector{GraphState}
     return graphStates
 end
 
-filename = "../resources/testundir.vac"
+filename = "../resources/test.vac"
 G = vacRead(filename)
 source = "1"
 
 graphStates = runBFS(G, source)
 
-makegif = false
-dpi = 400
-fps = 2
+makegif = true
+dpi = 300
+fps = 5
 iterateThroughGraphState(graphStates, "Queue", makegif, Δt = 0.2, FPS = fps, DPI = dpi)
