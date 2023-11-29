@@ -22,6 +22,54 @@ end
 Graph(edges=Vector{Edge}(undef,1), nodes=Vector{Node}(undef,1), directed=false, weighted=false, versionNo=1, labelToIndex=Dict(), xMin = Inf, xMax = -Inf , yMin = Inf, yMax = -Inf ) = Graph(edges, nodes, directed, weighted, versionNo,labelToIndex, xMin, xMax, yMin,yMax)
 Graph(;edges=Vector{Edge}(undef,1), nodes=Vector{Node}(undef, 1), directed=false, weighted=false, versionNo=1, labelToIndex=Dict(), xMin = Inf, xMax = -Inf , yMin = Inf, yMax = -Inf  ) = Graph(edges, nodes, directed, weighted, versionNo, labelToIndex, xMin, xMax, yMin,yMax)
 
+function hangingLine(p1, p2; reverseYs::Bool=false, trim::Int64=0)
+    a = (p2[2] - p1[2])/(cosh(p2[1]) - cosh(p1[1]))
+    b = p1[2] - a * cosh(p1[1])
+    x = collect(LinRange(p1[1], p2[1], 100))
+    
+    y::Vector{Float64} = []
+    for xi in x
+        push!(y, a * cosh(xi) + b)
+    end
+
+    if (reverseYs)
+        y = reverse(y)
+        n = length(y)
+        for i in 1:n
+            y[i] = p2[2] + p1[2] - y[i] 
+        end
+    end
+
+    if (trim > 0 && trim < 100)
+        i = 0
+        while (i != trim)
+            deleteat!(x, length(x))
+            deleteat!(y, length(y))
+            i = i + 1
+        end
+    end
+
+    return x, y
+end
+
+# Drawing straight lines with arrows
+# as: arrow head size 0-1 (fraction of arrow length; if <0 : use quiver with default constant size
+# la: arrow alpha transparency 0-1
+function arrow0!(x, y, u, v; as=0.07, lc=:black, la=1)  # by @rafael.guerra
+    if as < 0
+        quiver!([x],[y],quiver=([u],[v]), lc=lc, la=la)  # NB: better use quiver directly in vectorial mode
+    else
+        nuv = sqrt(u^2 + v^2)
+        v1, v2 = [u;v] / nuv,  [-v;u] / nuv
+        v4 = (3*v1 + v2)/3.1623  # sqrt(10) to get unit vector
+        v5 = v4 - 2*(v4'*v2)*v2
+        v4, v5 = as*nuv*v4, as*nuv*v5
+        plot!([x,x+u], [y,y+v], lc=lc,la=la)
+        plot!([x+u,x+u-v5[1]], [y+v,y+v-v5[2]], lc=lc, la=la)
+        plot!([x+u,x+u-v4[1]], [y+v,y+v-v4[2]], lc=lc, la=la)
+    end
+end
+
 # Computes a the Graph's limits as a bounding box of the graph's nodes
 function setGraphLimits(g::Graph)
 
@@ -155,19 +203,63 @@ function makePlot(g::Graph, showTicks::Bool, showLabels::Bool)::Plots.Plot{Plots
         labels[currNode.index] = currNode.label
     end
 
-    # Populate the edges vector and plot the edges
-    for currEdge in g.edges
-        #push!(edges, [currEdge.sourceKey, currEdge.destKey])
+    # Plot the edges by drawing lineArgs
+    if (g.directed)
+        edgesDrawn = []
+        # If G is a directed graph, we have to curve in the case we have (u,v) and (v,u) ∈ E 
+        currEdgeInd = 1
+        for currEdge in g.edges
+            
+            if (currEdgeInd ∈ edgesDrawn)
+                currEdgeInd += 1
+                continue
+            end
+            
+            u = currEdge.sourceKey
+            v = currEdge.destKey
+            
+            # Check if there is a complimentary edge with opposite source and dest:
+            reverseEdgeInd = findEdgeIndex(g, v, u)
+            if (reverseEdgeInd != -1)
+                # Since the reverse edge is in the graph, we must make curves to display both:
+                reverseEdge = g.edges[reverseEdgeInd] 
 
-        u = currEdge.sourceKey
-        v = currEdge.destKey
+                p1 = [g.nodes[v].xCoord, g.nodes[v].yCoord]
+                p2 = [g.nodes[u].xCoord, g.nodes[u].yCoord]
 
-        plot!(graphPlot,[xy[u,1]; xy[v,1]], [xy[u,2]; xy[v,2]],color = currEdge.color, linewidth = currEdge.lineWidth)
-        midx = (xy[u,1] + xy[v,1]) / 2
-        midy = (xy[u,2] + xy[v,2]) / 2
-        
-        if (g.weighted)
-            annotate!(graphPlot, midx, midy, text(currEdge.weight, plot_font, txtsize, color="black"))
+                x, y = hangingLine(p1, p2, trim=10)
+                plot!(graphPlot, x, y, color = currEdge.color, arrow=true, linewidth = currEdge.lineWidth)
+                push!(edgesDrawn, currEdgeInd)
+
+                x, y = hangingLine(p1, p2, reverseYs=true, trim=10)
+                plot!(graphPlot, x, y, color = reverseEdge.color, arrow=true, linewidth = reverseEdge.lineWidth)
+                push!(edgesDrawn, reverseEdgeInd)
+            else
+                # If there is no reverse edge in the graph, plot the edge as a straight line:
+                plot!(graphPlot,[xy[u,1]; xy[v,1]], [xy[u,2]; xy[v,2]],color = currEdge.color, linewidth = currEdge.lineWidth)
+                push!(edgesDrawn, currEdgeInd)
+            end
+            
+            currEdgeInd += 1
+        end
+
+    else
+        # If the graph is undirected, we can simply draw a straight line from source to dest:
+        for currEdge in g.edges
+            #push!(edges, [currEdge.sourceKey, currEdge.destKey])
+
+            u = currEdge.sourceKey
+            v = currEdge.destKey
+
+            plot!(graphPlot,[xy[u,1]; xy[v,1]], [xy[u,2]; xy[v,2]],color = currEdge.color, linewidth = currEdge.lineWidth)
+            midx = (xy[u,1] + xy[v,1]) / 2
+            midy = (xy[u,2] + xy[v,2]) / 2
+            
+            if (g.weighted)
+                midx = (xy[u,1] + xy[v,1]) / 2
+                midy = (xy[u,2] + xy[v,2]) / 2
+                annotate!(graphPlot, midx, midy, text(currEdge.weight, plot_font, txtsize, color="black"))
+            end
         end
     end
     
@@ -215,7 +307,7 @@ function updateGraphEdges(g::Graph, VVI::Vector{Vector{Int64}})
     updateGraphEdges(g, newEdges)
 end 
 
-function updateGraphNodes(g::Graph,nodeVec::Vector{Node})
+function updateGraphNodes(g::Graph, nodeVec::Vector{Node})
     g.nodes = nodeVec
 end
 
@@ -223,10 +315,7 @@ function updateGraphNodes(g::Graph,VVF::Matrix{Float64})
     updateGraphNodes(g, createNodeVectorFromFM(VVF))
 end
 
-function findEdgeIndex(g::Graph, sourceLabel::String, destLabel::String)::Int64
-    sourceKey = findNodeIndexFromLabel(g, sourceLabel)
-    destKey = findNodeIndexFromLabel(g, destLabel)
-    
+function findEdgeIndex(g::Graph, sourceKey::Int64, destKey::Int64)::Int64
     if ((sourceKey != -1) && (destKey != -1))
         index = 1
         if (g.directed == true)
@@ -249,7 +338,13 @@ function findEdgeIndex(g::Graph, sourceLabel::String, destLabel::String)::Int64
     end
 
     return -1
+end
 
+function findEdgeIndex(g::Graph, sourceLabel::String, destLabel::String)::Int64
+    sourceKey = findNodeIndexFromLabel(g, sourceLabel)
+    destKey = findNodeIndexFromLabel(g, destLabel)
+    
+    return findEdgeIndex(g, sourceKey, destKey)
 end
 
 """

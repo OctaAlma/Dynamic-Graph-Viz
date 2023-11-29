@@ -7,7 +7,6 @@ mutable struct Edge
     lineWidth::Float64
 end
 
-#Edge(weight=1., color="black", sourceKey=-1, destKey=-1) = Edge(weight, color, sourceKey, destKey)
 Edge(;sourceKey=-1, destKey=-1, weight=1.0, color="black", lineWidth=1.0) = Edge(sourceKey, destKey, weight, color, lineWidth)
 
 #takes in a vector of edges, and returns a vector of edges

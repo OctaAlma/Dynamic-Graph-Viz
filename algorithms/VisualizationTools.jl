@@ -54,224 +54,66 @@ function iterateThroughGraphState(graphStates::Vector{GraphState}, dsName::Strin
     end
 end
 
-function highlightNode(g::Graph, nodeInd::Int64; color="red")
+function setNodeAppearance(g::Graph, nodeInd::Int64; size = -1, oc::String = "", fc::String = "", lc::String = "")
+    if (nodeInd < 1 || nodeInd > length(g.nodes))
+        println("Invalid node index: ", nodeInd)
+        return
+    end
     
-    if (nodeInd < 1 || nodeInd > length(g.nodes))
-        println("Invalid node index: ", nodeInd)
-        return
+    if (size != -1)
+        g.nodes[nodeInd].size = size
     end
-
-    g.nodes[nodeInd].outlineColor = color
-
+    
+    if (oc != "")
+        g.nodes[nodeInd].outlineColor = oc
+    end
+    
+    if (fc != "")
+        g.nodes[nodeInd].fillColor = fc
+    end
+    
+    if (lc != "")
+        g.nodes[nodeInd].labelColor = lc
+    end
 end
 
-function resetNodeColor(g::Graph, nodeInd::Int64)
-
-    if (nodeInd < 1 || nodeInd > length(g.nodes))
-        println("Invalid node index: ", nodeInd)
-        return
-    end
-
-    g.nodes[nodeInd].outlineColor = "black"
-end
-
-function highlightNode(g::Graph, nodeLabel::String)
+function setNodeAppearance(g::Graph, nodeLabel::String; size = -1, oc::String = "", fc::String = "", lc::String = "")
     nodeInd = findNodeIndexFromLabel(g, nodeLabel)
+    setNodeAppearance(g, nodeInd, size = size, oc = oc, fc = fc, lc = lc)
+end
 
-    if (nodeInd == -1)
-        println("Could not find node with label ", nodeLabel)
-    else
-        highlightNode(g, nodeInd)
+function setEdgeAppearance(g::Graph, edgeInd::Int64; color::String = "", thickness::Float64 = -1.0)
+    if (edgeInd == -1 || edgeInd > length(g.edges))
+        println("Could not find an edge with source index ", sourceInd, " and destination index ", destInd)
+        return
+    end
+
+    if (color != "")
+        g.edges[edgeInd].color = color
+    end
+
+    if (thickness != -1.0)
+        g.edges[edgeInd].lineWidth = thickness
     end
 end
 
-function highlightEdge(g::Graph, sourceLabel::String, destLabel::String; color::String)
+function setEdgeAppearance(g::Graph, sourceInd::Int64, destInd::Int64; color::String = "", thickness::Float64 = -1.0)
+    edgeInd = findEdgeIndex(g, sourceInd, destInd)
+    if (edgeInd == -1)
+        println("Could not find an edge with source index ", sourceInd, " and destination index ", destInd)
+        return
+    end
+
+    setEdgeAppearance(g, edgeInd, color=color, thickness=thickness)
+end
+
+function setEdgeAppearance(g::Graph, sourceLabel::String, destLabel::String; color::String, thickness::Float64 = -1.0)
     edgeInd = findEdgeIndex(g, sourceLabel, destLabel)
 
     if (edgeInd == -1)
-        println("There is no edge between ", sourceLabel, " and ", destLabel)
-    end
-
-    g.edges[edgeInd].color = color
-    g.edges[edgeInd].lineWidth = 4
-end
-
-function highlightEdge(g::Graph, sourceInd::Int64, destInd::Int64; color::String)
-    sLabel = findNodeLabelFromIndex(g, sourceInd)
-    dLabel = findNodeLabelFromIndex(g, destInd)
-
-    if (sLabel == "")
-        println("Invalid source label passed into highlightEdge ", sLabel)
+        println("Could not find an edge with source label ", sourceLabel, " and destination label ", destLabel)
         return
     end
 
-    if (dLabel == "")
-        println("Invalid destination label passed into highlightEdge ", dLabel)
-        return
-    end
-
-    highlightEdge(g, sLabel, dLabel, color=color)
-end
-
-function resetEdgeColor(g::Graph, sourceLabel::String, destLabel::String)
-    edgeInd = findEdgeIndex(g, sourceLabel, destLabel)
-
-    if (edgeInd == -1)
-        println("There is no edge between ", sourceLabel, " and ", destLabel)
-    end
-
-    g.edges[edgeInd].color = "black"
-    g.edges[edgeInd].lineWidth = 1.0
-end
-
-function resetEdgeColor(g::Graph, sourceInd::Int64, destInd::Int64)
-    sLabel = findNodeLabelFromIndex(g, sourceInd)
-    dLabel = findNodeLabelFromIndex(g, destInd)
-
-    if (sLabel == "")
-        println("Invalid source label passed into highlightEdge ", sLabel)
-        return
-    end
-
-    if (dLabel == "")
-        println("Invalid destination label passed into highlightEdge ", dLabel)
-        return
-    end
-
-    resetEdgeColor(g, sLabel, dLabel)
-end
-
-function makeVizPlot(gs::GraphState, showTicks=false, showLabels=true; DPI=250)::Plots.Plot{Plots.GRBackend} 
-    
-    graphPlot = plot(dpi=DPI)
-    g = gs.G
-
-    # Create the delta for the bound padding:
-    k = 0.25
-    deltaX = (g.xMax - g.xMin) * k
-    deltaY = (g.yMax - g.yMin) * k
-    
-    # Setup the graph Plot by setting its limits and other attributes
-    plot!(graphPlot, xlim = [g.xMin - deltaX,g.xMax + deltaX], ylim = [g.yMin - deltaY, g.yMax + deltaY])
-    plot!(graphPlot, axis = showTicks, xticks = showTicks, yticks = showTicks) 
-    plot!(graphPlot, grid = false, legend = false)
-
-    if isempty(g.nodes)
-        return graphPlot
-    end
-
-    n = length(g.nodes)
-    xy = zeros(n, 2)
-    plot_font = "computer modern"
-    txtsize = 6
-
-    # Populate the xy 2-dimmensional vector. The ith entry corresponds to the ith node's (x,y) coordinates    
-    for currNode in g.nodes
-        xy[currNode.index, :] = [currNode.xCoord, currNode.yCoord]
-    end
-
-    # Populate the edges vector and plot the edges
-    for currEdge in g.edges
-
-        u = currEdge.sourceKey
-        v = currEdge.destKey
-        
-        plot!(graphPlot,[xy[u,1]; xy[v,1]], [xy[u,2]; xy[v,2]], color = currEdge.color, linewidth = currEdge.lineWidth)
-        midx = (xy[u,1] + xy[v,1]) / 2
-        midy = (xy[u,2] + xy[v,2]) / 2
-        
-        # Display the edge weight if the graph is weighted
-        if (g.weighted)
-            annotate!(graphPlot, midx, midy, text(currEdge.weight, plot_font, txtsize, color="black"))
-        end
-    end
-    
-    #Plot the xy circles and node labels
-    i = 1
-    for currNode in g.nodes
-        xyForNode = zeros(1, 2)
-        xyForNode[1,:] = [currNode.xCoord, currNode.yCoord]
-        
-        outlineThickness = 1.0
-        if (currNode.outlineColor == "Black")
-            outlineThickness = 3.0
-        end
-
-        scatter!(graphPlot, xyForNode[:,1], xyForNode[:,2], markersize = currNode.size * 2, color = currNode.fillColor, markerstrokecolor = currNode.outlineColor, markerstrokewidth=outlineThickness)
-        
-        if (showLabels == true)
-            fullLabel = currNode.label * "\n" * gs.nodeLabels[i]
-            annotate!(graphPlot, currNode.xCoord, currNode.yCoord, text(fullLabel, plot_font, txtsize, color=currNode.labelColor))
-            i = i + 1
-        end
-    end
-
-    plotDataStructure(graphPlot, gs)
-
-    return graphPlot
-end
-
-rect(w, h, x, y) = Shape(x .+ [0, w, w, 0, 0], y .+ [0, 0, h, h, 0])
-
-function plotDataStructure(p, gs; maxEntries = 10, hlFirstEntry = false)
-    
-    maxEntries = min(maxEntries, length(gs.dataStructure))
-    
-    # Create and plot the rectangle containing the data structure's elements:
-    w = abs(gs.G.xMax - gs.G.xMin)
-    h = abs(gs.G.yMax - gs.G.yMin) * 0.1
-    
-    yMaxBox = gs.G.yMin - h
-    yMinBox = gs.G.yMin - 2 * h
-    yMidBox = (yMaxBox + yMinBox) / 2.0
-
-    queueBox = rect(w, h, gs.G.xMin, yMinBox)
-    plot!(p, queueBox, fillcolor = "light grey")
-
-    # dividerXs contains an array of equally spaced values, 
-    # which represent where the dividers should be placed on the rectangle
-
-    dividerXs = nothing 
-    
-    if (maxEntries <= 1)
-        dividerXs = [gs.G.xMin, gs.G.xMax]
-    else
-        dividerXs = LinRange(gs.G.xMin, gs.G.xMax, maxEntries)
-    end
-
-    # We want to plot a line that goes from the (dividerXs[i], yboxMin) to (dividerXs[i], yboxMax)
-    xyBottom = zeros(length(dividerXs), 2)
-    xyTop = zeros(length(dividerXs), 2)
-    xyMid = []
-
-    # Populate the xy 2-dimmensional vector. The ith entry corresponds to the ith node's (x,y) coordinates    
-    i = 1
-    xPrev = nothing
-    for xi in dividerXs
-        xyBottom[i, :] = [xi, yMinBox]
-        xyTop[i, :] = [xi, yMaxBox]
-
-        if (i > 1)
-            push!(xyMid, (xi + xPrev) / 2.0)
-        end
-
-        xPrev = xi
-        i = i + 1
-    end
-
-    for i in 1:maxEntries
-        plot!(p,[xyBottom[i,1]; xyTop[i,1]], [xyBottom[i,2]; xyTop[i,2]], color = "black", linewidth = 1)
-    end
-
-    if (maxEntries == 0)
-        return
-    end
-
-    plot_font = "computer modern"
-    txtsize = 12
-    i = 1
-    for xi in xyMid
-        annotate!(p, xi, yMidBox, text(gs.dataStructure[i], plot_font, txtsize, color="black"))
-        i = i + 1
-    end
+    setEdgeAppearance(g, edgeInd, color=color, thickness=thickness)
 end
