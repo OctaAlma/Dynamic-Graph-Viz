@@ -147,136 +147,6 @@ function applyView(g::Graph, label::String, radius::Float64)
     end
 end
 
-# This function returns a plot object containing the visualization of the graph object g
-function makePlot(g::Graph, showTicks::Bool, showLabels::Bool)::Plots.Plot{Plots.GRBackend} 
-    graphPlot = plot()
-    limit = length(g.nodes)*2
-    k = 0.25
-    #     plot!(graphPlot, xlim = [-10,10], ylim = [-10,10])
-
-    deltaX = (g.xMax - g.xMin) * k
-    deltaY = (g.yMax - g.yMin) * k
-    
-    plot!(graphPlot, xlim = [g.xMin - deltaX,g.xMax + deltaX], ylim = [g.yMin - deltaY, g.yMax + deltaY])
-    #plot!(graphPlot, aspect_ratio=:equal)
-    plot!(graphPlot, grid = false, legend = false)
-    plot!(graphPlot, axis = showTicks, xticks = showTicks, yticks = showTicks) 
-
-    if isempty(g.nodes)
-        return graphPlot
-    end
-    
-    if !isassigned(g.nodes,1)
-        empty!(g.nodes)
-        empty!(g.edges)
-        return graphPlot
-    end
-
-    n = length(g.nodes)
-    xy = zeros(n, 2)
-    edges = Vector{Vector{Int64}}()
-    labels = Vector{String}()
-    plot_font = "computer modern"
-    txtsize = 12
-    
-    for i in 1:n
-        push!(labels, "")
-    end
-
-    # plot!(graphPlot, xlim = [-10,10], ylim = [-10,10])
-    plot!(graphPlot, xlim = [g.xMin - deltaX,g.xMax + deltaX], ylim = [g.yMin - deltaY, g.yMax + deltaY])
-    #plot!(graphPlot, aspect_ratio=:equal)
-    plot!(graphPlot, grid = showTicks, legend = false)
-    plot!(graphPlot, axis = showTicks, xticks = showTicks, yticks = showTicks) 
-
-    # Populate the xy 2-dimmensional vector
-    allZeroes = true # Boolean that checks if the xy coordinates are all 0s
-    
-    for currNode in g.nodes
-        # NOTE: we use the index of the node to identify it
-        
-        if (!allZeroes) || (currNode.xCoord != 0) || (currNode.yCoord != 0)
-            allZeroes = false
-        end
-
-        xy[currNode.index, :] = [currNode.xCoord, currNode.yCoord]
-        labels[currNode.index] = currNode.label
-    end
-
-    # Plot the edges by drawing lineArgs
-    if (g.directed)
-        edgesDrawn = []
-        # If G is a directed graph, we have to curve in the case we have (u,v) and (v,u) ∈ E 
-        currEdgeInd = 1
-        for currEdge in g.edges
-            
-            if (currEdgeInd ∈ edgesDrawn)
-                currEdgeInd += 1
-                continue
-            end
-            
-            u = currEdge.sourceKey
-            v = currEdge.destKey
-            
-            # Check if there is a complimentary edge with opposite source and dest:
-            reverseEdgeInd = findEdgeIndex(g, v, u)
-            if (reverseEdgeInd != -1)
-                # Since the reverse edge is in the graph, we must make curves to display both:
-                reverseEdge = g.edges[reverseEdgeInd] 
-
-                p1 = [g.nodes[v].xCoord, g.nodes[v].yCoord]
-                p2 = [g.nodes[u].xCoord, g.nodes[u].yCoord]
-
-                x, y = hangingLine(p1, p2, trim=10)
-                plot!(graphPlot, x, y, color = currEdge.color, arrow=true, linewidth = currEdge.lineWidth)
-                push!(edgesDrawn, currEdgeInd)
-
-                x, y = hangingLine(p1, p2, reverseYs=true, trim=10)
-                plot!(graphPlot, x, y, color = reverseEdge.color, arrow=true, linewidth = reverseEdge.lineWidth)
-                push!(edgesDrawn, reverseEdgeInd)
-            else
-                # If there is no reverse edge in the graph, plot the edge as a straight line:
-                plot!(graphPlot,[xy[u,1]; xy[v,1]], [xy[u,2]; xy[v,2]],color = currEdge.color, linewidth = currEdge.lineWidth)
-                push!(edgesDrawn, currEdgeInd)
-            end
-            
-            currEdgeInd += 1
-        end
-
-    else
-        # If the graph is undirected, we can simply draw a straight line from source to dest:
-        for currEdge in g.edges
-            #push!(edges, [currEdge.sourceKey, currEdge.destKey])
-
-            u = currEdge.sourceKey
-            v = currEdge.destKey
-
-            plot!(graphPlot,[xy[u,1]; xy[v,1]], [xy[u,2]; xy[v,2]],color = currEdge.color, linewidth = currEdge.lineWidth)
-            midx = (xy[u,1] + xy[v,1]) / 2
-            midy = (xy[u,2] + xy[v,2]) / 2
-            
-            if (g.weighted)
-                midx = (xy[u,1] + xy[v,1]) / 2
-                midy = (xy[u,2] + xy[v,2]) / 2
-                annotate!(graphPlot, midx, midy, text(currEdge.weight, plot_font, txtsize, color="black"))
-            end
-        end
-    end
-    
-    #Plot the xy circles and node labels
-    for currNode in g.nodes
-        xyForNode = zeros(1, 2)
-        xyForNode[1,:] = [currNode.xCoord, currNode.yCoord]
-        scatter!(graphPlot, xyForNode[:,1], xyForNode[:,2], markersize = currNode.size, color = currNode.fillColor, markerstrokecolor = currNode.outlineColor)
-        
-        if (showLabels == true)
-            annotate!(graphPlot, currNode.xCoord, currNode.yCoord, text(currNode.label, plot_font, txtsize, color=currNode.labelColor))
-        end
-    end
-
-    return graphPlot
-end
-
 function findNodeIndexFromLabel(g::Graph, label::String)::Int64
     for currNode in g.nodes
         if (currNode.label == label)
@@ -345,6 +215,24 @@ function findEdgeIndex(g::Graph, sourceLabel::String, destLabel::String)::Int64
     destKey = findNodeIndexFromLabel(g, destLabel)
     
     return findEdgeIndex(g, sourceKey, destKey)
+end
+
+function getEdgeWeight(g::Graph, sourceKey::Int64, destKey::Int64)::Float64
+    if ((sourceKey != -1) && (destKey != -1))
+        eInd = findEdgeIndex(g, sourceKey, destKey)
+        if (eInd != -1)
+            return g.edges[eInd].weight
+        end
+    end
+
+    return Inf
+end
+
+function getEdgeWeight(g::Graph, sourceLabel::String, destLabel::String)::Float64
+    sourceKey = findNodeIndexFromLabel(g, sourceLabel)
+    destKey = findNodeIndexFromLabel(g, destLabel)
+    
+    return getEdgeWeight(g, sourceKey, destKey)
 end
 
 """
@@ -690,9 +578,9 @@ function getCoolingFactor(t)::Float64
 end
 
 # Returns a COPY of the Node in the graph with the specified index/key
-function getNode(g::Graph, key::Int64)
+function getNode(g::Graph, key::Int64)::Node
     for node ∈ g.nodes
-        if (node.key == key)
+        if (node.index == key)
             return Node(label=node.label, index=node.index, size=node.size, outlineColor=node.outlineColor, fillColor=node.fillColor, labelColor=node.labelColor, xCoord=node.xCoord, yCoord=node.yCoord)
         end
     end

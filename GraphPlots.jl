@@ -1,5 +1,5 @@
-include("../structFiles/Graph.jl")
-include("../loaders/vacLoader.jl")
+include("./structFiles/Graph.jl")
+include("./loaders/vacLoader.jl")
 
 function initPlot(p, g, k, showTicks)
 
@@ -7,7 +7,8 @@ function initPlot(p, g, k, showTicks)
     deltaY = (g.yMax - g.yMin) * k
 
     plot!(p, xlim = [g.xMin - deltaX,g.xMax + deltaX], ylim = [g.yMin - deltaY, g.yMax + deltaY])
-    plot!(p, grid = showTicks, legend = false)
+    plot!(p, grid = showTicks, legend = false, aspect_ratio =:none)
+
     plot!(p, axis = showTicks, xticks = showTicks, yticks = showTicks) 
 end
 
@@ -19,7 +20,7 @@ function plotNodes(p, g; showLabels = true, plot_font = "computer modern", txtsi
         scatter!(p, xyForNode[:,1], xyForNode[:,2], markersize = currNode.size, color = currNode.fillColor, markerstrokecolor = currNode.outlineColor)
         
         if (showLabels == true)
-            annotate!(p, currNode.xCoord, currNode.yCoord, text(currNode.label, plot_font, txtsize, color=currNode.labelColor))
+            annotate!(p, currNode.xCoord, currNode.yCoord, text(currNode.label, plot_font, txtsize, color = currNode.labelColor))
         end
     end
 end
@@ -27,8 +28,6 @@ end
 function plotUndirectedEdges(p, g, xy; plot_font = "computer modern", txtsize = 12)
     # If the graph is undirected, we can simply draw a straight line from source to dest:
     for currEdge in g.edges
-        #push!(edges, [currEdge.sourceKey, currEdge.destKey])
-
         u = currEdge.sourceKey
         v = currEdge.destKey
 
@@ -42,10 +41,29 @@ function plotUndirectedEdges(p, g, xy; plot_font = "computer modern", txtsize = 
     end
 end
 
+function offsetFactor(g, vSize)
+    xLen = abs(g.xMax - g.xMin)
+    yLen = abs(g.yMax - g.yMin)
+
+    factor = (vSize) / min(xLen, yLen)
+    # println(factor)
+
+    return factor
+end
+
+function getOffset(g, vSize)
+    xLen = abs(g.xMax - g.xMin)
+    yLen = abs(g.yMax - g.yMin)
+
+    aspect = xLen / yLen
+
+    return [(vSize) / xLen, (vSize) / yLen] * aspect
+end
+
 function plotDirectedEdges2(p, g, xy; plot_font = "computer modern", txtsize = 12, arrowSize = 0.8)
     # Vector to keep track of all edges that have been drawn
     edgesDrawn::Vector{Tuple{Int64, Int64}} = []
-    GR.setarrowsize(arrowSize)
+    # GR.setarrowsize(arrowSize)
 
     for i in eachindex(g.edges)
         currEdge = g.edges[i]
@@ -65,9 +83,13 @@ function plotDirectedEdges2(p, g, xy; plot_font = "computer modern", txtsize = 1
         uvDir = [g.nodes[v].xCoord, g.nodes[v].yCoord] - [g.nodes[u].xCoord, g.nodes[u].yCoord]
         uvNormDir = uvDir / √(uvDir[1]^2 + uvDir[2]^2) # The normalized direction from nodes u to v
         invNormDir = [-uvNormDir[2], uvNormDir[1]]
+        uSize = g.nodes[u].size
+        vSize = g.nodes[v].size
 
         if (invertedEdgeInd == -1)
-            offset = uvNormDir * 0.5
+            # offset = uvNormDir * 0.5
+            # offset = uvNormDir * offsetFactor(g, vSize)
+            offset = uvNormDir .* getOffset(g, vSize)
 
             # Plot the edge from node u to node v
             xCoords = [xy[u,1]; xy[v,1] - offset[1]]
@@ -76,14 +98,17 @@ function plotDirectedEdges2(p, g, xy; plot_font = "computer modern", txtsize = 1
         else
             offset = uvNormDir * 0.4
             sideOffset = invNormDir * 0.3
+            # offset = uvNormDir * offsetFactor(g, vSize)
+            offset = uvNormDir .* getOffset(g,vSize)
 
             # Plot the edge from node u to node v
             xCoords = [xy[u,1] + sideOffset[1]; xy[v,1] + sideOffset[1] - offset[1]]
             yCoords = [xy[u,2] + sideOffset[2]; xy[v,2] + sideOffset[2] - offset[2]]
-
             plot!(p, xCoords, yCoords, color = currEdge.color, linewidth = currEdge.lineWidth, arrow = (:closed, 1.0))
             
             invEdge = g.edges[invertedEdgeInd]
+            offset = uvNormDir * offsetFactor(g, uSize)
+
             # Plot the edge from node v to node u
             xCoords = [xy[v,1] - sideOffset[1]; xy[u,1] - sideOffset[1] + offset[1]]
             yCoords = [xy[v,2] - sideOffset[2]; xy[u,2] - sideOffset[2] + offset[2]]
@@ -102,7 +127,8 @@ function plotDirectedEdges2(p, g, xy; plot_font = "computer modern", txtsize = 1
 end
 
 # This function returns a plot object containing the visualization of the graph object g
-function plotGraph(g::Graph, showTicks::Bool, showLabels::Bool; plot_font = "computer modern", txtsize = 12)::Plots.Plot{Plots.GRBackend} 
+function makePlot(g::Graph, showTicks::Bool, showLabels::Bool; plot_font = "computer modern", txtsize = 12)::Plots.Plot{Plots.GRBackend} 
+    gr()
     graphPlot = plot()
 
     initPlot(graphPlot, g, 0.25, showTicks)
@@ -139,12 +165,7 @@ function plotGraph(g::Graph, showTicks::Bool, showLabels::Bool; plot_font = "com
         plotUndirectedEdges(graphPlot, g, xy, plot_font = plot_font, txtsize = txtsize)
     end
 
-    plotNodes(graphPlot, g, showLabels = true, plot_font = plot_font, txtsize = txtsize)
+    plotNodes(graphPlot, g, showLabels = showLabels, plot_font = plot_font, txtsize = txtsize)
 
     return graphPlot
 end
-
-filename = "../resources/testDir.vac"
-G = vacRead(filename)
-
-plotGraph(G, false, false)

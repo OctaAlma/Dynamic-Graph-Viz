@@ -1,3 +1,4 @@
+include("GraphPlots.jl")
 include("./loaders/vacLoader.jl")
 include("./loaders/mtxLoader.jl")
 include("./loaders/txtLoader.jl")

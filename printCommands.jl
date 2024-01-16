@@ -1,8 +1,8 @@
 # There are 4 categories: load/save Graph, edit Graph, edit Coords, display
 
 printLoadCommands() = println("""
-\tload FILENAME.txt                          - Loads a Graph from an .mtx file containing edge connections
-\tload FILENAME.mxt                          - Loads a Graph from a .txt file containing edge connections
+\tload FILENAME.txt                          - Loads a Graph from an .txt file containing edge connections
+\tload FILENAME.mxt                          - Loads a Graph from a .mtx file containing edge connections
 \tload FILENAME.mat                          - Loads a Graph from a .mat file containing edge connections and (optionally) node coordinates
 \tload FILENAME.vac                          - Loads a Graph from a .vac file
 """)
@@ -12,7 +12,7 @@ printLoadxy() = println("""
 """)
 
 printSaveCommands() = println("""
-\tsaveas FILENAME.pdf                        - Saves the current graph to a PDF file"
+\tsaveas FILENAME.pdf                        - Saves the current graph to a PDF file
 \tsaveas FILENAME.png                        - Saves the current graph to an image PNG file
 \tsaveas FILENAME.txt                        - Saves the current graph edge information to a .txt file
 \tsaveas FILENAME.mtx                        - Saves the current graph edge information to a .mtx file
@@ -47,8 +47,8 @@ printviewCommands() = println("""
 printmoveCommands() = println("""
 \tmove NODE_LABEL AXIS UNITS                 - Moves the node specified by NODE_LABEL in the AXIS direction by UNITS units
 \tmove node NODE_LABEL AXIS UNITS            - Alias of move command above
-\tmove NODE_LABEL to XCoord Ycoord           - Moves the node specified by NODE_LABEL to the position XCoord,Ycoord. One of XCoord and YCoord may be left blank to preserve that coordinate.
-\tmove node NODE_LABEL to XCoord Ycoord      - Alias of move command above
+\tmove NODE_LABEL to xCoord yCoord           - Moves the node specified by NODE_LABEL to the position XCoord,Ycoord. xCoord or yCoord may be left blank to preserve that coordinate.
+\tmove node NODE_LABEL to xCoord yCoord      - Alias of move command above
 """)
 
 printAddCommands() = println("""

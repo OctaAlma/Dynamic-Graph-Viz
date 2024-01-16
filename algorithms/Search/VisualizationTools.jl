@@ -1,4 +1,5 @@
-include("../structFiles/Graph.jl")
+include("../../structFiles/Graph.jl")
+gr()
 
 mutable struct GraphState
     G::Graph

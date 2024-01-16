@@ -1,6 +1,7 @@
 using DataStructures
+include("../../GraphPlots.jl")
 include("./VisualizationTools.jl")
-include("../loaders/vacLoader.jl")
+include("../../loaders/vacLoader.jl")
 
 #= 
 We can store graph states in a sparse matrix that keeps track of changes in the label
@@ -21,19 +22,11 @@ Pros:
 =#
 
 function makeVizPlot(gs::GraphState, showTicks=false, showLabels=true; DPI=250)::Plots.Plot{Plots.GRBackend} 
-    
-    graphPlot = plot(dpi=DPI)
+    gr()
+    graphPlot = plot(dpi = DPI)
     g = gs.G
-
-    # Create the delta for the bound padding:
     k = 0.25
-    deltaX = (g.xMax - g.xMin) * k
-    deltaY = (g.yMax - g.yMin) * k
-    
-    # Setup the graph Plot by setting its limits and other attributes
-    plot!(graphPlot, xlim = [g.xMin - deltaX,g.xMax + deltaX], ylim = [g.yMin - deltaY, g.yMax + deltaY])
-    plot!(graphPlot, axis = showTicks, xticks = showTicks, yticks = showTicks) 
-    plot!(graphPlot, grid = false, legend = false)
+    initPlot(graphPlot, g, k, showTicks)
 
     if isempty(g.nodes)
         return graphPlot
@@ -44,25 +37,18 @@ function makeVizPlot(gs::GraphState, showTicks=false, showLabels=true; DPI=250):
     plot_font = "computer modern"
     txtsize = 6
 
+    plotDataStructure(graphPlot, gs)
+
     # Populate the xy 2-dimmensional vector. The ith entry corresponds to the ith node's (x,y) coordinates    
     for currNode in g.nodes
         xy[currNode.index, :] = [currNode.xCoord, currNode.yCoord]
     end
 
     # Populate the edges vector and plot the edges
-    for currEdge in g.edges
-
-        u = currEdge.sourceKey
-        v = currEdge.destKey
-        
-        plot!(graphPlot,[xy[u,1]; xy[v,1]], [xy[u,2]; xy[v,2]], color = currEdge.color, linewidth = currEdge.lineWidth)
-        midx = (xy[u,1] + xy[v,1]) / 2
-        midy = (xy[u,2] + xy[v,2]) / 2
-        
-        # Display the edge weight if the graph is weighted
-        if (g.weighted)
-            annotate!(graphPlot, midx, midy, text(currEdge.weight, plot_font, txtsize, color="black"))
-        end
+    if (g.directed)
+        plotDirectedEdges2(graphPlot, g, xy)
+    else
+        plotUndirectedEdges(graphPlot, g, xy)
     end
     
     #Plot the xy circles and node labels
@@ -76,7 +62,9 @@ function makeVizPlot(gs::GraphState, showTicks=false, showLabels=true; DPI=250):
             outlineThickness = 3.0
         end
 
-        scatter!(graphPlot, xyForNode[:,1], xyForNode[:,2], markersize = currNode.size * 2, color = currNode.fillColor, markerstrokecolor = currNode.outlineColor, markerstrokewidth=outlineThickness)
+        nodeSize = 25
+
+        scatter!(graphPlot, xyForNode[:,1], xyForNode[:,2], markersize = nodeSize, color = currNode.fillColor, markerstrokecolor = currNode.outlineColor, markerstrokewidth=outlineThickness)
         
         if (showLabels == true)
             fullLabel = currNode.label * "\n" * gs.nodeLabels[i]
@@ -84,8 +72,6 @@ function makeVizPlot(gs::GraphState, showTicks=false, showLabels=true; DPI=250):
             i = i + 1
         end
     end
-
-    plotDataStructure(graphPlot, gs)
 
     return graphPlot
 end
@@ -178,6 +164,7 @@ function runBFS(g::Graph, sLabel::String)::Vector{GraphState}
 
     # Setup the attributes vector and the node coloring
     for v in g.nodes
+        v.size = 25
         v.fillColor = "white"
         push!(attributes, (-1, -1))
         push!(nodeLabels, "d = ∞\nπ = NIL")
@@ -240,7 +227,7 @@ function runBFS(g::Graph, sLabel::String)::Vector{GraphState}
 
                 enqueue!(Q, vInd)
 
-                desc = "Updated node " * v.label * "'s color and distance from source."
+                desc = "Updated node " * v.label * "'s color to gray and distance from source."
                 push!(graphStates, GraphState(deepcopy(g), collect(Int64, deepcopy(Q)), desc, deepcopy(nodeLabels), []))
             else
                 # If node v is not white, then we simply restore the color of the edge connecting u to v
@@ -267,13 +254,13 @@ function runBFS(g::Graph, sLabel::String)::Vector{GraphState}
     return graphStates
 end
 
-filename = "../resources/test.vac"
+filename = "../resources/testDir.vac"
 G = vacRead(filename)
 source = "1"
 
 graphStates = runBFS(G, source)
 
-makegif = true
-dpi = 300
+makegif = false
+dpi = 400
 fps = 10
 iterateThroughGraphState(graphStates, "Queue", makegif, Δt = 0.2, FPS = fps, DPI = dpi)
