@@ -1,6 +1,6 @@
 using DataStructures
 include("../../GraphPlots.jl")
-include(".././VisualizationTools.jl")
+include("../Search/VisualizationTools.jl")
 include("../../loaders/vacLoader.jl")
 
 #=
