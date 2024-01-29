@@ -1,15 +1,6 @@
 include("./structFiles/GraphState.jl")
 include("./GraphPlots.jl")
 
-#=
-    - preview - Allows the user to view the states in the order that they appear in the visualization
-    - copy i j - Creates a copy of state at index i and inserts it at the index j.
-    - duplicate i Opt: n - Creates a duplicate of state i and places it in the index i + 1. If the option n is passed, it will create n duplicates of i and place them in the indices i + 1 … i + n.
-    - swap i j - The state at index i is replaced with the state at index j and vice-versa.
-    - move i j - Removes state i from its current position and inserts it at state j.
-    - delete i - Deletes a specific state from the visualization
-=#
-
 function inRange(i, min, max)::Bool
     return (i >= min) && (i <= max)
 end
@@ -26,7 +17,7 @@ end
 function vizInterface(G::Graph, showTicks::Bool, showLabels::Bool, font::String, fontSize::Int)
     animation::Vector{GraphState} = []
     
-    printstyled("Visualization Creator\n", color = :blue)
+    printstyled("\n-----VISUALIZATION EDITOR-----\n", color = :blue)
 
     push!(animation, GraphState(deepcopy(G), "", []))
     currState = animation[1]
@@ -42,7 +33,6 @@ function vizInterface(G::Graph, showTicks::Bool, showLabels::Bool, font::String,
             commands = split(input, " ")
             command = lowercase(commands[1])
             numCommands = length(commands)
-            
 
             if command == "help"
             
@@ -121,7 +111,6 @@ function vizInterface(G::Graph, showTicks::Bool, showLabels::Bool, font::String,
 
                 preview(animation, start = start, finish = finish, interval = interval,
                 showTicks = showTicks, showLabels = showLabels, plot_font = "computer modern", txtsize = 12)
-
                 
 
             elseif command == "delete" || command == "del"
@@ -138,6 +127,8 @@ function vizInterface(G::Graph, showTicks::Bool, showLabels::Bool, font::String,
             
             elseif command == "copy" || command == "cp"
 
+                # We can make it so that it saves a graph into a buffer
+                # then we can "paste" it later on
             
             elseif command == "duplicate" || command == "dup"
                 # duplicate i -dest j -n x
@@ -199,9 +190,18 @@ function vizInterface(G::Graph, showTicks::Bool, showLabels::Bool, font::String,
                 i = parse(Int64, commands[2])
                 j = parse(Int64, commands[3])
 
-                if (inRange(i, 1, numStates + 1) && inRange(j, 1, numStates + 1))
-                    insert!(animation, j, animation[i + 1])
-                    deleteat!(animation, i)
+                if (inRange(i, 1, numStates) && inRange(j, 1, numStates))
+                    
+                    if (i > j)
+                        insert!(animation, j, animation[i])
+                        deleteat!(animation, i + 1)
+                    else
+                        insert!(animation, j + 1, animation[i])
+                        deleteat!(animation, i)
+                    end
+
+                    currState = animation[currStateInd]
+
                     println("Graph state ", i, " has been successfully moved to index ", j)
                 else
                     println("Invalid insertion indices: source ", i, ", dest: ", j)
@@ -230,13 +230,18 @@ function vizInterface(G::Graph, showTicks::Bool, showLabels::Bool, font::String,
                 continue
             elseif command == "exit" || command == "q" || command == "quit"
                 break
+            else 
+                printstyled("Command ", command, " was not found. ", color = :red)
+                print("Enter ") 
+                printstyled("\"help\"", color = :green) 
+                print(" to view valid commands")
             end 
         catch e
             printstyled("Something went wrong. ", color = :red)
-            print("Try using the")
-            printstyled(" help ", color = :green)
-            println("command.")
-            rethrow(e)
+            print("Enter ")
+            printstyled("\"help\"", color = :green)
+            println(" to view the proper arguments for each command.")
+            # rethrow(e)
         end
     end
     return 0
