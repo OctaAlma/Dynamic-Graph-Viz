@@ -1,5 +1,14 @@
 # There are 4 categories: load/save Graph, edit Graph, edit Coords, display
 
+function printHelp(category="")
+    # There are 4 categories: load/save Graph, edit Graph, edit Coords, display
+    category = lowercase(category)
+    print(category)
+    if category == ""
+        printAll()
+    end
+end
+
 printLoadCommands() = println("""
 \tload FILENAME.txt                          - Loads a Graph from an .txt file containing edge connections
 \tload FILENAME.mxt                          - Loads a Graph from a .mtx file containing edge connections

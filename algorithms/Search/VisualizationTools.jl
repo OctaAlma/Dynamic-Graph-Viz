@@ -1,15 +1,5 @@
-include("../../structFiles/Graph.jl")
+include("../../structFiles/GraphState.jl")
 gr()
-
-mutable struct GraphState
-    G::Graph
-    dataStructure
-
-    description::String
-
-    nodeLabels::Vector{String}
-    edgeLabels::Vector{String}
-end
 
 function printDataStructure(gs::GraphState, dsName::String, dsPrev)
     if (isnothing(dsPrev) || dsPrev != gs.dataStructure)

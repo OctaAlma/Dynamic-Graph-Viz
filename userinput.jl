@@ -1,9 +1,10 @@
-include("GraphPlots.jl")
 include("./loaders/vacLoader.jl")
 include("./loaders/mtxLoader.jl")
 include("./loaders/txtLoader.jl")
 include("./loaders/matLoader.jl")
-include("printCommands.jl")
+include("./GraphPlots.jl")
+include("./printCommands.jl")
+include("./visualization.jl")
 
 # NOTE: These are just sample values used for the DEMO
 
@@ -74,15 +75,6 @@ function scriptloader(filepath::String)
     end
 end
 
-function displayGraph()
-    if (isnothing(G))
-        global G = Graph()
-        empty!(G.nodes)
-        empty!(G.edges)
-    end
-    display(makePlot(G, showTicks, showLabels))
-end
-
 function genericLoad(filename::String)
     # Check the extension of filename
     extension = String(split(filename, ".")[end])
@@ -108,7 +100,7 @@ function genericLoad(filename::String)
     end
 
     setGraphLimits(G)
-    displayGraph()
+    displayGraph(G)
 
 end
 
@@ -127,7 +119,7 @@ function genericSave(filename::String)
     elseif (extension == "vacs")
         outputGraphToVacs(filename)
     else
-        printstyled("Graph could not be saved with extention ",extension, color=:red)
+        printstyled("Graph could not be saved with extention ", extension, color=:red)
     end
 end
 
@@ -137,17 +129,6 @@ function printHelp(category="")
     print(category)
     if category == ""
         printAll()
-    
-    # elseif category == "load"
-    #     printLoadCommands()
-    # elseif category == "save"
-    #     printSaveCommands()
-
-    # elseif category == "edit graph"
-    #     printEditGraphCommands()
-
-    # elseif category == "edit xy"
-    #     printEditCoordCommands()
     end
 end
 
@@ -163,7 +144,7 @@ while true
     end
 
     if !executingScript
-        print("\nEnter a command: ")
+        printstyled("\nEnter a command: ", color = :yellow)
     else
         sleep(sleepInterval)
     end
@@ -223,7 +204,7 @@ while true
                 println("Undo history is empty. ")
             end
 
-            displayGraph()
+            displayGraph(G)
             continue
             
         elseif (!isempty(graphStack) && G != graphStack[end])
@@ -239,51 +220,7 @@ while true
                 continue
             end
             genericSave(String(commands[2]))
-            displayGraph()
-            
-
-        elseif commands[majorCommand] == "move"
-            # move NODE_LABEL X_OR_Y UNITS
-            # move node NODE_LABEL X_OR_Y UNITS
-            
-            # move LABEL to X Y
-            # move node LABEL to X Y
-            if majorCommand == 2
-                printmoveCommands() 
-                continue
-            end
-            moveCoord = 2
-            
-            if "node" == commands[2]
-                moveCoord = 3
-            end
-
-            nodeLabel = String(commands[moveCoord])
-            index = findNodeIndexFromLabel(G, nodeLabel)
-
-            if "to" == commands[moveCoord+1]
-                xUnits = 0.0
-                if commands[moveCoord+2] == "-"
-                    xUnits = G.nodes[index].xCoord 
-                else
-                    xUnits = parse(Float64, commands[moveCoord+2])
-                end
-                
-                yUnits = 0.0
-
-                if commands[moveCoord+3] == "-"
-                    yUnits = G.nodes[index].yCoord
-                else
-                    yUnits = parse(Float64, commands[moveCoord+3])
-                end
-                
-                moveNode(G, nodeLabel, xUnits, yUnits)
-            else
-                xOrY = lowercase(commands[moveCoord+1]) 
-                units = parse(Float64, commands[moveCoord+2])
-                moveNode(G, nodeLabel, xOrY, units)
-            end
-            displayGraph()
+            displayGraph(G)
             
         elseif occursin("quit",commands[majorCommand]) ||  occursin("exit",commands[majorCommand]) || commands[majorCommand] == "q"
             if majorCommand == 2
@@ -292,64 +229,6 @@ while true
             end
             exit()
         
-        elseif commands[majorCommand] == "display" # Will display the current graph object
-            if majorCommand == 2
-                printDisplayHelp() 
-                continue
-            end
-            displayGraph()
-        elseif commands[majorCommand] == "layout"
-            if majorCommand == 2
-                printLayoutCommands()
-                continue
-            end
-            
-            layoutType = lowercase(commands[2])
-
-            if (layoutType == "circular")
-                applyNewCoords(G, createCircularCoords(G))
-
-            elseif (layoutType == "degree" || layoutType == "degreedependent")
-                applyNewCoords(G, createDegreeDependantCoods(G))
-
-            elseif (layoutType == "force-directed" || layoutType == "force" || layoutType == "forcedirected")
-                # returns a vector containing [ε, K, rep, attr]
-                forceDirArgs = parseForceDirectedArgs(commands)
-                ε = forceDirArgs[1]
-                K = floor(Int64, forceDirArgs[2])
-                rep = forceDirArgs[3]
-                attr = forceDirArgs[4]
-                println("""Applying force-directed layout with parameters:
-                   ⬗ Minimum force magnitude / ε = $ε
-                   ⬗ Max Iterations = $K
-                   ⬗ Repulsive factor = $rep
-                   ⬗ Attractive factor = $attr """)
-
-                forceDirectedCoords(G, ε, K, rep, attr)
-
-            elseif (layoutType == "spectral")
-                spectralCoords(G)
-            end
-
-            setGraphLimits(G)
-            displayGraph()
-        
-        elseif commands[majorCommand] == "edges"
-            if majorCommand == 2
-                printEdgesCommands()
-                continue
-            end
-            if (commands[majorCommand+1] == "circle" || commands[majorCommand+1] == "circular" || commands[majorCommand+1] == "circ" || commands[majorCommand+1] == "cir")
-                updateGraphEdges(G, circleEdges(G))
-            elseif (commands[majorCommand+1] == "complete" || commands[majorCommand+1] == "comp" || commands[majorCommand+1] == "com")
-                updateGraphEdges(G,completeEdges(G))
-            elseif (commands[majorCommand+1] == "random" || commands[majorCommand+1] == "rand" || commands[majorCommand+1] == "ran" || commands[majorCommand+1] == "r")
-                updateGraphEdges(G, randomEdges(G))
-            end
-            
-            displayGraph()    
-            
-
         elseif commands[majorCommand] == "load"
             if majorCommand == 2
                 printLoadCommands()
@@ -368,7 +247,7 @@ while true
                 empty!(G.edges)
             end
 
-            displayGraph()
+            displayGraph(G)
         
         elseif commands[majorCommand] == "loadxy"
             if majorCommand == 2
@@ -379,7 +258,7 @@ while true
             filenamexy = resourceDir * String(commands[2])
             txtReadXY(G, filenamexy)
             
-            displayGraph()
+            displayGraph(G)
         
         elseif commands[majorCommand] == "savexy"
             if majorCommand == 2
@@ -388,191 +267,6 @@ while true
             end
             filename = resourceDir * String(commands[2])
             outputXY(G, filename)
-
-        elseif commands[majorCommand] == "add"
-            if majorCommand == 2
-                printAddCommands()
-                continue
-            end
-            # if (length(commands) == 2)
-            #     println(commands)
-            #     commands = split("add node "*commands[2])
-            #     println(commands)
-            # end
-                
-            if (lowercase(commands[2]) == "node")
-                if (length(commands) == 3)
-                    commands[2] = "-l"
-                end
-                addNode(G, commands)
-                setGraphLimits(G)
-                displayGraph()
-            
-            elseif (lowercase(commands[2]) == "edge" || length(commands) == 3)
-                sourceNum = 3
-                if (length(commands) == 3)
-                    sourceNum = 2
-                end
-                sourceLabel = String(commands[sourceNum])
-                destLabel = String(commands[sourceNum+1])
-                weight = 1.
-                
-                if (G.weighted == true)
-                    try
-                        weight = parse(Float64, commands[sourceNum+2])
-                    catch
-                        println("Please specify edge weight after NODE_LABEL")
-                        continue;
-                    end
-                end
-
-                addEdge(G, sourceLabel, destLabel, weight)
-            end
-
-            displayGraph()
-        elseif commands[majorCommand] == "remove"
-            if majorCommand == 2
-                printRemoveCommands() 
-                continue
-            end
-            if (length(commands) == 2)
-                label = String(commands[2])
-                removeNode(G, label)
-            elseif (lowercase(commands[2]) == "node")
-                label = String(commands[3])
-                removeNode(G, label)
-            elseif (length(commands) == 3)
-                sourceLabel = String(commands[2])
-                destLabel = String(commands[3])
-                removeEdge(G, sourceLabel, destLabel) 
-            elseif (lowercase(commands[2]) == "edge" )
-                sourceLabel = String(commands[3])
-                destLabel = String(commands[4])
-                removeEdge(G, sourceLabel, destLabel)
-            end
-
-            displayGraph()
-        elseif commands[majorCommand] == "get"
-            if majorCommand == 2
-                printGetCommands()
-                continue
-            end
-            getWhat = lowercase(String(commands[majorCommand + 1]))
-            if (getWhat == "node")
-                label = String(commands[majorCommand + 2])
-                nodeInd = findNodeIndexFromLabel(G, label)
-
-                if (nodeInd != -1)
-                    println("Requested Info for node: ",label)
-                    getNodeInfo(G.nodes[nodeInd], commands)
-                end
-            elseif (getWhat == "edge")
-                src = String(commands[majorCommand + 2]) #should these be pasred 
-                dst = String(commands[majorCommand + 3])
-                #nodeInd = findNodeIndexFromLabel(G, label) #figure out how to get edge
-                #TODO add a function to Graph.jl that takes 2 node labels and returns an edge
-                if (nodeInd != -1)
-                    println("Requested Info for edge: ",src,dst)
-                    println("Not yet Implemented")
-                    #getNodeInfo(G.nodes[nodeInd], commands) # change getNodeInfo to getEdgeInfo
-                end
-            else
-                println("Please specify whether you want to set node or set edge.")
-            end
-
-        elseif commands[majorCommand] == "set"
-            if majorCommand == 2
-                printSetCommands()
-                continue
-            end
-
-            # did they write "set node ..." or "set edge ..."?
-            editMe = lowercase(String(commands[majorCommand + 1]))
-
-            if (editMe == "node")
-                # set node LABEL -lc -fc -oc -s
-                setNode(G, commands)
-
-            elseif (editMe == "edge")
-                # set edge SOURCE DEST -c -w -t/-lw
-                setEdge(G, commands)
-
-            else
-                println("Please specify whether you want to set node or set edge.")
-            end
-
-            displayGraph()
-
-        elseif commands[majorCommand] == "setcolor"
-            if majorCommand == 2
-                printsetColorCommands()
-                continue
-            end
-            if (lowercase(commands[2]) == "node")
-
-                nodeLabel = String(commands[3])
-                ind = findNodeIndexFromLabel(G, nodeLabel)
-
-                if (ind != -1)
-                    newFillCol = ""
-                    newOutlineCol = ""
-                    newLabelCol = ""    
-                    
-                    changeMe = String(lowercase(commands[4]))
-                    newColor = String(lowercase(commands[5]))
-
-                    if (changeMe == "fill")
-                        newFillCol = newColor
-                    elseif (changeMe == "ol")
-                        newOutlineCol = newColor
-                    elseif (changeMe == "label")
-                        newLabelCol = newColor
-                    end
-
-                    updateNodeColor(G.nodes[ind], newFillCol, newOutlineCol, newLabelCol)
-
-                else
-                    println("Could not find $nodeLabel in graph.")
-                    continue
-                end
-
-            elseif (lowercase(commands[2]) == "edge")
-                sourceLabel = String(lowercase(commands[3]))
-                destLabel = String(lowercase(commands[4]))
-                newCol = String(lowercase(commands[5]))
-
-                edgeInd = findEdgeIndex(G, sourceLabel, destLabel)
-
-                if (edgeInd != -1)
-                    G.edges[edgeInd].color = newCol
-                end
-            end
-
-            displayGraph()
-        
-        elseif commands[majorCommand] == "setall"
-            if majorCommand == 2
-                printSetAllCommand()
-                continue
-            end
-
-            if (length(commands) >= 2)
-                whatToSet = lowercase(String(commands[2]))
-
-                if (whatToSet == "node" || whatToSet == "nodes")
-                    setAllNodes(G, commands)
-
-                elseif (whatToSet == "edge" || whatToSet == "edges")
-                    setAllEdges(G, commands)
-
-                else
-                    println("Second command must be \"nodes\" or \"edges\" followed by the options.")
-                end
-            else
-                println("Not enough commands provided for setall. Please enter \"help\" for documentation.")
-            end
-
-            displayGraph()
 
         elseif commands[majorCommand] == "toggle"
             if majorCommand == 2
@@ -601,58 +295,14 @@ while true
                 end
             end
             
-            displayGraph()
-        elseif commands[majorCommand] == "view"
-            if majorCommand == 2
-                printviewCommands()
-                continue
-            end
-            
-            if (lowercase(commands[2]) == "default")
-                setGraphLimits(G)
-            else
-                if (length(commands) == 4)
-                    # view CENTERx CENTERy RADIUS
-                    centerX = parse(Float64, commands[2])
-                    centerY = parse(Float64, commands[3])
-                    radius = parse(Float64, commands[4])
-                    applyView(G, centerX, centerY, radius)
-                
-                elseif (length(commands) == 3)
-                    # view NODE_ID RADIUS
-                    nodeLabel = String(commands[2])
-                    radius = parse(Float64, commands[3])
-                    
-                    applyView(G, nodeLabel, radius)
-                end
-            end
+            displayGraph(G)
 
-            displayGraph()
         elseif commands[majorCommand] == "sleep"
             if majorCommand == 2
                 printSleepCommand()
                 continue
             end
             sleep(parse(Float64,commands[majorCommand+1]))
-        
-        elseif commands[majorCommand] == "cleargraph"
-            if majorCommand == 2
-                printClearGraphHelp()
-                continue
-            end
-            printstyled("THIS COMMAND WILL CLEAR THE CURRENT GRAPH. THERE IS NO WAY TO RECOVER IT.\n"; color = :red)
-            print("Please type ") 
-            printstyled("\"YES\""; color = :green) 
-            print(" to confirm you want the graph cleared: ")
-            confirmation = readline()
-
-            if lowercase(confirmation) == "yes"
-                global G = Graph()
-                empty!(G.nodes)
-                empty!(G.edges)
-            end
-
-            displayGraph()
         
         elseif commands[majorCommand] == "clear"
             if majorCommand == 2
@@ -679,9 +329,13 @@ while true
             if commands[majorCommand + 1] == "grod"                
                 run(Cmd(`julia userinput.jl tiggle-grod`, dir="./"))
             end
-
-       
         
+        elseif (graphEditParser(G, commands, majorCommand) < 2)
+            print("")
+
+        elseif commands[majorCommand] == "viz"
+            vizInterface(G, showTicks, showLabels, "computer modern", 12)
+
         elseif majorCommand == 2
             printHelp(String(commands[2]))
     
@@ -694,13 +348,16 @@ while true
         if debug
             rethrow(e)
         end
-        println("Something went wrong. Try the help command.")
+        
+        printstyled("Something went wrong. ", color = :red)
+        print("Try using the ")
+        printstyled("help", color = :green)
+        print("command.")
+
         lastInputValid = false
     end
     
     if (!lastInputValid && !isempty(commandsHistory)) 
         pop!(commandsHistory)
-    end
-
-    
+    end    
 end

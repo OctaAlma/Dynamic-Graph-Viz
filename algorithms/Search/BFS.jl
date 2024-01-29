@@ -149,6 +149,9 @@ end
 function runBFS(g::Graph, sLabel::String)::Vector{GraphState}
     println("BFS procedure initialized.")
 
+    wasWeighted = g.weighted
+    g.weighted = false
+
     graphStates::Vector{GraphState} = []
 
     sInd = findNodeIndexFromLabel(g, sLabel)
@@ -251,16 +254,18 @@ function runBFS(g::Graph, sLabel::String)::Vector{GraphState}
 
     println("BFS procedure finished. All graph states created.")
 
+    g.weighted = wasWeighted
+
     return graphStates
 end
 
-filename = "../resources/testDir.vac"
+filename = "../../resources/testDir.vac"
 G = vacRead(filename)
 source = "1"
 
 graphStates = runBFS(G, source)
 
-makegif = false
+makegif = true
 dpi = 400
 fps = 10
 iterateThroughGraphState(graphStates, "Queue", makegif, Δt = 0.2, FPS = fps, DPI = dpi)
