@@ -826,6 +826,20 @@ function spectralCoords(g::Graph)
     end
 end
 
+validColors = ["blue","cyan","green","hidden","light_black",
+    "light_blue","light_cyan","light_green","light_magenta",
+    "light_red","light_white","light_yellow","magenta",
+    "red","reverse","underline","white","yellow"]
+
+function isValidColor(c::String)::Bool
+    if (c in validColors)
+        return true
+    end
+    printstyled("Invalid color: ", color=:red)
+    println(c)
+    return false
+end
+
 function parseSetEdgeCommand(commands::Vector{SubString{String}})
     c = undef
     lw = undef
@@ -839,6 +853,11 @@ function parseSetEdgeCommand(commands::Vector{SubString{String}})
 
         if (currCommand == "-c")
             c = String(commands[i+1])
+            
+            if (!isValidColor(c))
+                c = undef
+            end
+            
             i = i + 1
             continue
 
@@ -894,7 +913,7 @@ function setEdge(g::Graph, commands::Vector{SubString{String}})
 
     c, lw, w = parseSetEdgeCommand(commands)
 
-    if (c != undef)
+    if (c != undef && isValidColor(c))
         g.edges[edgeInd].color = c
         println("Setting edge color to ", c)
     end
@@ -930,16 +949,31 @@ function parseSetNodeCommand(commands::Vector{SubString{String}})
 
         elseif (currCommand == "-fc")
             fc = String(commands[i+1])
+            
+            if (!isValidColor(fc))
+                fc = undef
+            end
+
             i = i + 1
             continue
 
         elseif (currCommand == "-lc")
             lc = String(commands[i+1])
+            
+            if (!isValidColor(lc))
+                lc = undef
+            end
+            
             i = i + 1
             continue
 
         elseif (currCommand == "-oc")
             oc = String(commands[i+1])
+
+            if (!isValidColor(oc))
+                oc = undef
+            end
+
             i = i + 1
             continue
 
@@ -981,17 +1015,17 @@ function setNode(g::Graph, commands::Vector{SubString{String}})
         end
     end
 
-    if (fc != undef)
+    if (fc != undef && isValidColor(fc))
         println("Setting node fill color to ", fc)
         g.nodes[nodeInd].fillColor = fc
     end
 
-    if (oc != undef)
+    if (oc != undef && isValidColor(oc))
         println("Setting node outline color to ", oc)
         g.nodes[nodeInd].outlineColor = oc
     end
 
-    if (lc != undef)
+    if (lc != undef && isValidColor(lc))
         println("Setting node label color to ", lc)
         g.nodes[nodeInd].labelColor = lc
     end

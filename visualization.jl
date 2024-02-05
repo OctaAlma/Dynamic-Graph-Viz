@@ -1,5 +1,6 @@
 include("./structFiles/GraphState.jl")
 include("./GraphPlots.jl")
+include("./loaders/Loaders.jl")
 
 function inRange(i, min, max)::Bool
     return (i >= min) && (i <= max)
@@ -17,7 +18,7 @@ end
 function vizInterface(G::Graph, showTicks::Bool, showLabels::Bool, font::String, fontSize::Int)
     animation::Vector{GraphState} = []
     
-    printstyled("\n-----VISUALIZATION EDITOR-----\n", color = :blue)
+    printstyled("\n-----VISUALIZATION EDITOR-----\n", color = :cyan)
 
     push!(animation, GraphState(deepcopy(G), "", []))
     currState = animation[1]
@@ -34,8 +35,112 @@ function vizInterface(G::Graph, showTicks::Bool, showLabels::Bool, font::String,
             command = lowercase(commands[1])
             numCommands = length(commands)
 
-            if command == "help"
+            if command == "help" # IMPLEMENT ME
             
+            elseif command == "statesave"
+                # Format: savestate i FILENAME.txt/vac/mtx
+                stateToSave = currStateInd
+
+                if (length(commands) == 3)
+                    try
+                        stateToSave = parse(Int64, commands[2])
+                        if (!inRange(stateToSave, 1, numStates))
+                            println("Not a valid state index: ", stateToSave)
+                            continue
+                        else
+                            genericStateSave(animation, stateToSave, String(commands[3]))
+                        end
+                    catch
+                        println("Usage: statesave STATE_IND FILENAME")
+                        continue
+                    end
+                elseif (length(commands) == 2)
+                    genericStateSave(animation, stateToSave, String(commands[2]))
+                else
+                    println("Usage: statesave STATE_IND FILENAME")
+                end
+
+            elseif command == "stateload"
+                # Format: loadstate i FILENAME.txt/vac/mtx/mat
+
+                stateToLoad = currStateInd
+
+                if (length(commands) == 3)
+                    try
+                        stateToLoad = parse(Int64, commands[2])
+                        if (!inRange(stateToLoad, 1, numStates))
+                            println("Not a valid state index: ", stateToLoad)
+                            continue
+                        else
+                            genericStateLoad(animation, stateToLoad, String(commands[3]))
+                        end
+                    catch
+                        println("Usage: stateload STATE_IND FILENAME")
+                    end
+                elseif (length(commands) == 2)
+                    genericStateLoad(animation, stateToLoad, String(commands[2]))
+                else
+                    println("Usage: stateload STATE_IND FILENAME")
+                end
+
+            elseif command == "stateloadxy"
+                # Format: loadstate i FILENAME
+                stateToLoad = currStateInd
+
+                if (length(commands) == 3)
+                    try
+                        stateToLoad = parse(Int64, commands[2])
+                        if (!inRange(stateToLoad, 1, numStates))
+                            println("Not a valid state index: ", stateToLoad)
+                            continue
+                        else
+                            txtReadXY(animation[stateToLoad], String(commands[3]))
+                        end
+                    catch
+                        println("Usage: stateloadxy STATE_IND FILENAME")
+                    end
+                elseif (length(commands) == 2)
+                    txtReadXY(animation[stateToLoad], String(commands[2]))
+                else
+                    println("Usage: stateloadxy STATE_IND FILENAME")
+                end
+            
+            elseif command == "statesavexy"
+                # Format: savestate i FILENAME.txt/vac/mtx
+                stateToSave = currStateInd
+
+                if (length(commands) == 3)
+                    try
+                        stateToSave = parse(Int64, commands[2])
+                        if (!inRange(stateToSave, 1, numStates))
+                            println("Not a valid state index: ", stateToSave)
+                            continue
+                        else
+                            outputXY(animation[stateToSave].g, String(commands[3]))
+                        end
+                    catch
+                        println("Usage: statesavexy STATE_IND FILENAME")
+                        continue
+                    end
+                elseif (length(commands) == 2)
+                    outputXY(animation[stateToSave].g, String(commands[2]))
+                else
+                    println("Usage: statesavexy STATE_IND FILENAME")
+                end
+
+            elseif command == "saveas" # IMPLEMENT ME
+                filename = String(commands[2])
+                genericAnimSave(animation, filename)
+
+            elseif command == "load" # IMPLEMENT ME
+                filename = String(commands[2])
+                animation = genericAnimLoad(filename)
+                currStateInd = 1
+                currState = animation[currStateInd]
+            
+            elseif command == "desc" # IMPLEMENT ME
+                animation[currStateInd].desc = String(SubString(input, 6, length(input)))
+
             elseif command == "pr" || command == "prev"
                 if (currStateInd > 1)
                     currStateInd -= 1
@@ -115,6 +220,11 @@ function vizInterface(G::Graph, showTicks::Bool, showLabels::Bool, font::String,
 
             elseif command == "delete" || command == "del"
                 
+                if (numStates == 1)
+                    println("You cannot delete your only state!")
+                    continue
+                end
+
                 i = parse(Int64, commands[2])
                 if (inRange(i, 1, numStates))
                     deleteat!(animation, i)
@@ -185,7 +295,7 @@ function vizInterface(G::Graph, showTicks::Bool, showLabels::Bool, font::String,
                 println("Successfully created ", numDups, " duplicates of state ", copyInd, ".")
 
             
-            elseif command == "move" || command == "mv"
+            elseif (command == "move" || command == "mv") && (length(commands) == 3) 
                 # - move i j - Removes state i from its current position and inserts it at state j.
                 i = parse(Int64, commands[2])
                 j = parse(Int64, commands[3])

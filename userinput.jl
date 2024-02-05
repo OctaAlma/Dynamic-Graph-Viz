@@ -1,7 +1,4 @@
-include("./loaders/vacLoader.jl")
-include("./loaders/mtxLoader.jl")
-include("./loaders/txtLoader.jl")
-include("./loaders/matLoader.jl")
+include("./loaders/Loaders.jl")
 include("./GraphPlots.jl")
 include("./printCommands.jl")
 include("./visualization.jl")
@@ -119,7 +116,7 @@ function genericSave(filename::String)
     elseif (extension == "vacs")
         outputGraphToVacs(filename)
     else
-        printstyled("Graph could not be saved with extention ", extension, color=:red)
+        printstyled("Graph could not be saved with extension ", extension, color=:red)
     end
 end
 

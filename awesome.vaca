@@ -1,0 +1,481 @@
+6
+NEXT-STATE
+u
+u
+n -l 1 -x 20.554875 -y 9.15165 -f white -o black -lc black -s 10
+n -l 2 -x 15.055425 -y 16.72065 -f white -o black -lc black -s 10
+n -l 3 -x 6.95295 -y 21.39885 -f white -o black -lc black -s 10
+n -l 4 -x -2.351925 -y 22.3767 -f white -o black -lc black -s 10
+n -l 5 -x -11.25 -y 19.485675 -f white -o black -lc black -s 10
+n -l 6 -x -18.202949999999998 -y 13.225275 -f white -o black -lc black -s 10
+n -l 7 -x -22.008375 -y 4.677975 -f white -o black -lc black -s 10
+n -l 8 -x -22.008375 -y -4.677975 -f white -o black -lc black -s 10
+n -l 9 -x -18.202949999999998 -y -13.225275 -f white -o black -lc black -s 10
+n -l 10 -x -11.25 -y -19.485675 -f white -o black -lc black -s 10
+n -l 11 -x -2.351925 -y -22.3767 -f white -o black -lc black -s 10
+n -l 12 -x 6.95295 -y -21.39885 -f white -o black -lc black -s 10
+n -l 13 -x 15.055425 -y -16.72065 -f white -o black -lc black -s 10
+n -l 14 -x 20.554875 -y -9.15165 -f white -o black -lc black -s 10
+n -l 15 -x 22.5 -y -0.0 -f white -o black -lc black -s 10
+e -s 1 -d 4 -w 1.0 -c black -lw 1.0
+e -s 3 -d 8 -w 1.0 -c black -lw 1.0
+e -s 1 -d 4 -w 1.0 -c black -lw 1.0
+e -s 15 -d 14 -w 1.0 -c black -lw 1.0
+e -s 7 -d 2 -w 1.0 -c black -lw 1.0
+e -s 2 -d 11 -w 1.0 -c black -lw 1.0
+e -s 2 -d 6 -w 1.0 -c black -lw 1.0
+e -s 12 -d 10 -w 1.0 -c black -lw 1.0
+e -s 10 -d 10 -w 1.0 -c black -lw 1.0
+e -s 8 -d 9 -w 1.0 -c black -lw 1.0
+e -s 10 -d 11 -w 1.0 -c black -lw 1.0
+e -s 2 -d 9 -w 1.0 -c black -lw 1.0
+e -s 15 -d 1 -w 1.0 -c black -lw 1.0
+e -s 6 -d 2 -w 1.0 -c black -lw 1.0
+e -s 15 -d 13 -w 1.0 -c black -lw 1.0
+e -s 10 -d 2 -w 1.0 -c black -lw 1.0
+e -s 11 -d 10 -w 1.0 -c black -lw 1.0
+e -s 1 -d 5 -w 1.0 -c black -lw 1.0
+e -s 1 -d 14 -w 1.0 -c black -lw 1.0
+e -s 13 -d 15 -w 1.0 -c black -lw 1.0
+e -s 2 -d 8 -w 1.0 -c black -lw 1.0
+e -s 6 -d 2 -w 1.0 -c black -lw 1.0
+e -s 12 -d 12 -w 1.0 -c black -lw 1.0
+e -s 14 -d 15 -w 1.0 -c black -lw 1.0
+e -s 3 -d 1 -w 1.0 -c black -lw 1.0
+e -s 14 -d 8 -w 1.0 -c black -lw 1.0
+e -s 9 -d 10 -w 1.0 -c black -lw 1.0
+e -s 1 -d 7 -w 1.0 -c black -lw 1.0
+e -s 5 -d 2 -w 1.0 -c black -lw 1.0
+e -s 4 -d 3 -w 1.0 -c black -lw 1.0
+e -s 9 -d 7 -w 1.0 -c black -lw 1.0
+e -s 13 -d 9 -w 1.0 -c black -lw 1.0
+e -s 1 -d 8 -w 1.0 -c black -lw 1.0
+e -s 14 -d 1 -w 1.0 -c black -lw 1.0
+e -s 13 -d 3 -w 1.0 -c black -lw 1.0
+e -s 11 -d 5 -w 1.0 -c black -lw 1.0
+e -s 3 -d 13 -w 1.0 -c black -lw 1.0
+e -s 7 -d 9 -w 1.0 -c black -lw 1.0
+e -s 9 -d 13 -w 1.0 -c black -lw 1.0
+e -s 5 -d 5 -w 1.0 -c black -lw 1.0
+e -s 12 -d 11 -w 1.0 -c black -lw 1.0
+e -s 10 -d 10 -w 1.0 -c black -lw 1.0
+e -s 7 -d 12 -w 1.0 -c black -lw 1.0
+e -s 8 -d 10 -w 1.0 -c black -lw 1.0
+e -s 11 -d 15 -w 1.0 -c black -lw 1.0
+e -s 7 -d 13 -w 1.0 -c black -lw 1.0
+e -s 15 -d 14 -w 1.0 -c black -lw 1.0
+e -s 9 -d 15 -w 1.0 -c black -lw 1.0
+e -s 8 -d 14 -w 1.0 -c black -lw 1.0
+e -s 6 -d 7 -w 1.0 -c black -lw 1.0
+LIMITS -22.008375 22.5 -22.3767 22.3767
+DESC-START
+
+DESC-END
+NEXT-STATE
+u
+w
+n -l 1 -x -16.14755989 -y -1.53424 -f white -o black -lc black -s 10
+n -l 2 -x -18.68548915 -y 7.512202 -f white -o black -lc black -s 10
+n -l 3 -x -9.72527155 -y 6.067591 -f white -o black -lc black -s 10
+n -l 4 -x -20.20916128 -y 2.648502 -f white -o black -lc black -s 10
+n -l 5 -x -19.62900288 -y -12.189754 -f white -o black -lc black -s 10
+n -l 6 -x -10.55067808 -y -12.929434 -f white -o black -lc black -s 10
+n -l 7 -x -14.39895192 -y -14.810908 -f white -o black -lc black -s 10
+n -l 8 -x -16.95416507 -y 2.271211 -f white -o black -lc black -s 10
+n -l 9 -x -7.30901222 -y 8.551821 -f white -o black -lc black -s 10
+n -l 10 -x -11.07728448 -y 17.663014 -f white -o black -lc black -s 10
+n -l 11 -x -15.40353661 -y -10.393469 -f white -o black -lc black -s 10
+n -l 12 -x -25.59510655 -y -8.589658 -f white -o black -lc black -s 10
+n -l 13 -x -26.06101605 -y -2.584176 -f white -o black -lc black -s 10
+n -l 14 -x -13.22550817 -y 5.891428 -f white -o black -lc black -s 10
+n -l 17 -x -8.87139561 -y -20.347906 -f white -o black -lc black -s 10
+n -l 18 -x -25.63023219 -y 7.453952 -f white -o black -lc black -s 10
+n -l 20 -x -14.26857999 -y 10.557648 -f white -o black -lc black -s 10
+n -l 22 -x -26.48206203 -y 3.024561 -f white -o black -lc black -s 10
+n -l 24 -x 6.85125862 -y 6.63808 -f white -o black -lc black -s 10
+n -l 26 -x 9.27618929 -y -1.86768 -f white -o black -lc black -s 10
+n -l 25 -x 5.86262966 -y -5.478338 -f white -o black -lc black -s 10
+n -l 28 -x 2.41689787 -y 2.633326 -f white -o black -lc black -s 10
+n -l 29 -x -2.19083935 -y 5.237296 -f white -o black -lc black -s 10
+n -l 30 -x 7.63287294 -y 11.766667 -f white -o black -lc black -s 10
+n -l 27 -x 11.9744559 -y 12.750372 -f white -o black -lc black -s 10
+n -l 31 -x -9.26179368 -y 14.027679 -f white -o black -lc black -s 10
+n -l 32 -x -1.18149086 -y 1.243556 -f white -o black -lc black -s 10
+n -l 33 -x -0.07089184 -y 14.110163 -f white -o black -lc black -s 10
+n -l 15 -x 7.39779332 -y 17.156909 -f white -o black -lc black -s 10
+n -l 16 -x 2.03537594 -y 22.58819 -f white -o black -lc black -s 10
+n -l 19 -x -5.38985619 -y 21.98706 -f white -o black -lc black -s 10
+n -l 21 -x 5.15270247 -y 20.347233 -f white -o black -lc black -s 10
+n -l 23 -x -1.67011644 -y 22.515022 -f white -o black -lc black -s 10
+n -l 34 -x -1.44882076 -y 12.53225 -f white -o black -lc black -s 10
+e -s 1 -d 2 -w 1.0 -c black -lw 1.0
+e -s 1 -d 3 -w 1.0 -c black -lw 1.0
+e -s 2 -d 3 -w 1.0 -c black -lw 1.0
+e -s 1 -d 4 -w 1.0 -c black -lw 1.0
+e -s 2 -d 4 -w 1.0 -c black -lw 1.0
+e -s 3 -d 4 -w 1.0 -c black -lw 1.0
+e -s 1 -d 5 -w 1.0 -c black -lw 1.0
+e -s 1 -d 6 -w 1.0 -c black -lw 1.0
+e -s 1 -d 7 -w 1.0 -c black -lw 1.0
+e -s 5 -d 7 -w 1.0 -c black -lw 1.0
+e -s 6 -d 7 -w 1.0 -c black -lw 1.0
+e -s 1 -d 8 -w 1.0 -c black -lw 1.0
+e -s 2 -d 8 -w 1.0 -c black -lw 1.0
+e -s 3 -d 8 -w 1.0 -c black -lw 1.0
+e -s 4 -d 8 -w 1.0 -c black -lw 1.0
+e -s 1 -d 9 -w 1.0 -c black -lw 1.0
+e -s 3 -d 9 -w 1.0 -c black -lw 1.0
+e -s 3 -d 10 -w 1.0 -c black -lw 1.0
+e -s 1 -d 11 -w 1.0 -c black -lw 1.0
+e -s 5 -d 11 -w 1.0 -c black -lw 1.0
+e -s 6 -d 11 -w 1.0 -c black -lw 1.0
+e -s 1 -d 12 -w 1.0 -c black -lw 1.0
+e -s 1 -d 13 -w 1.0 -c black -lw 1.0
+e -s 4 -d 13 -w 1.0 -c black -lw 1.0
+e -s 1 -d 14 -w 1.0 -c black -lw 1.0
+e -s 2 -d 14 -w 1.0 -c black -lw 1.0
+e -s 3 -d 14 -w 1.0 -c black -lw 1.0
+e -s 4 -d 14 -w 1.0 -c black -lw 1.0
+e -s 6 -d 17 -w 1.0 -c black -lw 1.0
+e -s 7 -d 17 -w 1.0 -c black -lw 1.0
+e -s 1 -d 18 -w 1.0 -c black -lw 1.0
+e -s 2 -d 18 -w 1.0 -c black -lw 1.0
+e -s 1 -d 20 -w 1.0 -c black -lw 1.0
+e -s 2 -d 20 -w 1.0 -c black -lw 1.0
+e -s 1 -d 22 -w 1.0 -c black -lw 1.0
+e -s 2 -d 22 -w 1.0 -c black -lw 1.0
+e -s 24 -d 26 -w 1.0 -c black -lw 1.0
+e -s 25 -d 26 -w 1.0 -c black -lw 1.0
+e -s 3 -d 28 -w 1.0 -c black -lw 1.0
+e -s 24 -d 28 -w 1.0 -c black -lw 1.0
+e -s 25 -d 28 -w 1.0 -c black -lw 1.0
+e -s 3 -d 29 -w 1.0 -c black -lw 1.0
+e -s 24 -d 30 -w 1.0 -c black -lw 1.0
+e -s 27 -d 30 -w 1.0 -c black -lw 1.0
+e -s 2 -d 31 -w 1.0 -c black -lw 1.0
+e -s 9 -d 31 -w 1.0 -c black -lw 1.0
+e -s 1 -d 32 -w 1.0 -c black -lw 1.0
+e -s 25 -d 32 -w 1.0 -c black -lw 1.0
+e -s 26 -d 32 -w 1.0 -c black -lw 1.0
+e -s 29 -d 32 -w 1.0 -c black -lw 1.0
+e -s 3 -d 33 -w 1.0 -c black -lw 1.0
+e -s 9 -d 33 -w 1.0 -c black -lw 1.0
+e -s 15 -d 33 -w 1.0 -c black -lw 1.0
+e -s 16 -d 33 -w 1.0 -c black -lw 1.0
+e -s 19 -d 33 -w 1.0 -c black -lw 1.0
+e -s 21 -d 33 -w 1.0 -c black -lw 1.0
+e -s 23 -d 33 -w 1.0 -c black -lw 1.0
+e -s 24 -d 33 -w 1.0 -c black -lw 1.0
+e -s 30 -d 33 -w 1.0 -c black -lw 1.0
+e -s 31 -d 33 -w 1.0 -c black -lw 1.0
+e -s 32 -d 33 -w 1.0 -c black -lw 1.0
+e -s 9 -d 34 -w 1.0 -c black -lw 1.0
+e -s 10 -d 34 -w 1.0 -c black -lw 1.0
+e -s 14 -d 34 -w 1.0 -c black -lw 1.0
+e -s 15 -d 34 -w 1.0 -c black -lw 1.0
+e -s 16 -d 34 -w 1.0 -c black -lw 1.0
+e -s 19 -d 34 -w 1.0 -c black -lw 1.0
+e -s 20 -d 34 -w 1.0 -c black -lw 1.0
+e -s 21 -d 34 -w 1.0 -c black -lw 1.0
+e -s 23 -d 34 -w 1.0 -c black -lw 1.0
+e -s 24 -d 34 -w 1.0 -c black -lw 1.0
+e -s 27 -d 34 -w 1.0 -c black -lw 1.0
+e -s 28 -d 34 -w 1.0 -c black -lw 1.0
+e -s 29 -d 34 -w 1.0 -c black -lw 1.0
+e -s 30 -d 34 -w 1.0 -c black -lw 1.0
+e -s 31 -d 34 -w 1.0 -c black -lw 1.0
+e -s 32 -d 34 -w 1.0 -c black -lw 1.0
+e -s 33 -d 34 -w 1.0 -c black -lw 1.0
+LIMITS -26.48206203 11.9744559 -20.347906 22.58819
+DESC-START
+
+DESC-END
+NEXT-STATE
+u
+u
+n -l 1 -x 50.13147 -y 9.37125 -f white -o black -lc black -s 10
+n -l 2 -x 47.55597 -y 18.42324 -f white -o black -lc black -s 10
+n -l 3 -x 43.361219999999996 -y 26.847929999999998 -f white -o black -lc black -s 10
+n -l 4 -x 37.68951 -y 34.3587 -f white -o black -lc black -s 10
+n -l 5 -x 30.73413 -y 40.69902 -f white -o black -lc black -s 10
+n -l 6 -x 22.73274 -y 45.65316 -f white -o black -lc black -s 10
+n -l 7 -x 13.956660000000001 -y 49.053329999999995 -f white -o black -lc black -s 10
+n -l 8 -x 4.70577 -y 50.78223 -f white -o black -lc black -s 10
+n -l 9 -x -4.70577 -y 50.78223 -f white -o black -lc black -s 10
+n -l 10 -x -13.956660000000001 -y 49.053329999999995 -f white -o black -lc black -s 10
+n -l 11 -x -22.73274 -y 45.65316 -f white -o black -lc black -s 10
+n -l 12 -x -30.73413 -y 40.69902 -f white -o black -lc black -s 10
+n -l 13 -x -37.68951 -y 34.3587 -f white -o black -lc black -s 10
+n -l 14 -x -43.361219999999996 -y 26.847929999999998 -f white -o black -lc black -s 10
+n -l 15 -x -47.55597 -y 18.42324 -f white -o black -lc black -s 10
+n -l 16 -x -50.13147 -y 9.37125 -f white -o black -lc black -s 10
+n -l 17 -x -51.0 -y 0.0 -f white -o black -lc black -s 10
+n -l 18 -x -50.13147 -y -9.37125 -f white -o black -lc black -s 10
+n -l 19 -x -47.55597 -y -18.42324 -f white -o black -lc black -s 10
+n -l 20 -x -43.361219999999996 -y -26.847929999999998 -f white -o black -lc black -s 10
+n -l 21 -x -37.68951 -y -34.3587 -f white -o black -lc black -s 10
+n -l 22 -x -30.73413 -y -40.69902 -f white -o black -lc black -s 10
+n -l 23 -x -22.73274 -y -45.65316 -f white -o black -lc black -s 10
+n -l 24 -x -13.956660000000001 -y -49.053329999999995 -f white -o black -lc black -s 10
+n -l 25 -x -4.70577 -y -50.78223 -f white -o black -lc black -s 10
+n -l 26 -x 4.70577 -y -50.78223 -f white -o black -lc black -s 10
+n -l 27 -x 13.956660000000001 -y -49.053329999999995 -f white -o black -lc black -s 10
+n -l 28 -x 22.73274 -y -45.65316 -f white -o black -lc black -s 10
+n -l 29 -x 30.73413 -y -40.69902 -f white -o black -lc black -s 10
+n -l 30 -x 37.68951 -y -34.3587 -f white -o black -lc black -s 10
+n -l 31 -x 43.361219999999996 -y -26.847929999999998 -f white -o black -lc black -s 10
+n -l 32 -x 47.55597 -y -18.42324 -f white -o black -lc black -s 10
+n -l 33 -x 50.13147 -y -9.37125 -f white -o black -lc black -s 10
+n -l 34 -x 51.0 -y -0.0 -f white -o black -lc black -s 10
+e -s 2 -d 1 -w 1.0 -c black -lw 1.0
+e -s 3 -d 1 -w 1.0 -c black -lw 1.0
+e -s 4 -d 1 -w 1.0 -c black -lw 1.0
+e -s 5 -d 1 -w 1.0 -c black -lw 1.0
+e -s 6 -d 1 -w 1.0 -c black -lw 1.0
+e -s 7 -d 1 -w 1.0 -c black -lw 1.0
+e -s 8 -d 1 -w 1.0 -c black -lw 1.0
+e -s 9 -d 1 -w 1.0 -c black -lw 1.0
+e -s 11 -d 1 -w 1.0 -c black -lw 1.0
+e -s 12 -d 1 -w 1.0 -c black -lw 1.0
+e -s 13 -d 1 -w 1.0 -c black -lw 1.0
+e -s 14 -d 1 -w 1.0 -c black -lw 1.0
+e -s 18 -d 1 -w 1.0 -c black -lw 1.0
+e -s 20 -d 1 -w 1.0 -c black -lw 1.0
+e -s 22 -d 1 -w 1.0 -c black -lw 1.0
+e -s 32 -d 1 -w 1.0 -c black -lw 1.0
+e -s 3 -d 2 -w 1.0 -c black -lw 1.0
+e -s 4 -d 2 -w 1.0 -c black -lw 1.0
+e -s 8 -d 2 -w 1.0 -c black -lw 1.0
+e -s 14 -d 2 -w 1.0 -c black -lw 1.0
+e -s 18 -d 2 -w 1.0 -c black -lw 1.0
+e -s 20 -d 2 -w 1.0 -c black -lw 1.0
+e -s 22 -d 2 -w 1.0 -c black -lw 1.0
+e -s 31 -d 2 -w 1.0 -c black -lw 1.0
+e -s 4 -d 3 -w 1.0 -c black -lw 1.0
+e -s 8 -d 3 -w 1.0 -c black -lw 1.0
+e -s 9 -d 3 -w 1.0 -c black -lw 1.0
+e -s 10 -d 3 -w 1.0 -c black -lw 1.0
+e -s 14 -d 3 -w 1.0 -c black -lw 1.0
+e -s 28 -d 3 -w 1.0 -c black -lw 1.0
+e -s 29 -d 3 -w 1.0 -c black -lw 1.0
+e -s 33 -d 3 -w 1.0 -c black -lw 1.0
+e -s 8 -d 4 -w 1.0 -c black -lw 1.0
+e -s 13 -d 4 -w 1.0 -c black -lw 1.0
+e -s 14 -d 4 -w 1.0 -c black -lw 1.0
+e -s 7 -d 5 -w 1.0 -c black -lw 1.0
+e -s 11 -d 5 -w 1.0 -c black -lw 1.0
+e -s 7 -d 6 -w 1.0 -c black -lw 1.0
+e -s 11 -d 6 -w 1.0 -c black -lw 1.0
+e -s 17 -d 6 -w 1.0 -c black -lw 1.0
+e -s 17 -d 7 -w 1.0 -c black -lw 1.0
+e -s 31 -d 9 -w 1.0 -c black -lw 1.0
+e -s 33 -d 9 -w 1.0 -c black -lw 1.0
+e -s 34 -d 9 -w 1.0 -c black -lw 1.0
+e -s 34 -d 10 -w 1.0 -c black -lw 1.0
+e -s 34 -d 14 -w 1.0 -c black -lw 1.0
+e -s 33 -d 15 -w 1.0 -c black -lw 1.0
+e -s 34 -d 15 -w 1.0 -c black -lw 1.0
+e -s 33 -d 16 -w 1.0 -c black -lw 1.0
+e -s 34 -d 16 -w 1.0 -c black -lw 1.0
+e -s 33 -d 19 -w 1.0 -c black -lw 1.0
+e -s 34 -d 19 -w 1.0 -c black -lw 1.0
+e -s 34 -d 20 -w 1.0 -c black -lw 1.0
+e -s 33 -d 21 -w 1.0 -c black -lw 1.0
+e -s 34 -d 21 -w 1.0 -c black -lw 1.0
+e -s 33 -d 23 -w 1.0 -c black -lw 1.0
+e -s 34 -d 23 -w 1.0 -c black -lw 1.0
+e -s 26 -d 24 -w 1.0 -c black -lw 1.0
+e -s 28 -d 24 -w 1.0 -c black -lw 1.0
+e -s 30 -d 24 -w 1.0 -c black -lw 1.0
+e -s 33 -d 24 -w 1.0 -c black -lw 1.0
+e -s 34 -d 24 -w 1.0 -c black -lw 1.0
+e -s 26 -d 25 -w 1.0 -c black -lw 1.0
+e -s 28 -d 25 -w 1.0 -c black -lw 1.0
+e -s 32 -d 25 -w 1.0 -c black -lw 1.0
+e -s 32 -d 26 -w 1.0 -c black -lw 1.0
+e -s 30 -d 27 -w 1.0 -c black -lw 1.0
+e -s 34 -d 27 -w 1.0 -c black -lw 1.0
+e -s 34 -d 28 -w 1.0 -c black -lw 1.0
+e -s 32 -d 29 -w 1.0 -c black -lw 1.0
+e -s 34 -d 29 -w 1.0 -c black -lw 1.0
+e -s 33 -d 30 -w 1.0 -c black -lw 1.0
+e -s 34 -d 30 -w 1.0 -c black -lw 1.0
+e -s 33 -d 31 -w 1.0 -c black -lw 1.0
+e -s 34 -d 31 -w 1.0 -c black -lw 1.0
+e -s 33 -d 32 -w 1.0 -c black -lw 1.0
+e -s 34 -d 32 -w 1.0 -c black -lw 1.0
+e -s 34 -d 33 -w 1.0 -c black -lw 1.0
+LIMITS -51.0 51.0 -50.78223 50.78223
+DESC-START
+
+DESC-END
+NEXT-STATE
+u
+u
+n -l a -x -5.593965248234153 -y -3.998458940019454 -f white -o black -lc black -s 10
+n -l b -x -3.546532372106107 -y -5.241625313327852 -f white -o black -lc black -s 10
+n -l c -x -2.156947162089141 -y -6.419029728872453 -f white -o black -lc black -s 10
+n -l d -x -4.874450988667505 -y -5.142981213994052 -f white -o black -lc black -s 10
+n -l e -x -4.279575824235799 -y -5.534693433125332 -f white -o black -lc black -s 10
+n -l f -x -3.993534142883612 -y -3.2480638914190667 -f white -o black -lc black -s 10
+n -l g -x -5.487603082304159 -y -3.0834759670700778 -f white -o black -lc black -s 10
+e -s a -d b -w 1.0 -c black -lw 1.0
+e -s b -d c -w 1.0 -c black -lw 1.0
+e -s d -d c -w 1.0 -c black -lw 1.0
+e -s c -d e -w 1.0 -c black -lw 1.0
+e -s a -d c -w 1.0 -c black -lw 1.0
+e -s a -d e -w 1.0 -c black -lw 1.0
+e -s b -d e -w 1.0 -c black -lw 1.0
+e -s d -d b -w 1.0 -c black -lw 1.0
+e -s f -d e -w 1.0 -c black -lw 1.0
+e -s f -d b -w 1.0 -c black -lw 1.0
+e -s g -d e -w 1.0 -c black -lw 1.0
+e -s g -d b -w 1.0 -c black -lw 1.0
+LIMITS -5.593965248234153 -2.156947162089141 -6.419029728872453 -3.0834759670700778
+DESC-START
+
+DESC-END
+NEXT-STATE
+u
+u
+n -l 1 -x 20.554875 -y 9.15165 -f white -o black -lc black -s 10
+n -l 2 -x 15.055425 -y 16.72065 -f white -o black -lc black -s 10
+n -l 3 -x 6.95295 -y 21.39885 -f white -o black -lc black -s 10
+n -l 4 -x -2.351925 -y 22.3767 -f white -o black -lc black -s 10
+n -l 5 -x -11.25 -y 19.485675 -f white -o black -lc black -s 10
+n -l 6 -x -18.202949999999998 -y 13.225275 -f white -o black -lc black -s 10
+n -l 7 -x -22.008375 -y 4.677975 -f white -o black -lc black -s 10
+n -l 8 -x -22.008375 -y -4.677975 -f white -o black -lc black -s 10
+n -l 9 -x -18.202949999999998 -y -13.225275 -f white -o black -lc black -s 10
+n -l 10 -x -11.25 -y -19.485675 -f white -o black -lc black -s 10
+n -l 11 -x -2.351925 -y -22.3767 -f white -o black -lc black -s 10
+n -l 12 -x 6.95295 -y -21.39885 -f white -o black -lc black -s 10
+n -l 13 -x 15.055425 -y -16.72065 -f white -o black -lc black -s 10
+n -l 14 -x 20.554875 -y -9.15165 -f white -o black -lc black -s 10
+n -l 15 -x 22.5 -y -0.0 -f white -o black -lc black -s 10
+e -s 1 -d 4 -w 1.0 -c black -lw 1.0
+e -s 3 -d 8 -w 1.0 -c black -lw 1.0
+e -s 1 -d 4 -w 1.0 -c black -lw 1.0
+e -s 15 -d 14 -w 1.0 -c black -lw 1.0
+e -s 7 -d 2 -w 1.0 -c black -lw 1.0
+e -s 2 -d 11 -w 1.0 -c black -lw 1.0
+e -s 2 -d 6 -w 1.0 -c black -lw 1.0
+e -s 12 -d 10 -w 1.0 -c black -lw 1.0
+e -s 10 -d 10 -w 1.0 -c black -lw 1.0
+e -s 8 -d 9 -w 1.0 -c black -lw 1.0
+e -s 10 -d 11 -w 1.0 -c black -lw 1.0
+e -s 2 -d 9 -w 1.0 -c black -lw 1.0
+e -s 15 -d 1 -w 1.0 -c black -lw 1.0
+e -s 6 -d 2 -w 1.0 -c black -lw 1.0
+e -s 15 -d 13 -w 1.0 -c black -lw 1.0
+e -s 10 -d 2 -w 1.0 -c black -lw 1.0
+e -s 11 -d 10 -w 1.0 -c black -lw 1.0
+e -s 1 -d 5 -w 1.0 -c black -lw 1.0
+e -s 1 -d 14 -w 1.0 -c black -lw 1.0
+e -s 13 -d 15 -w 1.0 -c black -lw 1.0
+e -s 2 -d 8 -w 1.0 -c black -lw 1.0
+e -s 6 -d 2 -w 1.0 -c black -lw 1.0
+e -s 12 -d 12 -w 1.0 -c black -lw 1.0
+e -s 14 -d 15 -w 1.0 -c black -lw 1.0
+e -s 3 -d 1 -w 1.0 -c black -lw 1.0
+e -s 14 -d 8 -w 1.0 -c black -lw 1.0
+e -s 9 -d 10 -w 1.0 -c black -lw 1.0
+e -s 1 -d 7 -w 1.0 -c black -lw 1.0
+e -s 5 -d 2 -w 1.0 -c black -lw 1.0
+e -s 4 -d 3 -w 1.0 -c black -lw 1.0
+e -s 9 -d 7 -w 1.0 -c black -lw 1.0
+e -s 13 -d 9 -w 1.0 -c black -lw 1.0
+e -s 1 -d 8 -w 1.0 -c black -lw 1.0
+e -s 14 -d 1 -w 1.0 -c black -lw 1.0
+e -s 13 -d 3 -w 1.0 -c black -lw 1.0
+e -s 11 -d 5 -w 1.0 -c black -lw 1.0
+e -s 3 -d 13 -w 1.0 -c black -lw 1.0
+e -s 7 -d 9 -w 1.0 -c black -lw 1.0
+e -s 9 -d 13 -w 1.0 -c black -lw 1.0
+e -s 5 -d 5 -w 1.0 -c black -lw 1.0
+e -s 12 -d 11 -w 1.0 -c black -lw 1.0
+e -s 10 -d 10 -w 1.0 -c black -lw 1.0
+e -s 7 -d 12 -w 1.0 -c black -lw 1.0
+e -s 8 -d 10 -w 1.0 -c black -lw 1.0
+e -s 11 -d 15 -w 1.0 -c black -lw 1.0
+e -s 7 -d 13 -w 1.0 -c black -lw 1.0
+e -s 15 -d 14 -w 1.0 -c black -lw 1.0
+e -s 9 -d 15 -w 1.0 -c black -lw 1.0
+e -s 8 -d 14 -w 1.0 -c black -lw 1.0
+e -s 6 -d 7 -w 1.0 -c black -lw 1.0
+LIMITS -22.008375 22.5 -22.3767 22.3767
+DESC-START
+
+DESC-END
+NEXT-STATE
+u
+u
+n -l 1 -x 20.554875 -y 9.15165 -f white -o black -lc black -s 10
+n -l 2 -x 15.055425 -y 16.72065 -f white -o black -lc black -s 10
+n -l 3 -x 6.95295 -y 21.39885 -f white -o black -lc black -s 10
+n -l 4 -x -2.351925 -y 22.3767 -f white -o black -lc black -s 10
+n -l 5 -x -11.25 -y 19.485675 -f white -o black -lc black -s 10
+n -l 6 -x -18.202949999999998 -y 13.225275 -f white -o black -lc black -s 10
+n -l 7 -x -22.008375 -y 4.677975 -f white -o black -lc black -s 10
+n -l 8 -x -22.008375 -y -4.677975 -f white -o black -lc black -s 10
+n -l 9 -x -18.202949999999998 -y -13.225275 -f white -o black -lc black -s 10
+n -l 10 -x -11.25 -y -19.485675 -f white -o black -lc black -s 10
+n -l 11 -x -2.351925 -y -22.3767 -f white -o black -lc black -s 10
+n -l 12 -x 6.95295 -y -21.39885 -f white -o black -lc black -s 10
+n -l 13 -x 15.055425 -y -16.72065 -f white -o black -lc black -s 10
+n -l 14 -x 20.554875 -y -9.15165 -f white -o black -lc black -s 10
+n -l 15 -x 22.5 -y -0.0 -f white -o black -lc black -s 10
+e -s 1 -d 4 -w 1.0 -c black -lw 1.0
+e -s 3 -d 8 -w 1.0 -c black -lw 1.0
+e -s 1 -d 4 -w 1.0 -c black -lw 1.0
+e -s 15 -d 14 -w 1.0 -c black -lw 1.0
+e -s 7 -d 2 -w 1.0 -c black -lw 1.0
+e -s 2 -d 11 -w 1.0 -c black -lw 1.0
+e -s 2 -d 6 -w 1.0 -c black -lw 1.0
+e -s 12 -d 10 -w 1.0 -c black -lw 1.0
+e -s 10 -d 10 -w 1.0 -c black -lw 1.0
+e -s 8 -d 9 -w 1.0 -c black -lw 1.0
+e -s 10 -d 11 -w 1.0 -c black -lw 1.0
+e -s 2 -d 9 -w 1.0 -c black -lw 1.0
+e -s 15 -d 1 -w 1.0 -c black -lw 1.0
+e -s 6 -d 2 -w 1.0 -c black -lw 1.0
+e -s 15 -d 13 -w 1.0 -c black -lw 1.0
+e -s 10 -d 2 -w 1.0 -c black -lw 1.0
+e -s 11 -d 10 -w 1.0 -c black -lw 1.0
+e -s 1 -d 5 -w 1.0 -c black -lw 1.0
+e -s 1 -d 14 -w 1.0 -c black -lw 1.0
+e -s 13 -d 15 -w 1.0 -c black -lw 1.0
+e -s 2 -d 8 -w 1.0 -c black -lw 1.0
+e -s 6 -d 2 -w 1.0 -c black -lw 1.0
+e -s 12 -d 12 -w 1.0 -c black -lw 1.0
+e -s 14 -d 15 -w 1.0 -c black -lw 1.0
+e -s 3 -d 1 -w 1.0 -c black -lw 1.0
+e -s 14 -d 8 -w 1.0 -c black -lw 1.0
+e -s 9 -d 10 -w 1.0 -c black -lw 1.0
+e -s 1 -d 7 -w 1.0 -c black -lw 1.0
+e -s 5 -d 2 -w 1.0 -c black -lw 1.0
+e -s 4 -d 3 -w 1.0 -c black -lw 1.0
+e -s 9 -d 7 -w 1.0 -c black -lw 1.0
+e -s 13 -d 9 -w 1.0 -c black -lw 1.0
+e -s 1 -d 8 -w 1.0 -c black -lw 1.0
+e -s 14 -d 1 -w 1.0 -c black -lw 1.0
+e -s 13 -d 3 -w 1.0 -c black -lw 1.0
+e -s 11 -d 5 -w 1.0 -c black -lw 1.0
+e -s 3 -d 13 -w 1.0 -c black -lw 1.0
+e -s 7 -d 9 -w 1.0 -c black -lw 1.0
+e -s 9 -d 13 -w 1.0 -c black -lw 1.0
+e -s 5 -d 5 -w 1.0 -c black -lw 1.0
+e -s 12 -d 11 -w 1.0 -c black -lw 1.0
+e -s 10 -d 10 -w 1.0 -c black -lw 1.0
+e -s 7 -d 12 -w 1.0 -c black -lw 1.0
+e -s 8 -d 10 -w 1.0 -c black -lw 1.0
+e -s 11 -d 15 -w 1.0 -c black -lw 1.0
+e -s 7 -d 13 -w 1.0 -c black -lw 1.0
+e -s 15 -d 14 -w 1.0 -c black -lw 1.0
+e -s 9 -d 15 -w 1.0 -c black -lw 1.0
+e -s 8 -d 14 -w 1.0 -c black -lw 1.0
+e -s 6 -d 7 -w 1.0 -c black -lw 1.0
+LIMITS -22.008375 22.5 -22.3767 22.3767
+DESC-START
+
+DESC-END
