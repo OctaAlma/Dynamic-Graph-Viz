@@ -130,7 +130,61 @@ function vizInterface(G::Graph, showTicks::Bool, showLabels::Bool, font::String,
 
             elseif command == "saveas" # IMPLEMENT ME
                 filename = String(commands[2])
-                genericAnimSave(animation, filename)
+                extension = lowercase(String(split(filename, ".")[end]))
+                if (extension == "gif") 
+                    # We do GIF here because we have all the graph information
+                    start = 1
+                    finish = numStates
+                    interval = 0.5    
+                    dpi = 150
+                    
+                    for i in 3:length(commands)
+                        arg = lowercase(commands[i])
+                        if arg == "-s" || arg == "-start"
+                            
+                            curr = parse(Int64, commands[i + 1])
+                            if (curr < finish && curr > 0)
+                                start = curr
+                                i += 1
+                            else
+                                println("Invalid input: -start ", curr)
+                            end
+
+                        elseif arg == "-f" || arg == "-finish"
+                            
+                            curr = parse(Int64, commands[i + 1])
+                            if (curr > start && curr <= numStates)
+                                finish = curr
+                                i += 1
+                            else
+                                println("Invalid input: -finish ", curr)
+                            end
+
+                        elseif arg == "-t" || arg == "-interval"
+
+                            curr = parse(Float64, commands[i + 1])
+                            if (curr > 0)
+                                interval = curr
+                                i += 1
+                            else
+                                println("Invalid input: -interval ", curr)
+                            end
+                        elseif  arg == "-dpi"
+                            curr = parse(Int64, commands[i + 1])
+                            if (curr > 0)
+                                dpi = curr
+                                i += 1
+                            else
+                                println("Invalid input: -dpi ", curr)
+                            end
+                        end
+                    end
+                    
+                    saveGIF(animation, filename, start=start, finish=finish, interval=interval,
+                            DPI=dpi, showTicks=showTicks, showLabels=showLabels)
+                else
+                    genericAnimSave(animation, filename)
+                end
 
             elseif command == "load" # IMPLEMENT ME
                 filename = String(commands[2])
@@ -194,7 +248,7 @@ function vizInterface(G::Graph, showTicks::Bool, showLabels::Bool, font::String,
                     elseif arg == "-f" || arg == "-finish"
                         
                         curr = parse(Int64, commands[i + 1])
-                        if (curr > start && curr < numStates)
+                        if (curr > start && curr <= numStates)
                             finish = curr
                             i += 1
                         else
@@ -210,7 +264,6 @@ function vizInterface(G::Graph, showTicks::Bool, showLabels::Bool, font::String,
                         else
                             println("Invalid input: -interval ", curr)
                         end
-
                     end
                 end
 
@@ -351,7 +404,7 @@ function vizInterface(G::Graph, showTicks::Bool, showLabels::Bool, font::String,
             print("Enter ")
             printstyled("\"help\"", color = :green)
             println(" to view the proper arguments for each command.")
-            # rethrow(e)
+            rethrow(e)
         end
     end
     return 0

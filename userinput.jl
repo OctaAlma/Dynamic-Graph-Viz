@@ -349,7 +349,7 @@ while true
         printstyled("Something went wrong. ", color = :red)
         print("Try using the ")
         printstyled("help", color = :green)
-        print("command.")
+        print(" command.")
 
         lastInputValid = false
     end

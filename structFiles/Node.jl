@@ -9,6 +9,8 @@ mutable struct Node
 
     xCoord::Float64
     yCoord::Float64
+
+    #subLabel::String
 end
 
 

@@ -829,7 +829,11 @@ end
 validColors = ["blue","cyan","green","hidden","light_black",
     "light_blue","light_cyan","light_green","light_magenta",
     "light_red","light_white","light_yellow","magenta",
-    "red","reverse","underline","white","yellow"]
+    "red","reverse","underline","white","yellow","gray","grey",
+    "cyan","purple","violet","brown","coral","cyan","darkgray","darkgrey",
+    "lightgrey","lightgray","firebrick","fuchsia","maroon","gold","goldenrod",
+    "lightyellow","whitesmoke","orange","navy","khaki","green1","green2","green3",
+    "chocolate","blue2","blue3","aquamarine", "darkorange", "darkorange2"]
 
 function isValidColor(c::String)::Bool
     if (c in validColors)
@@ -999,7 +1003,7 @@ function setNode(g::Graph, commands::Vector{SubString{String}})
     nodeLabel = String(commands[3])
     nodeInd = findNodeIndexFromLabel(g, nodeLabel)
     if (nodeInd == -1)
-        println("Could not find a node with the label ", nodeInd)
+        println("Could not find a node with the label ", nodeLabel)
         return
     end
 

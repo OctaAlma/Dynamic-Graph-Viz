@@ -1,0 +1,23 @@
+1
+u
+u
+n -l TU -x -5.0 -y 8.0 -f darkorange2 -o white -lc white -s 40
+n -l UTSA -x -6.0 -y -7.0 -f navy -o white -lc orange -s 40
+n -l Baylor -x -0.0 -y 13.0 -f green -o white -lc gold -s 40
+n -l TAMU -x 4.0 -y 8.0 -f maroon -o white -lc white -s 40
+e -s TU -d TU -w 1.0 -c black -lw 6.0
+e -s TU -d UTSA -w 1.0 -c black -lw 6.0
+e -s TU -d Baylor -w 1.0 -c black -lw 6.0
+e -s TU -d TAMU -w 1.0 -c black -lw 6.0
+e -s UTSA -d TU -w 1.0 -c black -lw 6.0
+e -s UTSA -d UTSA -w 1.0 -c black -lw 6.0
+e -s UTSA -d Baylor -w 1.0 -c black -lw 6.0
+e -s UTSA -d TAMU -w 1.0 -c black -lw 6.0
+e -s Baylor -d TU -w 1.0 -c black -lw 6.0
+e -s Baylor -d UTSA -w 1.0 -c black -lw 6.0
+e -s Baylor -d Baylor -w 1.0 -c black -lw 6.0
+e -s Baylor -d TAMU -w 1.0 -c black -lw 6.0
+e -s TAMU -d TU -w 1.0 -c black -lw 6.0
+e -s TAMU -d UTSA -w 1.0 -c black -lw 6.0
+e -s TAMU -d Baylor -w 1.0 -c black -lw 6.0
+e -s TAMU -d TAMU -w 1.0 -c black -lw 6.0

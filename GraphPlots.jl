@@ -127,9 +127,9 @@ function plotDirectedEdges2(p, g, xy; plot_font = "computer modern", txtsize = 1
 end
 
 # This function returns a plot object containing the visualization of the graph object g
-function makePlot(g::Graph, showTicks::Bool, showLabels::Bool; plot_font = "computer modern", txtsize = 12)::Plots.Plot{Plots.GRBackend} 
+function makePlot(g::Graph, showTicks::Bool, showLabels::Bool; plot_font = "computer modern", txtsize = 12, DPI = 250)::Plots.Plot{Plots.GRBackend} 
     gr()
-    graphPlot = plot()
+    graphPlot = plot(dpi = DPI)
 
     initPlot(graphPlot, g, 0.25, showTicks)
 
