@@ -1,0 +1,76 @@
+load cool.vac
+set node Baylor -l 3 -fc maroon
+setall nodes -fc white
+toggle grid
+setall nodes s 30
+setall nodes -s 30
+toggle labels
+toggle label
+toggle labels
+toggle grid
+toggle labels
+remove node 3
+remove node 4
+display
+toggle grid
+toggle labels
+load karate.mat
+toggle weights
+toggle labels
+toggle labels
+move node 34 down 5
+move node 34 up 3
+move node 34 left 1
+move node 34 down 1
+setall nodes -fc maroon
+toggle labels
+setall edges -t 2
+set node 9 -fc blue
+set node 9 -fc cyan
+set node 9 -fc darkorange
+set node 3 -fc darkorange
+set node 14 -fc darkorange
+set node 24 -fc darkorange
+set node 24 -fc maroon
+set node 14 -fc darkorange
+set node 4 -fc darkorange
+set node 84 -fc darkorange
+set node 8 -fc darkorange
+set node 22 -fc darkorange
+set node 13 -fc darkorange
+set node 17 -fc darkorange
+set node 16 -fc darkorange
+set node 16 -fc maroon
+set node 22 -fc maroon
+set node 13 -fc maroon
+set node 4 -fc maroon
+set node 1 -fc maroon
+set node 2 -fc maroon
+set node 17 -fc maroon
+set node 18 -fc maroon
+set node 12 -fc maroon
+set node 11 -fc maroon
+set node 6 -fc maroon
+set node 7 -fc maroon
+set node 5 -fc maroon
+set node 5 -fc darkorange
+set node 6 -fc darkorange
+set node 7 -fc darkorange
+set node 11 -fc darkorange
+set node 12 -fc darkorange
+set node 18 -fc darkorange
+set node 1 -fc darkorange
+set node 2 -fc darkorange
+set node 14 -fc darkorange
+set node 8 -fc darkorange
+set node 4 -fc darkorange
+set node 22 -fc darkorange
+set node 13 -fc darkorange
+set node 20 -fc darkorange
+set node 3 -fc darkorange
+set node 9 -fc darkorange
+toggle labels
+set node 17 -fc darkorange
+toggle labels
+move node 1 down 1
+move node 1 down 1
