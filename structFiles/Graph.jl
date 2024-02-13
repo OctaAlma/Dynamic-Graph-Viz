@@ -826,7 +826,7 @@ function spectralCoords(g::Graph)
     end
 end
 
-validColors = ["blue","cyan","green","hidden","light_black",
+validColors = ["black", "blue","cyan","green","hidden","light_black",
     "light_blue","light_cyan","light_green","light_magenta",
     "light_red","light_white","light_yellow","magenta",
     "red","reverse","underline","white","yellow","gray","grey",
