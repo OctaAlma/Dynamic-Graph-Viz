@@ -65,12 +65,20 @@ end
 function genericStateLoad(states::Vector{GraphState}, stateInd::Int64, filename::String)
     # Check the extension of filename
     extension = lowercase(String(split(filename, ".")[end]))
+
+    loaded = nothing
     
     if (extension == "vac")
-        states[stateInd].g = vacRead(filename)
+        loaded = vacRead(filename)
     elseif (extension == "mtx") || (extension == "txt")
-        states[stateInd].g = mtxRead(filename)
+        loaded = states[stateInd].g = mtxRead(filename)
     elseif (extension == "mat")
-        states[stateInd].g = MATRead(filename)
+        loaded = states[stateInd].g = MATRead(filename)
+    end
+
+    if (!isnothing(loaded))
+        states[stateInd].g = loaded
+    else
+        println("Could not load file ", filename)
     end
 end

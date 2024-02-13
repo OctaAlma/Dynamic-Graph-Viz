@@ -37,7 +37,7 @@ function vizInterface(G::Graph, showTicks::Bool, showLabels::Bool, font::String,
 
             if command == "help" # IMPLEMENT ME
             
-            elseif command == "statesave"
+            elseif command == "statesave" || command == "ssave"
                 # Format: savestate i FILENAME.txt/vac/mtx
                 stateToSave = currStateInd
 
@@ -60,7 +60,7 @@ function vizInterface(G::Graph, showTicks::Bool, showLabels::Bool, font::String,
                     println("Usage: statesave STATE_IND FILENAME")
                 end
 
-            elseif command == "stateload"
+            elseif command == "stateload" || command == "sload"
                 # Format: loadstate i FILENAME.txt/vac/mtx/mat
 
                 stateToLoad = currStateInd
@@ -103,6 +103,22 @@ function vizInterface(G::Graph, showTicks::Bool, showLabels::Bool, font::String,
                     txtReadXY(animation[stateToLoad], String(commands[2]))
                 else
                     println("Usage: stateloadxy STATE_IND FILENAME")
+                end
+            
+            elseif command == "toggle"
+
+                if (length(commands) < 2)
+                    println("Please specify what to toggle")
+                    continue
+                end
+
+                toggleMe = lowercase(commands[2])
+                
+                if toggleMe == "grid" || toggleMe == "ticks"
+                    showTicks = !showTicks
+
+                elseif toggleMe == "label" || toggleMe == "labels"
+                    showLabels = !showLabels
                 end
             
             elseif command == "statesavexy"
@@ -388,6 +404,14 @@ function vizInterface(G::Graph, showTicks::Bool, showLabels::Bool, font::String,
                 animation[j] = tmp
 
                 currState = animation[currStateInd]
+            
+            elseif command == "sleep"
+
+                sleep(parse(Float64,commands[majorCommand+1]))
+            
+            elseif command == "clear"
+
+                run(Cmd(`clear`, dir="./")) 
 
             elseif (graphEditParser(currState.g, commands, 1) < 2)
                 continue
@@ -403,7 +427,7 @@ function vizInterface(G::Graph, showTicks::Bool, showLabels::Bool, font::String,
             printstyled("Something went wrong. ", color = :red)
             print("Enter ")
             printstyled("\"help\"", color = :green)
-            println(" to view the proper arguments for each command.")
+            println(" to view the proper arguments for each command.\n")
             rethrow(e)
         end
     end
