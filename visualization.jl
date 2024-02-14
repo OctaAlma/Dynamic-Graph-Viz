@@ -146,6 +146,52 @@ function vizInterface(G::Graph, showTicks::Bool, showLabels::Bool, font::String,
 
             elseif command == "saveas" # IMPLEMENT ME
                 filename = String(commands[2])
+                
+                if (filename == "png" || filename == "pngs" || filename == "pdf" || filename == "pdfs")
+                    start = 1
+                    finish = numStates
+                    try
+                        foldername = String(commands[3])
+
+                        for i in 3:numCommands
+                            arg = String(lowercase(commands[i]))
+
+                            if arg == "-s" || arg == "-start"
+                                curr = parse(Int64, commands[i + 1])
+                                if (inRange(curr, 1, numStates))
+                                    start = curr
+                                    i += 1
+                                else
+                                    println("Invalid input: -s ", curr)
+                                end
+                            elseif arg == "-f" || arg == "-finish"
+                                curr = parse(Int64, commands[i + 1])
+                                
+                                if (inRange(curr, 1, numStates))
+                                    finish = curr
+                                    i += 1
+                                else
+                                    println("Invalid input: -f ", curr)
+                                end
+                            end
+                        end
+
+                        if (filename == "png" || filename == "pngs")
+                            saveStatesToPNGs(animation, foldername, start, finish, showTicks, showLabels)
+                        else
+                            saveStatesToPDFs(animation, foldername, start, finish, showTicks, showLabels)
+                        end
+
+                    catch e
+                        printstyled("Error in saving states to pngs\n", color=:red)
+                        printstyled("Usage: ", color=:green)
+                        println("saveas pngs FOLDER_NAME Opt: -s START_STATE -f FINISH_STATE")
+                        rethrow(e)
+                    end
+
+                    continue
+                end
+
                 extension = lowercase(String(split(filename, ".")[end]))
                 if (extension == "gif") 
                     # We do GIF here because we have all the graph information

@@ -3,7 +3,6 @@ include("./matLoader.jl")
 include("./txtLoader.jl")
 include("./mtxLoader.jl")
 include("./vacLoader.jl")
-include("./animLoader.jl")
 include("../structFiles/GraphState.jl")
 
 function genericAnimSave(states::Vector{GraphState}, filename::String)
@@ -52,7 +51,7 @@ function genericStateSave(states::Vector{GraphState}, stateInd::Int64, filename:
     extension = lowercase(String(split(filename, ".")[end]))
 
     if (extension == "png" || extension == "pdf")
-        savefig(makePlot(states[stateInd].g, showTicks, showLabels), commands[2])
+        savefig(makePlot(states[stateInd].g, showTicks, showLabels), filename)
     elseif (extension == "vac")
         outputGraphToVac(states[stateInd].g, filename)
     elseif (extension == "mtx" || extension == "txt")
@@ -81,4 +80,50 @@ function genericStateLoad(states::Vector{GraphState}, stateInd::Int64, filename:
     else
         println("Could not load file ", filename)
     end
+end
+
+function saveStatesToPNGs(states::Vector{GraphState}, foldername::String, 
+    start::Int64, finish::Int64, showTicks::Bool, showLabels::Bool)
+    currDir = pwd()
+
+    try
+        mkdir(foldername)
+        cd(foldername)
+        println("Successfully created folder: ", foldername)
+        println("Saving files...")
+    catch e
+        cd(foldername)
+        println("Saving files to existing folder: ", foldername)
+    end
+
+    for i in start:finish
+        filename = "$i.png"
+        savefig(makePlot(states[i].g, showTicks, showLabels), filename)
+    end
+
+    cd(currDir)
+    println("Done\n\n")
+end
+
+function saveStatesToPDFs(states::Vector{GraphState}, foldername::String, 
+    start::Int64, finish::Int64, showTicks::Bool, showLabels::Bool)
+    currDir = pwd()
+
+    try
+        mkdir(foldername)
+        cd(foldername)
+        println("Successfully created folder: ", foldername)
+        println("Saving files...")
+    catch e
+        cd(foldername)
+        println("Saving files to existing folder: ", foldername)
+    end
+
+    for i in start:finish
+        filename = "$i.pdf"
+        savefig(makePlot(states[i].g, showTicks, showLabels), filename)
+    end
+
+    cd(currDir)
+    println("Done\n\n")
 end

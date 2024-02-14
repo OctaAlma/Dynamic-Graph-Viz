@@ -310,7 +310,7 @@ function removeNode(g::Graph, label::String)
     end
     
     if (index == -1)
-        println("A node with label", label, " was not found.")
+        println("A node with label ", label, " was not found.")
         return
     end
 
@@ -826,11 +826,11 @@ function spectralCoords(g::Graph)
     end
 end
 
-validColors = ["black", "blue","cyan","green","hidden","light_black",
-    "light_blue","light_cyan","light_green","light_magenta",
+validColors = ["azure", "dodgerblue","black", "blue","cyan","green","light_black",
+    "light_blue","light_green","light_magenta",
     "light_red","light_white","light_yellow","magenta",
-    "red","reverse","underline","white","yellow","gray","grey",
-    "cyan","purple","violet","brown","coral","cyan","darkgray","darkgrey",
+    "red","white","yellow","gray","grey",
+    "cyan","purple","violet","brown","coral","darkgray","darkgrey",
     "lightgrey","lightgray","firebrick","fuchsia","maroon","gold","goldenrod",
     "lightyellow","whitesmoke","orange","navy","khaki","green1","green2","green3",
     "chocolate","blue2","blue3","aquamarine", "darkorange", "darkorange2"]

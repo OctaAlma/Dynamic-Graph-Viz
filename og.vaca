@@ -1,0 +1,601 @@
+20
+NEXT-STATE
+u
+u
+n -l 9 -x 8.34154 -y 5.677664999999999 -f lightgrey -o black -lc black -s 20
+n -l 1 -x -0.6557249999999999 -y 2.294934999999999 -f lightgrey -o black -lc black -s 20
+n -l 2 -x -5.75 -y 9.091404999999998 -f lightgrey -o black -lc black -s 20
+n -l 3 -x -11.685815 -y 4.6172699999999995 -f lightgrey -o black -lc black -s 20
+n -l 4 -x -6.685815 -y -2.6172699999999995 -f lightgrey -o black -lc black -s 20
+n -l 5 -x -4.75 -y -14.691405 -f lightgrey -o black -lc black -s 20
+n -l 6 -x 4.344275 -y -14.6 -f lightgrey -o black -lc black -s 20
+n -l 7 -x 0.3415400000000002 -y -8.677665 -f lightgrey -o black -lc black -s 20
+n -l 8 -x 5.5 -y -3.0 -f lightgrey -o black -lc black -s 20
+e -s 3 -d 2 -w 1.0 -c grey -lw 5.0
+e -s 3 -d 4 -w 1.0 -c grey -lw 5.0
+e -s 4 -d 1 -w 1.0 -c grey -lw 5.0
+e -s 2 -d 1 -w 1.0 -c grey -lw 5.0
+e -s 2 -d 4 -w 1.0 -c grey -lw 5.0
+e -s 3 -d 1 -w 1.0 -c grey -lw 5.0
+e -s 4 -d 7 -w 1.0 -c grey -lw 5.0
+e -s 5 -d 7 -w 1.0 -c grey -lw 5.0
+e -s 5 -d 6 -w 1.0 -c grey -lw 5.0
+e -s 7 -d 6 -w 1.0 -c grey -lw 5.0
+e -s 7 -d 8 -w 1.0 -c grey -lw 5.0
+e -s 1 -d 8 -w 1.0 -c grey -lw 5.0
+e -s 8 -d 9 -w 1.0 -c grey -lw 5.0
+e -s 6 -d 8 -w 1.0 -c grey -lw 5.0
+LIMITS -11.685815 8.34154 -14.691405 9.091404999999998
+DESC-START
+
+DESC-END
+NEXT-STATE
+u
+u
+n -l 9 -x 8.34154 -y 5.677664999999999 -f lightgrey -o black -lc black -s 20
+n -l 1 -x -0.6557249999999999 -y 2.294934999999999 -f lightgrey -o black -lc black -s 20
+n -l 2 -x -5.75 -y 9.091404999999998 -f dodgerblue -o black -lc black -s 20
+n -l 3 -x -11.685815 -y 4.6172699999999995 -f lightgrey -o black -lc black -s 20
+n -l 4 -x -6.685815 -y -2.6172699999999995 -f lightgrey -o black -lc black -s 20
+n -l 5 -x -4.75 -y -14.691405 -f lightgrey -o black -lc black -s 20
+n -l 6 -x 4.344275 -y -14.6 -f lightgrey -o black -lc black -s 20
+n -l 7 -x 0.3415400000000002 -y -8.677665 -f lightgrey -o black -lc black -s 20
+n -l 8 -x 5.5 -y -3.0 -f lightgrey -o black -lc black -s 20
+e -s 3 -d 2 -w 1.0 -c grey -lw 5.0
+e -s 3 -d 4 -w 1.0 -c grey -lw 5.0
+e -s 4 -d 1 -w 1.0 -c grey -lw 5.0
+e -s 2 -d 1 -w 1.0 -c grey -lw 5.0
+e -s 2 -d 4 -w 1.0 -c grey -lw 5.0
+e -s 3 -d 1 -w 1.0 -c grey -lw 5.0
+e -s 4 -d 7 -w 1.0 -c grey -lw 5.0
+e -s 5 -d 7 -w 1.0 -c grey -lw 5.0
+e -s 5 -d 6 -w 1.0 -c grey -lw 5.0
+e -s 7 -d 6 -w 1.0 -c grey -lw 5.0
+e -s 7 -d 8 -w 1.0 -c grey -lw 5.0
+e -s 1 -d 8 -w 1.0 -c grey -lw 5.0
+e -s 8 -d 9 -w 1.0 -c grey -lw 5.0
+e -s 6 -d 8 -w 1.0 -c grey -lw 5.0
+LIMITS -11.685815 8.34154 -14.691405 9.091404999999998
+DESC-START
+
+DESC-END
+NEXT-STATE
+u
+u
+n -l 9 -x 8.34154 -y 5.677664999999999 -f lightgrey -o black -lc black -s 20
+n -l 1 -x -0.6557249999999999 -y 2.294934999999999 -f lightgrey -o black -lc black -s 20
+n -l 2 -x -5.75 -y 9.091404999999998 -f dodgerblue -o black -lc black -s 20
+n -l 3 -x -11.685815 -y 4.6172699999999995 -f lightgrey -o black -lc black -s 20
+n -l 4 -x -6.685815 -y -2.6172699999999995 -f lightgrey -o black -lc black -s 20
+n -l 5 -x -4.75 -y -14.691405 -f lightgrey -o black -lc black -s 20
+n -l 6 -x 4.344275 -y -14.6 -f lightgrey -o black -lc black -s 20
+n -l 7 -x 0.3415400000000002 -y -8.677665 -f lightgrey -o black -lc black -s 20
+n -l 8 -x 5.5 -y -3.0 -f lightgrey -o black -lc black -s 20
+e -s 3 -d 2 -w 1.0 -c black -lw 7.0
+e -s 3 -d 4 -w 1.0 -c grey -lw 5.0
+e -s 4 -d 1 -w 1.0 -c grey -lw 5.0
+e -s 2 -d 1 -w 1.0 -c grey -lw 5.0
+e -s 2 -d 4 -w 1.0 -c grey -lw 5.0
+e -s 3 -d 1 -w 1.0 -c grey -lw 5.0
+e -s 4 -d 7 -w 1.0 -c grey -lw 5.0
+e -s 5 -d 7 -w 1.0 -c grey -lw 5.0
+e -s 5 -d 6 -w 1.0 -c grey -lw 5.0
+e -s 7 -d 6 -w 1.0 -c grey -lw 5.0
+e -s 7 -d 8 -w 1.0 -c grey -lw 5.0
+e -s 1 -d 8 -w 1.0 -c grey -lw 5.0
+e -s 8 -d 9 -w 1.0 -c grey -lw 5.0
+e -s 6 -d 8 -w 1.0 -c grey -lw 5.0
+LIMITS -11.685815 8.34154 -14.691405 9.091404999999998
+DESC-START
+
+DESC-END
+NEXT-STATE
+u
+u
+n -l 9 -x 8.34154 -y 5.677664999999999 -f lightgrey -o black -lc black -s 20
+n -l 1 -x -0.6557249999999999 -y 2.294934999999999 -f lightgrey -o black -lc black -s 20
+n -l 2 -x -5.75 -y 9.091404999999998 -f dodgerblue -o black -lc black -s 20
+n -l 3 -x -11.685815 -y 4.6172699999999995 -f dodgerblue -o black -lc black -s 20
+n -l 4 -x -6.685815 -y -2.6172699999999995 -f lightgrey -o black -lc black -s 20
+n -l 5 -x -4.75 -y -14.691405 -f lightgrey -o black -lc black -s 20
+n -l 6 -x 4.344275 -y -14.6 -f lightgrey -o black -lc black -s 20
+n -l 7 -x 0.3415400000000002 -y -8.677665 -f lightgrey -o black -lc black -s 20
+n -l 8 -x 5.5 -y -3.0 -f lightgrey -o black -lc black -s 20
+e -s 3 -d 2 -w 1.0 -c black -lw 7.0
+e -s 3 -d 4 -w 1.0 -c grey -lw 5.0
+e -s 4 -d 1 -w 1.0 -c grey -lw 5.0
+e -s 2 -d 1 -w 1.0 -c grey -lw 5.0
+e -s 2 -d 4 -w 1.0 -c grey -lw 5.0
+e -s 3 -d 1 -w 1.0 -c grey -lw 5.0
+e -s 4 -d 7 -w 1.0 -c grey -lw 5.0
+e -s 5 -d 7 -w 1.0 -c grey -lw 5.0
+e -s 5 -d 6 -w 1.0 -c grey -lw 5.0
+e -s 7 -d 6 -w 1.0 -c grey -lw 5.0
+e -s 7 -d 8 -w 1.0 -c grey -lw 5.0
+e -s 1 -d 8 -w 1.0 -c grey -lw 5.0
+e -s 8 -d 9 -w 1.0 -c grey -lw 5.0
+e -s 6 -d 8 -w 1.0 -c grey -lw 5.0
+LIMITS -11.685815 8.34154 -14.691405 9.091404999999998
+DESC-START
+
+DESC-END
+NEXT-STATE
+u
+u
+n -l 9 -x 8.34154 -y 5.677664999999999 -f lightgrey -o black -lc black -s 20
+n -l 1 -x -0.6557249999999999 -y 2.294934999999999 -f lightgrey -o black -lc black -s 20
+n -l 2 -x -5.75 -y 9.091404999999998 -f dodgerblue -o black -lc black -s 20
+n -l 3 -x -11.685815 -y 4.6172699999999995 -f dodgerblue -o black -lc black -s 20
+n -l 4 -x -6.685815 -y -2.6172699999999995 -f lightgrey -o black -lc black -s 20
+n -l 5 -x -4.75 -y -14.691405 -f lightgrey -o black -lc black -s 20
+n -l 6 -x 4.344275 -y -14.6 -f lightgrey -o black -lc black -s 20
+n -l 7 -x 0.3415400000000002 -y -8.677665 -f lightgrey -o black -lc black -s 20
+n -l 8 -x 5.5 -y -3.0 -f lightgrey -o black -lc black -s 20
+e -s 3 -d 2 -w 1.0 -c black -lw 7.0
+e -s 3 -d 4 -w 1.0 -c grey -lw 5.0
+e -s 4 -d 1 -w 1.0 -c grey -lw 5.0
+e -s 2 -d 1 -w 1.0 -c black -lw 7.0
+e -s 2 -d 4 -w 1.0 -c grey -lw 5.0
+e -s 3 -d 1 -w 1.0 -c grey -lw 5.0
+e -s 4 -d 7 -w 1.0 -c grey -lw 5.0
+e -s 5 -d 7 -w 1.0 -c grey -lw 5.0
+e -s 5 -d 6 -w 1.0 -c grey -lw 5.0
+e -s 7 -d 6 -w 1.0 -c grey -lw 5.0
+e -s 7 -d 8 -w 1.0 -c grey -lw 5.0
+e -s 1 -d 8 -w 1.0 -c grey -lw 5.0
+e -s 8 -d 9 -w 1.0 -c grey -lw 5.0
+e -s 6 -d 8 -w 1.0 -c grey -lw 5.0
+LIMITS -11.685815 8.34154 -14.691405 9.091404999999998
+DESC-START
+
+DESC-END
+NEXT-STATE
+u
+u
+n -l 9 -x 8.34154 -y 5.677664999999999 -f lightgrey -o black -lc black -s 20
+n -l 1 -x -0.6557249999999999 -y 2.294934999999999 -f lightgrey -o black -lc black -s 20
+n -l 2 -x -5.75 -y 9.091404999999998 -f dodgerblue -o black -lc black -s 20
+n -l 3 -x -11.685815 -y 4.6172699999999995 -f dodgerblue -o black -lc black -s 20
+n -l 4 -x -6.685815 -y -2.6172699999999995 -f lightgrey -o black -lc black -s 20
+n -l 5 -x -4.75 -y -14.691405 -f lightgrey -o black -lc black -s 20
+n -l 6 -x 4.344275 -y -14.6 -f lightgrey -o black -lc black -s 20
+n -l 7 -x 0.3415400000000002 -y -8.677665 -f lightgrey -o black -lc black -s 20
+n -l 8 -x 5.5 -y -3.0 -f lightgrey -o black -lc black -s 20
+e -s 3 -d 2 -w 1.0 -c black -lw 7.0
+e -s 3 -d 4 -w 1.0 -c grey -lw 5.0
+e -s 4 -d 1 -w 1.0 -c grey -lw 5.0
+e -s 2 -d 1 -w 1.0 -c black -lw 7.0
+e -s 2 -d 4 -w 1.0 -c black -lw 7.0
+e -s 3 -d 1 -w 1.0 -c grey -lw 5.0
+e -s 4 -d 7 -w 1.0 -c grey -lw 5.0
+e -s 5 -d 7 -w 1.0 -c grey -lw 5.0
+e -s 5 -d 6 -w 1.0 -c grey -lw 5.0
+e -s 7 -d 6 -w 1.0 -c grey -lw 5.0
+e -s 7 -d 8 -w 1.0 -c grey -lw 5.0
+e -s 1 -d 8 -w 1.0 -c grey -lw 5.0
+e -s 8 -d 9 -w 1.0 -c grey -lw 5.0
+e -s 6 -d 8 -w 1.0 -c grey -lw 5.0
+LIMITS -11.685815 8.34154 -14.691405 9.091404999999998
+DESC-START
+
+DESC-END
+NEXT-STATE
+u
+u
+n -l 9 -x 8.34154 -y 5.677664999999999 -f lightgrey -o black -lc black -s 20
+n -l 1 -x -0.6557249999999999 -y 2.294934999999999 -f lightgrey -o black -lc black -s 20
+n -l 2 -x -5.75 -y 9.091404999999998 -f dodgerblue -o black -lc black -s 20
+n -l 3 -x -11.685815 -y 4.6172699999999995 -f dodgerblue -o black -lc black -s 20
+n -l 4 -x -6.685815 -y -2.6172699999999995 -f lightgrey -o black -lc black -s 20
+n -l 5 -x -4.75 -y -14.691405 -f lightgrey -o black -lc black -s 20
+n -l 6 -x 4.344275 -y -14.6 -f lightgrey -o black -lc black -s 20
+n -l 7 -x 0.3415400000000002 -y -8.677665 -f lightgrey -o black -lc black -s 20
+n -l 8 -x 5.5 -y -3.0 -f lightgrey -o black -lc black -s 20
+e -s 3 -d 2 -w 1.0 -c black -lw 7.0
+e -s 3 -d 4 -w 1.0 -c grey -lw 5.0
+e -s 4 -d 1 -w 1.0 -c black -lw 7.0
+e -s 2 -d 1 -w 1.0 -c black -lw 7.0
+e -s 2 -d 4 -w 1.0 -c black -lw 7.0
+e -s 3 -d 1 -w 1.0 -c grey -lw 5.0
+e -s 4 -d 7 -w 1.0 -c grey -lw 5.0
+e -s 5 -d 7 -w 1.0 -c grey -lw 5.0
+e -s 5 -d 6 -w 1.0 -c grey -lw 5.0
+e -s 7 -d 6 -w 1.0 -c grey -lw 5.0
+e -s 7 -d 8 -w 1.0 -c grey -lw 5.0
+e -s 1 -d 8 -w 1.0 -c grey -lw 5.0
+e -s 8 -d 9 -w 1.0 -c grey -lw 5.0
+e -s 6 -d 8 -w 1.0 -c grey -lw 5.0
+LIMITS -11.685815 8.34154 -14.691405 9.091404999999998
+DESC-START
+
+DESC-END
+NEXT-STATE
+u
+u
+n -l 9 -x 8.34154 -y 5.677664999999999 -f lightgrey -o black -lc black -s 20
+n -l 1 -x -0.6557249999999999 -y 2.294934999999999 -f dodgerblue -o black -lc black -s 20
+n -l 2 -x -5.75 -y 9.091404999999998 -f dodgerblue -o black -lc black -s 20
+n -l 3 -x -11.685815 -y 4.6172699999999995 -f dodgerblue -o black -lc black -s 20
+n -l 4 -x -6.685815 -y -2.6172699999999995 -f dodgerblue -o black -lc black -s 20
+n -l 5 -x -4.75 -y -14.691405 -f lightgrey -o black -lc black -s 20
+n -l 6 -x 4.344275 -y -14.6 -f lightgrey -o black -lc black -s 20
+n -l 7 -x 0.3415400000000002 -y -8.677665 -f lightgrey -o black -lc black -s 20
+n -l 8 -x 5.5 -y -3.0 -f lightgrey -o black -lc black -s 20
+e -s 3 -d 2 -w 1.0 -c black -lw 7.0
+e -s 3 -d 4 -w 1.0 -c grey -lw 5.0
+e -s 4 -d 1 -w 1.0 -c black -lw 7.0
+e -s 2 -d 1 -w 1.0 -c black -lw 7.0
+e -s 2 -d 4 -w 1.0 -c black -lw 7.0
+e -s 3 -d 1 -w 1.0 -c grey -lw 5.0
+e -s 4 -d 7 -w 1.0 -c grey -lw 5.0
+e -s 5 -d 7 -w 1.0 -c grey -lw 5.0
+e -s 5 -d 6 -w 1.0 -c grey -lw 5.0
+e -s 7 -d 6 -w 1.0 -c grey -lw 5.0
+e -s 7 -d 8 -w 1.0 -c grey -lw 5.0
+e -s 1 -d 8 -w 1.0 -c grey -lw 5.0
+e -s 8 -d 9 -w 1.0 -c grey -lw 5.0
+e -s 6 -d 8 -w 1.0 -c grey -lw 5.0
+LIMITS -11.685815 8.34154 -14.691405 9.091404999999998
+DESC-START
+
+DESC-END
+NEXT-STATE
+u
+u
+n -l 9 -x 8.34154 -y 5.677664999999999 -f lightgrey -o black -lc black -s 20
+n -l 1 -x -0.6557249999999999 -y 2.294934999999999 -f dodgerblue -o black -lc black -s 20
+n -l 2 -x -5.75 -y 9.091404999999998 -f dodgerblue -o black -lc black -s 20
+n -l 3 -x -11.685815 -y 4.6172699999999995 -f dodgerblue -o black -lc black -s 20
+n -l 4 -x -6.685815 -y -2.6172699999999995 -f dodgerblue -o black -lc black -s 20
+n -l 5 -x -4.75 -y -14.691405 -f lightgrey -o black -lc black -s 20
+n -l 6 -x 4.344275 -y -14.6 -f lightgrey -o black -lc black -s 20
+n -l 7 -x 0.3415400000000002 -y -8.677665 -f lightgrey -o black -lc black -s 20
+n -l 8 -x 5.5 -y -3.0 -f lightgrey -o black -lc black -s 20
+e -s 3 -d 2 -w 1.0 -c black -lw 7.0
+e -s 3 -d 4 -w 1.0 -c grey -lw 5.0
+e -s 4 -d 1 -w 1.0 -c black -lw 7.0
+e -s 2 -d 1 -w 1.0 -c black -lw 7.0
+e -s 2 -d 4 -w 1.0 -c black -lw 7.0
+e -s 3 -d 1 -w 1.0 -c black -lw 7.0
+e -s 4 -d 7 -w 1.0 -c grey -lw 5.0
+e -s 5 -d 7 -w 1.0 -c grey -lw 5.0
+e -s 5 -d 6 -w 1.0 -c grey -lw 5.0
+e -s 7 -d 6 -w 1.0 -c grey -lw 5.0
+e -s 7 -d 8 -w 1.0 -c grey -lw 5.0
+e -s 1 -d 8 -w 1.0 -c grey -lw 5.0
+e -s 8 -d 9 -w 1.0 -c grey -lw 5.0
+e -s 6 -d 8 -w 1.0 -c grey -lw 5.0
+LIMITS -11.685815 8.34154 -14.691405 9.091404999999998
+DESC-START
+
+DESC-END
+NEXT-STATE
+u
+u
+n -l 9 -x 8.34154 -y 5.677664999999999 -f lightgrey -o black -lc black -s 20
+n -l 1 -x -0.6557249999999999 -y 2.294934999999999 -f dodgerblue -o black -lc black -s 20
+n -l 2 -x -5.75 -y 9.091404999999998 -f dodgerblue -o black -lc black -s 20
+n -l 3 -x -11.685815 -y 4.6172699999999995 -f dodgerblue -o black -lc black -s 20
+n -l 4 -x -6.685815 -y -2.6172699999999995 -f dodgerblue -o black -lc black -s 20
+n -l 5 -x -4.75 -y -14.691405 -f lightgrey -o black -lc black -s 20
+n -l 6 -x 4.344275 -y -14.6 -f lightgrey -o black -lc black -s 20
+n -l 7 -x 0.3415400000000002 -y -8.677665 -f lightgrey -o black -lc black -s 20
+n -l 8 -x 5.5 -y -3.0 -f lightgrey -o black -lc black -s 20
+e -s 3 -d 2 -w 1.0 -c black -lw 7.0
+e -s 3 -d 4 -w 1.0 -c grey -lw 5.0
+e -s 4 -d 1 -w 1.0 -c black -lw 7.0
+e -s 2 -d 1 -w 1.0 -c black -lw 7.0
+e -s 2 -d 4 -w 1.0 -c black -lw 7.0
+e -s 3 -d 1 -w 1.0 -c black -lw 7.0
+e -s 4 -d 7 -w 1.0 -c black -lw 7.0
+e -s 5 -d 7 -w 1.0 -c grey -lw 5.0
+e -s 5 -d 6 -w 1.0 -c grey -lw 5.0
+e -s 7 -d 6 -w 1.0 -c grey -lw 5.0
+e -s 7 -d 8 -w 1.0 -c grey -lw 5.0
+e -s 1 -d 8 -w 1.0 -c grey -lw 5.0
+e -s 8 -d 9 -w 1.0 -c grey -lw 5.0
+e -s 6 -d 8 -w 1.0 -c grey -lw 5.0
+LIMITS -11.685815 8.34154 -14.691405 9.091404999999998
+DESC-START
+
+DESC-END
+NEXT-STATE
+u
+u
+n -l 9 -x 8.34154 -y 5.677664999999999 -f lightgrey -o black -lc black -s 20
+n -l 1 -x -0.6557249999999999 -y 2.294934999999999 -f dodgerblue -o black -lc black -s 20
+n -l 2 -x -5.75 -y 9.091404999999998 -f dodgerblue -o black -lc black -s 20
+n -l 3 -x -11.685815 -y 4.6172699999999995 -f dodgerblue -o black -lc black -s 20
+n -l 4 -x -6.685815 -y -2.6172699999999995 -f dodgerblue -o black -lc black -s 20
+n -l 5 -x -4.75 -y -14.691405 -f lightgrey -o black -lc black -s 20
+n -l 6 -x 4.344275 -y -14.6 -f lightgrey -o black -lc black -s 20
+n -l 7 -x 0.3415400000000002 -y -8.677665 -f lightgrey -o black -lc black -s 20
+n -l 8 -x 5.5 -y -3.0 -f lightgrey -o black -lc black -s 20
+e -s 3 -d 2 -w 1.0 -c black -lw 7.0
+e -s 3 -d 4 -w 1.0 -c black -lw 7.0
+e -s 4 -d 1 -w 1.0 -c black -lw 7.0
+e -s 2 -d 1 -w 1.0 -c black -lw 7.0
+e -s 2 -d 4 -w 1.0 -c black -lw 7.0
+e -s 3 -d 1 -w 1.0 -c black -lw 7.0
+e -s 4 -d 7 -w 1.0 -c black -lw 7.0
+e -s 5 -d 7 -w 1.0 -c grey -lw 5.0
+e -s 5 -d 6 -w 1.0 -c grey -lw 5.0
+e -s 7 -d 6 -w 1.0 -c grey -lw 5.0
+e -s 7 -d 8 -w 1.0 -c grey -lw 5.0
+e -s 1 -d 8 -w 1.0 -c grey -lw 5.0
+e -s 8 -d 9 -w 1.0 -c grey -lw 5.0
+e -s 6 -d 8 -w 1.0 -c grey -lw 5.0
+LIMITS -11.685815 8.34154 -14.691405 9.091404999999998
+DESC-START
+
+DESC-END
+NEXT-STATE
+u
+u
+n -l 9 -x 8.34154 -y 5.677664999999999 -f lightgrey -o black -lc black -s 20
+n -l 1 -x -0.6557249999999999 -y 2.294934999999999 -f dodgerblue -o black -lc black -s 20
+n -l 2 -x -5.75 -y 9.091404999999998 -f dodgerblue -o black -lc black -s 20
+n -l 3 -x -11.685815 -y 4.6172699999999995 -f dodgerblue -o black -lc black -s 20
+n -l 4 -x -6.685815 -y -2.6172699999999995 -f dodgerblue -o black -lc black -s 20
+n -l 5 -x -4.75 -y -14.691405 -f lightgrey -o black -lc black -s 20
+n -l 6 -x 4.344275 -y -14.6 -f lightgrey -o black -lc black -s 20
+n -l 7 -x 0.3415400000000002 -y -8.677665 -f lightgrey -o black -lc black -s 20
+n -l 8 -x 5.5 -y -3.0 -f lightgrey -o black -lc black -s 20
+e -s 3 -d 2 -w 1.0 -c black -lw 7.0
+e -s 3 -d 4 -w 1.0 -c black -lw 7.0
+e -s 4 -d 1 -w 1.0 -c black -lw 7.0
+e -s 2 -d 1 -w 1.0 -c black -lw 7.0
+e -s 2 -d 4 -w 1.0 -c black -lw 7.0
+e -s 3 -d 1 -w 1.0 -c black -lw 7.0
+e -s 4 -d 7 -w 1.0 -c black -lw 7.0
+e -s 5 -d 7 -w 1.0 -c grey -lw 5.0
+e -s 5 -d 6 -w 1.0 -c grey -lw 5.0
+e -s 7 -d 6 -w 1.0 -c grey -lw 5.0
+e -s 7 -d 8 -w 1.0 -c grey -lw 5.0
+e -s 1 -d 8 -w 1.0 -c black -lw 7.0
+e -s 8 -d 9 -w 1.0 -c grey -lw 5.0
+e -s 6 -d 8 -w 1.0 -c grey -lw 5.0
+LIMITS -11.685815 8.34154 -14.691405 9.091404999999998
+DESC-START
+
+DESC-END
+NEXT-STATE
+u
+u
+n -l 9 -x 8.34154 -y 5.677664999999999 -f lightgrey -o black -lc black -s 20
+n -l 1 -x -0.6557249999999999 -y 2.294934999999999 -f dodgerblue -o black -lc black -s 20
+n -l 2 -x -5.75 -y 9.091404999999998 -f dodgerblue -o black -lc black -s 20
+n -l 3 -x -11.685815 -y 4.6172699999999995 -f dodgerblue -o black -lc black -s 20
+n -l 4 -x -6.685815 -y -2.6172699999999995 -f dodgerblue -o black -lc black -s 20
+n -l 5 -x -4.75 -y -14.691405 -f lightgrey -o black -lc black -s 20
+n -l 6 -x 4.344275 -y -14.6 -f lightgrey -o black -lc black -s 20
+n -l 7 -x 0.3415400000000002 -y -8.677665 -f lightgrey -o black -lc black -s 20
+n -l 8 -x 5.5 -y -3.0 -f lightgrey -o black -lc black -s 20
+e -s 3 -d 2 -w 1.0 -c black -lw 7.0
+e -s 3 -d 4 -w 1.0 -c black -lw 7.0
+e -s 4 -d 1 -w 1.0 -c black -lw 7.0
+e -s 2 -d 1 -w 1.0 -c black -lw 7.0
+e -s 2 -d 4 -w 1.0 -c black -lw 7.0
+e -s 3 -d 1 -w 1.0 -c black -lw 7.0
+e -s 4 -d 7 -w 1.0 -c black -lw 7.0
+e -s 5 -d 7 -w 1.0 -c grey -lw 5.0
+e -s 5 -d 6 -w 1.0 -c grey -lw 5.0
+e -s 7 -d 6 -w 1.0 -c grey -lw 5.0
+e -s 7 -d 8 -w 1.0 -c black -lw 7.0
+e -s 1 -d 8 -w 1.0 -c black -lw 7.0
+e -s 8 -d 9 -w 1.0 -c grey -lw 5.0
+e -s 6 -d 8 -w 1.0 -c grey -lw 5.0
+LIMITS -11.685815 8.34154 -14.691405 9.091404999999998
+DESC-START
+
+DESC-END
+NEXT-STATE
+u
+u
+n -l 9 -x 8.34154 -y 5.677664999999999 -f lightgrey -o black -lc black -s 20
+n -l 1 -x -0.6557249999999999 -y 2.294934999999999 -f dodgerblue -o black -lc black -s 20
+n -l 2 -x -5.75 -y 9.091404999999998 -f dodgerblue -o black -lc black -s 20
+n -l 3 -x -11.685815 -y 4.6172699999999995 -f dodgerblue -o black -lc black -s 20
+n -l 4 -x -6.685815 -y -2.6172699999999995 -f dodgerblue -o black -lc black -s 20
+n -l 5 -x -4.75 -y -14.691405 -f lightgrey -o black -lc black -s 20
+n -l 6 -x 4.344275 -y -14.6 -f lightgrey -o black -lc black -s 20
+n -l 7 -x 0.3415400000000002 -y -8.677665 -f dodgerblue -o black -lc black -s 20
+n -l 8 -x 5.5 -y -3.0 -f dodgerblue -o black -lc black -s 20
+e -s 3 -d 2 -w 1.0 -c black -lw 7.0
+e -s 3 -d 4 -w 1.0 -c black -lw 7.0
+e -s 4 -d 1 -w 1.0 -c black -lw 7.0
+e -s 2 -d 1 -w 1.0 -c black -lw 7.0
+e -s 2 -d 4 -w 1.0 -c black -lw 7.0
+e -s 3 -d 1 -w 1.0 -c black -lw 7.0
+e -s 4 -d 7 -w 1.0 -c black -lw 7.0
+e -s 5 -d 7 -w 1.0 -c grey -lw 5.0
+e -s 5 -d 6 -w 1.0 -c grey -lw 5.0
+e -s 7 -d 6 -w 1.0 -c grey -lw 5.0
+e -s 7 -d 8 -w 1.0 -c black -lw 7.0
+e -s 1 -d 8 -w 1.0 -c black -lw 7.0
+e -s 8 -d 9 -w 1.0 -c grey -lw 5.0
+e -s 6 -d 8 -w 1.0 -c grey -lw 5.0
+LIMITS -11.685815 8.34154 -14.691405 9.091404999999998
+DESC-START
+
+DESC-END
+NEXT-STATE
+u
+u
+n -l 9 -x 8.34154 -y 5.677664999999999 -f lightgrey -o black -lc black -s 20
+n -l 1 -x -0.6557249999999999 -y 2.294934999999999 -f dodgerblue -o black -lc black -s 20
+n -l 2 -x -5.75 -y 9.091404999999998 -f dodgerblue -o black -lc black -s 20
+n -l 3 -x -11.685815 -y 4.6172699999999995 -f dodgerblue -o black -lc black -s 20
+n -l 4 -x -6.685815 -y -2.6172699999999995 -f dodgerblue -o black -lc black -s 20
+n -l 5 -x -4.75 -y -14.691405 -f lightgrey -o black -lc black -s 20
+n -l 6 -x 4.344275 -y -14.6 -f lightgrey -o black -lc black -s 20
+n -l 7 -x 0.3415400000000002 -y -8.677665 -f dodgerblue -o black -lc black -s 20
+n -l 8 -x 5.5 -y -3.0 -f dodgerblue -o black -lc black -s 20
+e -s 3 -d 2 -w 1.0 -c black -lw 7.0
+e -s 3 -d 4 -w 1.0 -c black -lw 7.0
+e -s 4 -d 1 -w 1.0 -c black -lw 7.0
+e -s 2 -d 1 -w 1.0 -c black -lw 7.0
+e -s 2 -d 4 -w 1.0 -c black -lw 7.0
+e -s 3 -d 1 -w 1.0 -c black -lw 7.0
+e -s 4 -d 7 -w 1.0 -c black -lw 7.0
+e -s 5 -d 7 -w 1.0 -c grey -lw 5.0
+e -s 5 -d 6 -w 1.0 -c grey -lw 5.0
+e -s 7 -d 6 -w 1.0 -c grey -lw 5.0
+e -s 7 -d 8 -w 1.0 -c black -lw 7.0
+e -s 1 -d 8 -w 1.0 -c black -lw 7.0
+e -s 8 -d 9 -w 1.0 -c black -lw 7.0
+e -s 6 -d 8 -w 1.0 -c grey -lw 5.0
+LIMITS -11.685815 8.34154 -14.691405 9.091404999999998
+DESC-START
+
+DESC-END
+NEXT-STATE
+u
+u
+n -l 9 -x 8.34154 -y 5.677664999999999 -f lightgrey -o black -lc black -s 20
+n -l 1 -x -0.6557249999999999 -y 2.294934999999999 -f dodgerblue -o black -lc black -s 20
+n -l 2 -x -5.75 -y 9.091404999999998 -f dodgerblue -o black -lc black -s 20
+n -l 3 -x -11.685815 -y 4.6172699999999995 -f dodgerblue -o black -lc black -s 20
+n -l 4 -x -6.685815 -y -2.6172699999999995 -f dodgerblue -o black -lc black -s 20
+n -l 5 -x -4.75 -y -14.691405 -f lightgrey -o black -lc black -s 20
+n -l 6 -x 4.344275 -y -14.6 -f lightgrey -o black -lc black -s 20
+n -l 7 -x 0.3415400000000002 -y -8.677665 -f dodgerblue -o black -lc black -s 20
+n -l 8 -x 5.5 -y -3.0 -f dodgerblue -o black -lc black -s 20
+e -s 3 -d 2 -w 1.0 -c black -lw 7.0
+e -s 3 -d 4 -w 1.0 -c black -lw 7.0
+e -s 4 -d 1 -w 1.0 -c black -lw 7.0
+e -s 2 -d 1 -w 1.0 -c black -lw 7.0
+e -s 2 -d 4 -w 1.0 -c black -lw 7.0
+e -s 3 -d 1 -w 1.0 -c black -lw 7.0
+e -s 4 -d 7 -w 1.0 -c black -lw 7.0
+e -s 5 -d 7 -w 1.0 -c black -lw 7.0
+e -s 5 -d 6 -w 1.0 -c grey -lw 5.0
+e -s 7 -d 6 -w 1.0 -c grey -lw 5.0
+e -s 7 -d 8 -w 1.0 -c black -lw 7.0
+e -s 1 -d 8 -w 1.0 -c black -lw 7.0
+e -s 8 -d 9 -w 1.0 -c black -lw 7.0
+e -s 6 -d 8 -w 1.0 -c grey -lw 5.0
+LIMITS -11.685815 8.34154 -14.691405 9.091404999999998
+DESC-START
+
+DESC-END
+NEXT-STATE
+u
+u
+n -l 9 -x 8.34154 -y 5.677664999999999 -f lightgrey -o black -lc black -s 20
+n -l 1 -x -0.6557249999999999 -y 2.294934999999999 -f dodgerblue -o black -lc black -s 20
+n -l 2 -x -5.75 -y 9.091404999999998 -f dodgerblue -o black -lc black -s 20
+n -l 3 -x -11.685815 -y 4.6172699999999995 -f dodgerblue -o black -lc black -s 20
+n -l 4 -x -6.685815 -y -2.6172699999999995 -f dodgerblue -o black -lc black -s 20
+n -l 5 -x -4.75 -y -14.691405 -f lightgrey -o black -lc black -s 20
+n -l 6 -x 4.344275 -y -14.6 -f lightgrey -o black -lc black -s 20
+n -l 7 -x 0.3415400000000002 -y -8.677665 -f dodgerblue -o black -lc black -s 20
+n -l 8 -x 5.5 -y -3.0 -f dodgerblue -o black -lc black -s 20
+e -s 3 -d 2 -w 1.0 -c black -lw 7.0
+e -s 3 -d 4 -w 1.0 -c black -lw 7.0
+e -s 4 -d 1 -w 1.0 -c black -lw 7.0
+e -s 2 -d 1 -w 1.0 -c black -lw 7.0
+e -s 2 -d 4 -w 1.0 -c black -lw 7.0
+e -s 3 -d 1 -w 1.0 -c black -lw 7.0
+e -s 4 -d 7 -w 1.0 -c black -lw 7.0
+e -s 5 -d 7 -w 1.0 -c black -lw 7.0
+e -s 5 -d 6 -w 1.0 -c black -lw 7.0
+e -s 7 -d 6 -w 1.0 -c grey -lw 5.0
+e -s 7 -d 8 -w 1.0 -c black -lw 7.0
+e -s 1 -d 8 -w 1.0 -c black -lw 7.0
+e -s 8 -d 9 -w 1.0 -c black -lw 7.0
+e -s 6 -d 8 -w 1.0 -c grey -lw 5.0
+LIMITS -11.685815 8.34154 -14.691405 9.091404999999998
+DESC-START
+
+DESC-END
+NEXT-STATE
+u
+u
+n -l 9 -x 8.34154 -y 5.677664999999999 -f lightgrey -o black -lc black -s 20
+n -l 1 -x -0.6557249999999999 -y 2.294934999999999 -f dodgerblue -o black -lc black -s 20
+n -l 2 -x -5.75 -y 9.091404999999998 -f dodgerblue -o black -lc black -s 20
+n -l 3 -x -11.685815 -y 4.6172699999999995 -f dodgerblue -o black -lc black -s 20
+n -l 4 -x -6.685815 -y -2.6172699999999995 -f dodgerblue -o black -lc black -s 20
+n -l 5 -x -4.75 -y -14.691405 -f dodgerblue -o black -lc black -s 20
+n -l 6 -x 4.344275 -y -14.6 -f dodgerblue -o black -lc black -s 20
+n -l 7 -x 0.3415400000000002 -y -8.677665 -f dodgerblue -o black -lc black -s 20
+n -l 8 -x 5.5 -y -3.0 -f dodgerblue -o black -lc black -s 20
+e -s 3 -d 2 -w 1.0 -c black -lw 7.0
+e -s 3 -d 4 -w 1.0 -c black -lw 7.0
+e -s 4 -d 1 -w 1.0 -c black -lw 7.0
+e -s 2 -d 1 -w 1.0 -c black -lw 7.0
+e -s 2 -d 4 -w 1.0 -c black -lw 7.0
+e -s 3 -d 1 -w 1.0 -c black -lw 7.0
+e -s 4 -d 7 -w 1.0 -c black -lw 7.0
+e -s 5 -d 7 -w 1.0 -c black -lw 7.0
+e -s 5 -d 6 -w 1.0 -c black -lw 7.0
+e -s 7 -d 6 -w 1.0 -c grey -lw 5.0
+e -s 7 -d 8 -w 1.0 -c black -lw 7.0
+e -s 1 -d 8 -w 1.0 -c black -lw 7.0
+e -s 8 -d 9 -w 1.0 -c black -lw 7.0
+e -s 6 -d 8 -w 1.0 -c grey -lw 5.0
+LIMITS -11.685815 8.34154 -14.691405 9.091404999999998
+DESC-START
+
+DESC-END
+NEXT-STATE
+u
+u
+n -l 9 -x 8.34154 -y 5.677664999999999 -f lightgrey -o black -lc black -s 20
+n -l 1 -x -0.6557249999999999 -y 2.294934999999999 -f dodgerblue -o black -lc black -s 20
+n -l 2 -x -5.75 -y 9.091404999999998 -f dodgerblue -o black -lc black -s 20
+n -l 3 -x -11.685815 -y 4.6172699999999995 -f dodgerblue -o black -lc black -s 20
+n -l 4 -x -6.685815 -y -2.6172699999999995 -f dodgerblue -o black -lc black -s 20
+n -l 5 -x -4.75 -y -14.691405 -f dodgerblue -o black -lc black -s 20
+n -l 6 -x 4.344275 -y -14.6 -f dodgerblue -o black -lc black -s 20
+n -l 7 -x 0.3415400000000002 -y -8.677665 -f dodgerblue -o black -lc black -s 20
+n -l 8 -x 5.5 -y -3.0 -f dodgerblue -o black -lc black -s 20
+e -s 3 -d 2 -w 1.0 -c black -lw 7.0
+e -s 3 -d 4 -w 1.0 -c black -lw 7.0
+e -s 4 -d 1 -w 1.0 -c black -lw 7.0
+e -s 2 -d 1 -w 1.0 -c black -lw 7.0
+e -s 2 -d 4 -w 1.0 -c black -lw 7.0
+e -s 3 -d 1 -w 1.0 -c black -lw 7.0
+e -s 4 -d 7 -w 1.0 -c black -lw 7.0
+e -s 5 -d 7 -w 1.0 -c black -lw 7.0
+e -s 5 -d 6 -w 1.0 -c black -lw 7.0
+e -s 7 -d 6 -w 1.0 -c grey -lw 5.0
+e -s 7 -d 8 -w 1.0 -c black -lw 7.0
+e -s 1 -d 8 -w 1.0 -c black -lw 7.0
+e -s 8 -d 9 -w 1.0 -c black -lw 7.0
+e -s 6 -d 8 -w 1.0 -c black -lw 7.0
+LIMITS -11.685815 8.34154 -14.691405 9.091404999999998
+DESC-START
+
+DESC-END
+NEXT-STATE
+u
+u
+n -l 9 -x 8.34154 -y 5.677664999999999 -f lightgrey -o black -lc black -s 20
+n -l 1 -x -0.6557249999999999 -y 2.294934999999999 -f dodgerblue -o black -lc black -s 20
+n -l 2 -x -5.75 -y 9.091404999999998 -f dodgerblue -o black -lc black -s 20
+n -l 3 -x -11.685815 -y 4.6172699999999995 -f dodgerblue -o black -lc black -s 20
+n -l 4 -x -6.685815 -y -2.6172699999999995 -f dodgerblue -o black -lc black -s 20
+n -l 5 -x -4.75 -y -14.691405 -f dodgerblue -o black -lc black -s 20
+n -l 6 -x 4.344275 -y -14.6 -f dodgerblue -o black -lc black -s 20
+n -l 7 -x 0.3415400000000002 -y -8.677665 -f dodgerblue -o black -lc black -s 20
+n -l 8 -x 5.5 -y -3.0 -f dodgerblue -o black -lc black -s 20
+e -s 3 -d 2 -w 1.0 -c black -lw 7.0
+e -s 3 -d 4 -w 1.0 -c black -lw 7.0
+e -s 4 -d 1 -w 1.0 -c black -lw 7.0
+e -s 2 -d 1 -w 1.0 -c black -lw 7.0
+e -s 2 -d 4 -w 1.0 -c black -lw 7.0
+e -s 3 -d 1 -w 1.0 -c black -lw 7.0
+e -s 4 -d 7 -w 1.0 -c black -lw 7.0
+e -s 5 -d 7 -w 1.0 -c black -lw 7.0
+e -s 5 -d 6 -w 1.0 -c black -lw 7.0
+e -s 7 -d 6 -w 1.0 -c black -lw 7.0
+e -s 7 -d 8 -w 1.0 -c black -lw 7.0
+e -s 1 -d 8 -w 1.0 -c black -lw 7.0
+e -s 8 -d 9 -w 1.0 -c black -lw 7.0
+e -s 6 -d 8 -w 1.0 -c black -lw 7.0
+LIMITS -11.685815 8.34154 -14.691405 9.091404999999998
+DESC-START
+
+DESC-END
