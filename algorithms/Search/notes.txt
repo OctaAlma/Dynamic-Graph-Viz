@@ -1,7 +1,0 @@
-A gif of plots with 1000 dpi took 3 minutes and 49.52 seconds
- - Looks EXTREMELY sharp
- - 2.5 MB
-
-A gif of plots with 300 dpi took 32.15 seconds
-
-A gif of plots with 300 250 took 24.87s seconds
