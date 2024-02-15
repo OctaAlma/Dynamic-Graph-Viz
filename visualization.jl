@@ -345,7 +345,7 @@ function vizInterface(G::Graph, showTicks::Bool, showLabels::Bool, font::String,
                     deleteat!(animation, i)
                 end
 
-                if (currStateInd > i)
+                if (currStateInd >= i)
                     currStateInd -= 1
                     currState = animation[currStateInd]
                 end

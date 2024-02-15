@@ -4,8 +4,7 @@
 
 ### Required Dependencies
 
-This project was built on Julia 1.9
-This project requires the following Julia packages:
+This project was built on Julia 1.9 or 1.10 and requires the following Julia packages:
 
 - ``JLD2`` - for loading and saving vectors of graph states to the ``.jld`` format
 - ``LinearAlgebra`` - Necessary for eigenvalue computations for spectral layout
