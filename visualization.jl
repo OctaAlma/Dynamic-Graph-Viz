@@ -222,7 +222,7 @@ function vizInterface(G::Graph, showTicks::Bool, showLabels::Bool, font::String,
                                 println("Invalid input: -finish ", curr)
                             end
 
-                        elseif arg == "-t" || arg == "-interval"
+                        elseif arg == "-t" || arg == "-interval" || arg == "-i"
 
                             curr = parse(Float64, commands[i + 1])
                             if (curr > 0)
@@ -317,7 +317,7 @@ function vizInterface(G::Graph, showTicks::Bool, showLabels::Bool, font::String,
                             println("Invalid input: -finish ", curr)
                         end
 
-                    elseif arg == "-t" || arg == "-interval"
+                    elseif arg == "-i" || arg == "-t" || arg == "-interval"
 
                         curr = parse(Float64, commands[i + 1])
                         if (curr > 0)
