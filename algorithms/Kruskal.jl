@@ -34,7 +34,7 @@ function findSet(a, parents)
     return parents[a]
 end
 
-function mergeSet(a, b, parents)
+function mergeSet(a, b, parents, G)
     setColor = "black"
 
     aSet = findSet(a, parents)

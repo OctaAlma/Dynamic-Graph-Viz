@@ -4,6 +4,7 @@ include("./txtLoader.jl")
 include("./mtxLoader.jl")
 include("./vacLoader.jl")
 include("../structFiles/GraphState.jl")
+include("../GraphPlots.jl")
 
 function genericAnimSave(states::Vector{GraphState}, filename::String)
     extension = lowercase(String(split(filename, ".")[end]))

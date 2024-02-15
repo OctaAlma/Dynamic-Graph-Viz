@@ -1,5 +1,4 @@
 include("./structFiles/Graph.jl")
-include("./loaders/vacLoader.jl")
 
 function initPlot(p, g, k, showTicks)
 
