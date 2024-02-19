@@ -16,6 +16,7 @@ function initKruskal(G::Graph)
     for node in G.nodes
         node.fillColor = colors[currColorInd]
         currColorInd += 1
+        node.size = 20
     end
 
     for edge in G.edges
@@ -35,19 +36,18 @@ function findSet(a, parents)
 end
 
 function mergeSet(a, b, parents, G)
-    setColor = "black"
+    setColor = "dodgerblue"
 
     aSet = findSet(a, parents)
     bSet = findSet(b, parents)
 
-    if (aSet == bSet)
-        return 
-    else
+    if (aSet != bSet)
         # Merge sets by making all nodes the same color             
         for i in eachindex(parents)
             findSet(i, parents)
             if parents[i] == bSet || parents[i] == aSet
                 G.nodes[i].fillColor = G.nodes[bSet].fillColor
+                # G.nodes[i].fillColor = setColor
                 parents[i] = bSet
             end
         end
@@ -134,11 +134,12 @@ function runKruskal(G::Graph)::Vector{GraphState}
         end
     end
 
-    preview(states, interval = 0.2)
-
     return states
 end
 
 g = vacRead("../resources/testDir.vac")
-runKruskal(g)
+s = runKruskal(g)
+saveGIF(s, "kruskal.gif", interval = 0.2, showLabels = false, showTicks = false)
+saveStatesToPDFs(s, "kruskal", 1, length(s), false, false)
+
 println("Done!")

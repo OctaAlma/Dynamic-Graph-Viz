@@ -628,6 +628,24 @@ function getAdjacentNodeIndices(g::Graph, vInd::Int64)::Vector{Int64}
     return adj
 end
 
+# Returns a vector of integers containing the indices of edges that have v as a source 
+function getTreeEdgeIndices(g::Graph, vInd::Int64)::Vector{Int64}
+    treeEdges::Vector{Int64} = []
+    
+    for i in eachindex(g.edges)
+
+        if g.edges[i].sourceKey == vInd 
+            push!(treeEdges, i)
+        end
+        
+        if !g.directed && edge.destKey == vInd && !(edge.sourceKey in treeEdges)
+            push!(treeEdges, i)
+        end
+    end
+
+    return treeEdges
+end
+
 # returns the index of a string in a vector. Returns -1 if not found
 function findIndex(lineArgs, substr)
     numArgs = length(lineArgs)

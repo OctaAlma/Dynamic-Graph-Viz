@@ -24,7 +24,29 @@ function plotNodes(p, g; showLabels = true, plot_font = "computer modern", txtsi
     end
 end
 
-function plotUndirectedEdges(p, g, xy; plot_font = "computer modern", txtsize = 12)
+function plotWeight(p, g, xy, u, v, w; font = "computer modern", txtsize = 10, boxsize = 10, useOffset = false)
+    # Note: when displaying weights, we want to add some offset equivalent to about 2% of the area in the graph 
+    widthOffset = (g.xMax - g.xMin) * 0.05
+    heightOffset = (g.yMax - g.yMin) * 0.05
+
+    # The weight should be right in the middle of the edge
+    midx = (xy[u,1] + xy[v,1]) / 2
+    midy = (xy[u,2] + xy[v,2]) / 2
+
+    if (useOffset)
+        # Add the offset to the midpoint
+        dir = normalize([xy[v,1], xy[v,2]] - [xy[u,1], xy[u,2]]).* [widthOffset, heightOffset]
+        midx += dir[2]
+        midy += dir[1]
+    end
+
+    # Put a square border where the weight is going to go ()
+    scatter!(p, [midx], [midy], marker = :square, markersize = boxsize, color = :lightgrey)
+    annotate!(p, midx, midy, text(convert(Int64, w), font, color="black", pointsize=txtsize))
+end
+
+function plotUndirectedEdges(p, g, xy; plot_font = "computer modern", txtsize = 12, useOffset = false)
+
     # If the graph is undirected, we can simply draw a straight line from source to dest:
     for currEdge in g.edges
         u = currEdge.sourceKey
@@ -33,9 +55,7 @@ function plotUndirectedEdges(p, g, xy; plot_font = "computer modern", txtsize = 
         plot!(p,[xy[u,1]; xy[v,1]], [xy[u,2]; xy[v,2]], color = currEdge.color, linewidth = currEdge.lineWidth)
         
         if (g.weighted)
-            midx = (xy[u,1] + xy[v,1]) / 2
-            midy = (xy[u,2] + xy[v,2]) / 2
-            annotate!(p, midx, midy, text(currEdge.weight, plot_font, txtsize, color="black"))
+            plotWeight(p, g, xy, u, v, currEdge.weight, font=plot_font, txtsize=txtsize, useOffset=useOffset)
         end
     end
 end
@@ -118,9 +138,7 @@ function plotDirectedEdges2(p, g, xy; plot_font = "computer modern", txtsize = 1
         end
 
         if (g.weighted)
-            midx = (xy[u,1] + xy[v,1]) / 2
-            midy = (xy[u,2] + xy[v,2]) / 2
-            annotate!(p, midx, midy, text(currEdge.weight, plot_font, txtsize, color="black"))
+            plotWeight(p, g, xy, u, v, currEdge.weight, font=plot_font)
         end
     end
 end
@@ -161,10 +179,79 @@ function makePlot(g::Graph, showTicks::Bool, showLabels::Bool; plot_font = "comp
     if (g.directed)
         plotDirectedEdges2(graphPlot, g, xy, plot_font = plot_font, txtsize = txtsize)
     else
-        plotUndirectedEdges(graphPlot, g, xy, plot_font = plot_font, txtsize = txtsize)
+        plotUndirectedEdges(graphPlot, g, xy, plot_font = plot_font, txtsize = txtsize*0.75)
     end
 
     plotNodes(graphPlot, g, showLabels = showLabels, plot_font = plot_font, txtsize = txtsize)
 
     return graphPlot
+end
+
+rect(w, h, x, y) = Shape(x .+ [0, w, w, 0, 0], y .+ [0, 0, h, h, 0])
+
+# Draws an array to the plot that was passed in
+function drawArray(p, g::Graph, array; maxEntries::Int64 = 7, plot_font = "computer modern", txtsize = 12)
+
+    # Create and plot the rectangle containing the data structure's elements:
+    w = abs(g.xMax - g.xMin)
+    h = abs(g.yMax - g.yMin) * 0.1
+    
+    yMaxBox = g.yMin * 1.1 - h
+    yMinBox = g.yMin * 1.1 - 2 * h
+    yMidBox = (yMaxBox + yMinBox) / 2.0
+
+    queueBox = rect(w, h, g.xMin, yMinBox)
+    plot!(p, queueBox, fillcolor = "light grey")
+
+    # dividerXs contains an array of equally spaced values that represent where the dividers 
+    # separating the contents of the queue should be placed on the rectangle
+    dividerXs = nothing 
+    
+    dividerXs = LinRange(g.xMin, g.xMax, maxEntries + 1)
+
+    # We want to plot a line that goes from the (dividerXs[i], yMinBox) to (dividerXs[i], yMaxBox)
+    xyBottom = zeros(length(dividerXs), 2)
+    xyTop = zeros(length(dividerXs), 2)
+    xyMid = []
+
+    # Populate the xy 2-dimmensional vector. The ith entry corresponds to the ith node's (x,y) coordinates    
+    i = 1
+    xPrev = nothing
+    for xi in dividerXs
+        xyBottom[i, :] = [xi, yMinBox]
+        xyTop[i, :] = [xi, yMaxBox]
+
+        if (i > 1)
+            push!(xyMid, (xi + xPrev) / 2.0)
+        end
+
+        xPrev = xi
+        i = i + 1
+    end
+
+    for i in 1:maxEntries
+        plot!(p,[xyBottom[i,1]; xyTop[i,1]], [xyBottom[i,2]; xyTop[i,2]], color = "black", linewidth = 1)
+    end
+
+    if (maxEntries == 0)
+        return
+    end
+
+    i = 1
+
+    numElements = length(array)
+
+    for xi in xyMid
+        if (i > numElements)
+            break
+        end
+
+        if (i == length(xyMid) && numElements > i)
+            annotate!(p, xi, yMidBox, text("...", plot_font, txtsize, color="black"))
+        else
+            annotate!(p, xi, yMidBox, text(array[i], plot_font, txtsize, color="black"))
+        end
+
+        i = i + 1
+    end
 end
