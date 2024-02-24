@@ -6,16 +6,16 @@ include("../GraphPlots.jl")
 function initSingleSource(G::Graph, sInd::Int64)
     attributes = []
     for v in G.nodes
-        v.size = 29
+        v.size = 35
         v.fillColor = "white"
-        push!(attributes, [Inf, "NIL"])
+        push!(attributes, [Inf, "∅"])
     end
 
     attributes[sInd][1] = 0.0
 
     for e in G.edges
         e.color = "grey"
-        e.lineWidth = 3
+        e.lineWidth = 5
     end
 
     return attributes
@@ -25,7 +25,7 @@ function relax(G::Graph, states, attributes, pqs, pq, uInd::Int64, vInd::Int64)
     edgeInd = findEdgeIndex(G, uInd, vInd)
     edgeuv = G.edges[edgeInd]
 
-    G.edges[edgeInd].lineWidth = 5
+    G.edges[edgeInd].lineWidth = 7
     G.edges[edgeInd].color = "gold"
 
     desc = "Relaxing node " * G.nodes[vInd].label
@@ -33,7 +33,7 @@ function relax(G::Graph, states, attributes, pqs, pq, uInd::Int64, vInd::Int64)
     push!(pqs, deepcopy(pq))
 
     if (attributes[vInd][1] > attributes[uInd][1] + edgeuv.weight)
-        if (attributes[vInd][2] != "NIL")
+        if (attributes[vInd][2] != "∅")
             # Note: we have to remove the edge from its previous parent to node v to denote it's not part of sssp
             G.edges[findEdgeIndex(G, findNodeIndexFromLabel(G, attributes[vInd][2]), vInd)].color = "lightgrey"
         end
@@ -87,7 +87,7 @@ function runDijkstra(G::Graph, sInd::Int64)
         for vInd in uNeighbors
             edgeInd = findEdgeIndex(G, uInd, vInd)
             G.edges[edgeInd].color = "red"
-            G.edges[edgeInd].lineWidth = 3
+            G.edges[edgeInd].lineWidth = 5
             
             if (G.nodes[vInd].fillColor != "orange")
                 G.nodes[vInd].fillColor = "chartreuse3"
@@ -119,7 +119,7 @@ function runDijkstra(G::Graph, sInd::Int64)
                 G.edges[edgeInd].color = "lightgrey"
             end
 
-            G.edges[edgeInd].lineWidth = 3
+            G.edges[edgeInd].lineWidth = 5
             desc = "Moving on to " * G.nodes[uInd].label * "'s next neighbor"
             push!(states, GraphState(deepcopy(G), desc, deepcopy(attributes)))
             push!(pqs, deepcopy(pq))
@@ -144,20 +144,25 @@ function plotDijkstraLabels(p, g, metadata)
         y = g.nodes[i].yCoord
         
         # Make the node label bold
-        annotate!(p, x, y, text(g.nodes[i].label * "\n\n", "Times Bold", 8, :black))
+        annotate!(p, x, y, text(g.nodes[i].label * "\n\n", "Times Bold", 12, :black))
 
         if metadata[i][1] != Inf
             str = "\nd=" * string(trunc(Int64, metadata[i][1])) * "\nπ=" * string(metadata[i][2])
-            annotate!(p, x, y, text(str, "computer modern", 8))
+            annotate!(p, x, y, text(str, "computer modern", 12))
         else
-            str = "\nd=" * string(metadata[i][1]) * "\nπ=" * string(metadata[i][2])
-            annotate!(p, x, y, text(str, "computer modern", 8))
+            str = "\nd=∞\nπ=" * string(metadata[i][2])
+            annotate!(p, x, y, text(str, "computer modern", 12))
         end
     end
 end
 
 function drawDijkstra(states::Vector{GraphState}, pqstates::Vector{PriorityQueue})
     numStates = length(states)
+
+    foldername = "dijkstra"
+    #mkdir(foldername)
+    cd(foldername)
+    
     anim = Animation()
     for i in 1:numStates
         # Extract all the information for viz
@@ -165,8 +170,8 @@ function drawDijkstra(states::Vector{GraphState}, pqstates::Vector{PriorityQueue
         currpq = collect(pqstates[i])
         currpqkeys = [ v[1] for v in currpq]
 
-        currPlot = makePlot(currState.g, false, false)
-        drawArray(currPlot, currState.g, currpqkeys, maxEntries = 5)
+        currPlot = makePlot(currState.g, false, false, txtsize = 18)
+        drawArray(currPlot, currState.g, currpqkeys, maxEntries = 5, txtsize = 18)
         plotDijkstraLabels(currPlot, currState.g, currState.meta)
 
         # Save a pdf file of each state

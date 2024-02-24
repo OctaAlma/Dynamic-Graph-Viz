@@ -56,6 +56,43 @@ function parseEdge(lineArgs::Vector{SubString{String}}, allNodes::Vector{Node})
     return Edge(sourceKey, destKey, weight, color, lineWidth)
 end
 
+function getEdgeInfo(e::Edge, source::String, dest::String, lineArgs::Vector{SubString{String}}, override::Bool=false)
+    anyCommand = false
+    i = findIndex(lineArgs, "-w")
+    if i != -1 || override == true
+        println("⬗ weight: ", e.weight)
+        anyCommand = true
+    end
+    i = findIndex(lineArgs, "-c")
+    if i != -1 || override == true
+        println("⬗ color: ", e.color)
+        anyCommand = true
+    end
+    
+    i = findIndex(lineArgs, "-t")
+    if (i == -1)
+        i = findIndex(lineArgs, "-lw")
+    end
+    if i != -1 || override == true
+        println("⬗ linewidth ", e.lineWidth)
+        anyCommand = true
+    end
+    i = findIndex(lineArgs, "-s")
+    if i != -1 || override == true
+        println("⬗ source node: ", source)
+        anyCommand = true
+    end
+    i = findIndex(lineArgs, "-d")
+    if i != -1 || override == true
+        println("⬗ destination node: ", dest)
+        anyCommand = true
+    end
+
+    if anyCommand == false
+        getEdgeInfo(e, source, dest, lineArgs, true)
+    end
+end
+
 Base.:(==)(c1::Edge, c2::Edge) = 
 c1.sourceKey == c2.sourceKey &&
 c1.destKey == c2.destKey &&

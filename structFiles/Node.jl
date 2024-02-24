@@ -123,37 +123,37 @@ function getNodeInfo(n::Node, lineArgs::Vector{SubString{String}}, override::Boo
     anyCommand = false
     i = findIndex(lineArgs, "-l")
     if i != -1 || override == true
-        println("label: ",n.label)
+        println("⬗ label: ",n.label)
         anyCommand = true
     end
     i = findIndex(lineArgs, "-x")
     if i != -1 || override == true
-        println("x: ",n.xCoord)
+        println("⬗ x: ",n.xCoord)
         anyCommand = true
     end
     i = findIndex(lineArgs, "-y")
     if i != -1 || override == true
-        println("y: ",n.yCoord)
+        println("⬗ y: ",n.yCoord)
         anyCommand = true
     end
     i = findIndex(lineArgs, "-fc")
     if i != -1 || override == true
-        println("fill Color: ",n.fillColor)
+        println("⬗ fill Color: ",n.fillColor)
         anyCommand = true
     end
     i = findIndex(lineArgs, "-oc")
     if i != -1 || override == true
-        println("outline Color: ",n.outlineColor)
+        println("⬗ outline Color: ",n.outlineColor)
         anyCommand = true
     end
     i = findIndex(lineArgs, "-lc")
     if i != -1 || override == true
-        println("label Color: ",n.labelColor)
+        println("⬗ label Color: ",n.labelColor)
         anyCommand = true
     end
     i = findIndex(lineArgs, "-s")
     if i != -1 || override == true
-        println("node Size: ", n.size)
+        println("⬗ node Size: ", n.size)
         anyCommand = true
     end
     if anyCommand == false

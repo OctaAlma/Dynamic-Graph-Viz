@@ -4,7 +4,7 @@ include("../GraphPlots.jl")
 
 function initKruskal(G::Graph)
     # Set all nodes to different colors
-    colors = ["red", "green", "blue", "yellow", "purple", "orange", "maroon",
+    colors = ["purple2", "chartreuse3", "maroon", "gold", "dodgerblue", "darkorange1", "red",
         "lavender", "pink", "magenta", "brown", "coral", "cyan"]
     
     if (length(G.nodes) > length(colors))
@@ -16,12 +16,12 @@ function initKruskal(G::Graph)
     for node in G.nodes
         node.fillColor = colors[currColorInd]
         currColorInd += 1
-        node.size = 20
+        node.size = 25
     end
 
     for edge in G.edges
         edge.color = "lightgrey"
-        edge.lineWidth = 2
+        edge.lineWidth = 7
     end
 
 end
@@ -71,22 +71,6 @@ function allNodesSameSet(parents)
     return true
 end
 
-#=
-Kruskal's algorithm
-    A = ∅
-    for each vertex v ∈ G.V:
-        Make-Set(v)
-
-    sort the edges of G.E into nondecreasing order by weight w 
-
-    for each edge (u, v) ∈ G.E, taken in nondecreasing order by weight
-        if find-set(u) ≠ find-set(v)
-            A = A ∪ {(u, v)}
-            Union(u, v)
-
-    return A
-=#
-
 function runKruskal(G::Graph)::Vector{GraphState}
     
     states::Vector{GraphState} = []
@@ -100,7 +84,7 @@ function runKruskal(G::Graph)::Vector{GraphState}
     for edge in sortedEdges
         edgeInd = findEdgeIndex(G, edge.sourceKey, edge.destKey)
         G.edges[edgeInd].color = "black"
-        G.edges[edgeInd].lineWidth = 5
+        G.edges[edgeInd].lineWidth = 9
 
         u = getNode(G, edge.sourceKey)
         v = getNode(G, edge.destKey)
@@ -121,7 +105,7 @@ function runKruskal(G::Graph)::Vector{GraphState}
             G.edges[edgeInd].color = "lightgrey"
         end
 
-        G.edges[edgeInd].lineWidth = 3
+        G.edges[edgeInd].lineWidth = 7
         push!(states, deepcopy(GraphState(G, desc, [])))
 
         iteration += 1
@@ -137,9 +121,9 @@ function runKruskal(G::Graph)::Vector{GraphState}
     return states
 end
 
-g = vacRead("../resources/testDir.vac")
+g = vacRead("../resources/kruskal.vac")
 s = runKruskal(g)
-saveGIF(s, "kruskal.gif", interval = 0.2, showLabels = false, showTicks = false)
-saveStatesToPDFs(s, "kruskal", 1, length(s), false, false)
+saveGIF(s, "kruskal.gif", interval = 0.2, showLabels = false, showTicks = false, txtsize = 28)
+saveStatesToPDFs(s, "kruskal", 1, length(s), false, false, txtsize = 28)
 
 println("Done!")

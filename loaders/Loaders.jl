@@ -47,7 +47,7 @@ function genericAnimLoad(filename::String)
     return states
 end
 
-function genericStateSave(states::Vector{GraphState}, stateInd::Int64, filename::String)
+function genericStateSave(states::Vector{GraphState}, stateInd::Int64, filename::String; showTicks = true, showLabels = true)
     # Check the extension of filename
     extension = lowercase(String(split(filename, ".")[end]))
 
@@ -107,7 +107,8 @@ function saveStatesToPNGs(states::Vector{GraphState}, foldername::String,
 end
 
 function saveStatesToPDFs(states::Vector{GraphState}, foldername::String, 
-    start::Int64, finish::Int64, showTicks::Bool, showLabels::Bool)
+    start::Int64, finish::Int64, showTicks::Bool, showLabels::Bool
+    ; txtsize = 12, plot_font = "computer modern")
     currDir = pwd()
 
     try
@@ -122,7 +123,7 @@ function saveStatesToPDFs(states::Vector{GraphState}, foldername::String,
 
     for i in start:finish
         filename = "$i.pdf"
-        savefig(makePlot(states[i].g, showTicks, showLabels), filename)
+        savefig(makePlot(states[i].g, showTicks, showLabels, txtsize = txtsize), filename)
     end
 
     cd(currDir)

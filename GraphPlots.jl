@@ -42,7 +42,7 @@ function plotWeight(p, g, xy, u, v, w; font = "computer modern", txtsize = 10, b
 
     # Put a square border where the weight is going to go ()
     scatter!(p, [midx], [midy], marker = :square, markersize = boxsize, color = :lightgrey)
-    annotate!(p, midx, midy, text(convert(Int64, w), font, color="black", pointsize=txtsize))
+    annotate!(p, midx, midy, text(convert(Int, w), font, color="black", pointsize=txtsize))
 end
 
 function plotUndirectedEdges(p, g, xy; plot_font = "computer modern", txtsize = 12, useOffset = false)
@@ -55,7 +55,7 @@ function plotUndirectedEdges(p, g, xy; plot_font = "computer modern", txtsize = 
         plot!(p,[xy[u,1]; xy[v,1]], [xy[u,2]; xy[v,2]], color = currEdge.color, linewidth = currEdge.lineWidth)
         
         if (g.weighted)
-            plotWeight(p, g, xy, u, v, currEdge.weight, font=plot_font, txtsize=txtsize, useOffset=useOffset)
+            plotWeight(p, g, xy, u, v, currEdge.weight, font=plot_font, txtsize=txtsize, useOffset=useOffset, boxsize = txtsize * 0.75)
         end
     end
 end
@@ -79,7 +79,7 @@ function getOffset(g, vSize)
     return [(vSize) / xLen, (vSize) / yLen] * aspect
 end
 
-function plotDirectedEdges2(p, g, xy; plot_font = "computer modern", txtsize = 12, arrowSize = 0.8)
+function plotDirectedEdges2(p, g, xy; plot_font = "computer modern", txtsize = 12, arrowSize = 2.0)
     # Vector to keep track of all edges that have been drawn
     edgesDrawn::Vector{Tuple{Int64, Int64}} = []
     # GR.setarrowsize(arrowSize)
@@ -113,7 +113,7 @@ function plotDirectedEdges2(p, g, xy; plot_font = "computer modern", txtsize = 1
             # Plot the edge from node u to node v
             xCoords = [xy[u,1]; xy[v,1] - offset[1]]
             yCoords = [xy[u,2]; xy[v,2] - offset[2]]
-            plot!(p, xCoords, yCoords, color = currEdge.color, linewidth = currEdge.lineWidth, arrow = (:closed, 1.0))
+            plot!(p, xCoords, yCoords, color = currEdge.color, linewidth = currEdge.lineWidth, arrow=true, arrowsize = 10)
         else
             offset = uvNormDir * 0.4
             sideOffset = invNormDir * 0.3
@@ -123,7 +123,7 @@ function plotDirectedEdges2(p, g, xy; plot_font = "computer modern", txtsize = 1
             # Plot the edge from node u to node v
             xCoords = [xy[u,1] + sideOffset[1]; xy[v,1] + sideOffset[1] - offset[1]]
             yCoords = [xy[u,2] + sideOffset[2]; xy[v,2] + sideOffset[2] - offset[2]]
-            plot!(p, xCoords, yCoords, color = currEdge.color, linewidth = currEdge.lineWidth, arrow = (:closed, 1.0))
+            plot!(p, xCoords, yCoords, color = currEdge.color, linewidth = currEdge.lineWidth, arrow = true, arrowsize = 10)
             
             invEdge = g.edges[invertedEdgeInd]
             offset = uvNormDir * offsetFactor(g, uSize)
@@ -131,14 +131,14 @@ function plotDirectedEdges2(p, g, xy; plot_font = "computer modern", txtsize = 1
             # Plot the edge from node v to node u
             xCoords = [xy[v,1] - sideOffset[1]; xy[u,1] - sideOffset[1] + offset[1]]
             yCoords = [xy[v,2] - sideOffset[2]; xy[u,2] - sideOffset[2] + offset[2]]
-            plot!(p, xCoords, yCoords, color = invEdge.color, linewidth = invEdge.lineWidth, arrow = (:closed, 1.0))
+            plot!(p, xCoords, yCoords, color = invEdge.color, linewidth = invEdge.lineWidth, arrow=true, arrowsize = 10)
 
             invEdgeNodeIndices = (v, u)
             push!(edgesDrawn, invEdgeNodeIndices)
         end
 
         if (g.weighted)
-            plotWeight(p, g, xy, u, v, currEdge.weight, font=plot_font)
+            plotWeight(p, g, xy, u, v, currEdge.weight, font=plot_font, txtsize = txtsize, boxsize = txtsize * 0.75)
         end
     end
 end

@@ -55,7 +55,7 @@ function vizInterface(G::Graph, showTicks::Bool, showLabels::Bool, font::String,
                         continue
                     end
                 elseif (length(commands) == 2)
-                    genericStateSave(animation, stateToSave, String(commands[2]))
+                    genericStateSave(animation, stateToSave, String(commands[2]), showTicks = showTicks, showLabels = showLabels)
                 else
                     println("Usage: statesave STATE_IND FILENAME")
                 end

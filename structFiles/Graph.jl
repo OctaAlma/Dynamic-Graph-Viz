@@ -1289,6 +1289,7 @@ function graphEditParser(G::Graph, commands::Vector{SubString{String}}, majorCom
             if (nodeInd != -1)
                 println("Requested Info for node: ",label)
                 getNodeInfo(G.nodes[nodeInd], commands)
+                return 1
             end
         elseif (getWhat == "edge")
             src = String(commands[majorCommand + 2]) #should these be pasred 
@@ -1296,8 +1297,8 @@ function graphEditParser(G::Graph, commands::Vector{SubString{String}}, majorCom
             edgeInd = findEdgeIndex(G, src, dest)
             if (edgeInd != -1)
                 println("Requested Info for edge: (", src, ", ", dest, ")")
-                println("Not yet Implemented")
-                #getNodeInfo(G.nodes[nodeInd], commands) # change getNodeInfo to getEdgeInfo
+                getEdgeInfo(G.edges[edgeInd], src, dest, commands)
+                return 1
             end
         else
             println("Please specify whether you want to set node or set edge.")
