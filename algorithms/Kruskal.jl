@@ -83,8 +83,8 @@ function runKruskal(G::Graph)::Vector{GraphState}
     iteration = 1
     for edge in sortedEdges
         edgeInd = findEdgeIndex(G, edge.sourceKey, edge.destKey)
-        G.edges[edgeInd].color = "black"
-        G.edges[edgeInd].lineWidth = 9
+        G.edges[edgeInd].color = "grey"
+        G.edges[edgeInd].lineWidth = 11
 
         u = getNode(G, edge.sourceKey)
         v = getNode(G, edge.destKey)
@@ -97,15 +97,14 @@ function runKruskal(G::Graph)::Vector{GraphState}
 
         if (uSet != vSet)
             mergeSet(uSet, vSet, parents, G)
+            G.edges[edgeInd].color = "black"
             desc = "We merged the sets " * u.label * " to " * v.label
-            push!(states, deepcopy(GraphState(G, desc, [])))
-            desc = "The nodes now belong to the same set. Continue"
+            
         else
             desc = "The nodes already belong to the same set. Continue"
-            G.edges[edgeInd].color = "lightgrey"
+            G.edges[edgeInd].lineWidth = 7
         end
 
-        G.edges[edgeInd].lineWidth = 7
         push!(states, deepcopy(GraphState(G, desc, [])))
 
         iteration += 1
