@@ -1,0 +1,33 @@
+1
+u
+u
+n -l 1 -x 12.58854 -y 12.0 -f white -o black -lc black -s 10
+n -l 2 -x 5.0 -y 4.08854 -f white -o black -lc black -s 10
+n -l 3 -x 5.0 -y 18.0 -f white -o black -lc black -s 10
+n -l 4 -x -9.0 -y 18.088540000000002 -f white -o black -lc black -s 10
+n -l 5 -x -17.588540000000002 -y 5.0 -f white -o black -lc black -s 10
+n -l 6 -x -17.5 -y 18.0 -f white -o black -lc black -s 10
+n -l 7 -x -17.588540000000002 -y -7.0 -f white -o black -lc black -s 10
+n -l 8 -x -9.0 -y 4.41146 -f white -o black -lc black -s 10
+n -l 9 -x -9.0 -y -7.0 -f white -o black -lc black -s 10
+n -l 10 -x 5.0 -y -6.58854 -f white -o black -lc black -s 10
+n -l 11 -x 17.588540000000002 -y 4.0 -f white -o black -lc black -s 10
+n -l 12 -x 22.0 -y 12.0 -f white -o black -lc black -s 10
+e -s 6 -d 5 -w 1.0 -c black -lw 1.0
+e -s 5 -d 7 -w 1.0 -c black -lw 1.0
+e -s 8 -d 9 -w 1.0 -c black -lw 1.0
+e -s 5 -d 4 -w 1.0 -c black -lw 1.0
+e -s 5 -d 8 -w 1.0 -c black -lw 1.0
+e -s 8 -d 2 -w 1.0 -c black -lw 1.0
+e -s 3 -d 2 -w 1.0 -c black -lw 1.0
+e -s 8 -d 3 -w 1.0 -c black -lw 1.0
+e -s 4 -d 3 -w 1.0 -c black -lw 1.0
+e -s 8 -d 4 -w 1.0 -c black -lw 1.0
+e -s 4 -d 2 -w 1.0 -c black -lw 1.0
+e -s 10 -d 2 -w 1.0 -c black -lw 1.0
+e -s 10 -d 8 -w 1.0 -c black -lw 1.0
+e -s 10 -d 11 -w 1.0 -c black -lw 1.0
+e -s 1 -d 2 -w 1.0 -c black -lw 1.0
+e -s 1 -d 12 -w 1.0 -c black -lw 1.0
+e -s 11 -d 1 -w 1.0 -c black -lw 1.0
+e -s 2 -d 11 -w 1.0 -c black -lw 1.0

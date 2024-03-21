@@ -1,19 +1,17 @@
 1
 u
 u
-n -l 1 -x -0.30770610470131743 -y 0.6162449441996739 -f white -o black -lc black -s 10
-n -l 2 -x 0.30770610470131804 -y -0.03802878224415775 -f white -o black -lc black -s 10
-n -l 3 -x 0.557345410189304 -y -0.4489710861166403 -f white -o black -lc black -s 10
-n -l 4 -x 0.30770610470131754 -y 0.35549928179392354 -f white -o black -lc black -s 10
-n -l 5 -x -0.3077061047013183 -y -0.2987744446499091 -f white -o black -lc black -s 10
-n -l 6 -x -0.5573454101893038 -y -0.44897108611663883 -f white -o black -lc black -s 10
+n -l 1 -x -0.24999999999998498 -y 0.23979453236522205 -f white -o black -lc black -s 10
+n -l 2 -x 0.24999999999999364 -y 0.6652056691337992 -f white -o black -lc black -s 10
+n -l 3 -x 0.6123724356957945 -y 4.85722573273506e-17 -f white -o black -lc black -s 10
+n -l 4 -x 0.25000000000000544 -y -0.6652056691337978 -f white -o black -lc black -s 10
+n -l 5 -x -0.2500000000000159 -y -0.23979453236522125 -f white -o black -lc black -s 10
+n -l 6 -x -0.6123724356957945 -y -7.077671781985373e-16 -f white -o black -lc black -s 10
 e -s 2 -d 1 -w 1.0 -c black -lw 1.0
 e -s 3 -d 2 -w 1.0 -c black -lw 1.0
 e -s 3 -d 4 -w 1.0 -c black -lw 1.0
 e -s 4 -d 5 -w 1.0 -c black -lw 1.0
 e -s 4 -d 1 -w 1.0 -c black -lw 1.0
-e -s 2 -d 5 -w 1.0 -c black -lw 1.0
+e -s 2 -d 4 -w 1.0 -c black -lw 1.0
 e -s 5 -d 6 -w 1.0 -c black -lw 1.0
 e -s 1 -d 6 -w 1.0 -c black -lw 1.0
-e -s 2 -d 4 -w 1.0 -c black -lw 1.0
-e -s 1 -d 5 -w 1.0 -c black -lw 1.0

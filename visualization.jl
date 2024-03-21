@@ -83,7 +83,7 @@ function vizInterface(G::Graph, showTicks::Bool, showLabels::Bool, font::String,
                     println("Usage: stateload STATE_IND FILENAME")
                 end
 
-            elseif command == "stateloadxy"
+            elseif command == "sloadxy"
                 # Format: loadstate i FILENAME
                 stateToLoad = currStateInd
 
@@ -102,7 +102,7 @@ function vizInterface(G::Graph, showTicks::Bool, showLabels::Bool, font::String,
                 elseif (length(commands) == 2)
                     txtReadXY(animation[stateToLoad], String(commands[2]))
                 else
-                    println("Usage: stateloadxy STATE_IND FILENAME")
+                    println("Usage: sloadxy STATE_IND FILENAME")
                 end
             
             elseif command == "toggle"
@@ -121,7 +121,7 @@ function vizInterface(G::Graph, showTicks::Bool, showLabels::Bool, font::String,
                     showLabels = !showLabels
                 end
             
-            elseif command == "statesavexy"
+            elseif command == "ssavexy"
                 # Format: savestate i FILENAME.txt/vac/mtx
                 stateToSave = currStateInd
 
@@ -135,7 +135,7 @@ function vizInterface(G::Graph, showTicks::Bool, showLabels::Bool, font::String,
                             outputXY(animation[stateToSave].g, String(commands[3]))
                         end
                     catch
-                        println("Usage: statesavexy STATE_IND FILENAME")
+                        println("Usage: ssavexy STATE_IND FILENAME")
                         continue
                     end
                 elseif (length(commands) == 2)
@@ -144,7 +144,7 @@ function vizInterface(G::Graph, showTicks::Bool, showLabels::Bool, font::String,
                     println("Usage: statesavexy STATE_IND FILENAME")
                 end
 
-            elseif command == "saveas" # IMPLEMENT ME
+            elseif command == "vsave" || command == "saveas" # PNGs, PDFs, GIF, JLD2, VACA, txt (xy)
                 filename = String(commands[2])
                 
                 if (filename == "png" || filename == "pngs" || filename == "pdf" || filename == "pdfs")
@@ -345,7 +345,7 @@ function vizInterface(G::Graph, showTicks::Bool, showLabels::Bool, font::String,
                     deleteat!(animation, i)
                 end
 
-                if (currStateInd >= i)
+                if (currStateInd > i)
                     currStateInd -= 1
                     currState = animation[currStateInd]
                 end

@@ -13,12 +13,15 @@ function genericAnimSave(states::Vector{GraphState}, filename::String)
         saveAnimationXY1(states, filename)
     elseif extension == "vaca"
         saveAnimToVaca(states, filename)
-    elseif extension == "jdl" 
+    elseif extension == "jld" 
         try
             save_object(filename, states)
         catch
             printstyled("Could not save animation to the file ", filename, ".\n", color = :red) 
         end
+    else
+        printstyled("The ", extension, " format is not supported.\n", color = :red)
+        println("Please enter a supported format: JLD, VACA, TXT, PNG, PDF, GIF.")
     end
 end
 
@@ -29,7 +32,7 @@ function genericAnimLoad(filename::String)
     
     if extension == "vaca"
         states = loadAnimFromVaca(filename)
-    elseif extension == "jdl" 
+    elseif extension == "jld" 
         try
             states = load_object(filename)            
         catch

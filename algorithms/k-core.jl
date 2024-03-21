@@ -2,105 +2,129 @@ include("../structFiles/GraphState.jl")
 include("../loaders/Loaders.jl")
 include("../GraphPlots.jl")
 
-function getDegrees(G::Graph)::Vector{Int64}
-    degrees = Vector{Int64}()
-    sizehint!(degrees, length(G.nodes))
-    for i in 1:length(G.nodes)
-        push!(degrees, 0)
-    end
+# This code was based on pseudocode found in 
+# https://www.baeldung.com/cs/graph-k-core
+
+function initKCore(core::Graph)
+    # Color all nodes some color and make them a size
+    p = split("setall nodes -fc white -s 35", " ")
+    setAllNodes(core, p)
+    p = split("setall edges -t 5", " ")
+    setAllEdges(core, p)
+end
+
+function computeDegreeVec(core::Graph)
+    deg = zeros(length(core.nodes))
     
-    for edge in G.edges
-        degrees[edge.sourceKey] += 1
-        degrees[edge.destKey] += 1
+    for e in core.edges
+        deg[e.sourceKey] += 1
+        deg[e.destKey] += 1    
     end
 
-    return degrees
+    return deg
 end
 
-function allGreaterThan(degrees::Vector{Int64}, k::Int64)
-    allNegs = true
-    for i in degrees
-        if i < k
-            return false
-        end
-
-        if i != -1
-            allnegs = false
+# Returns whether there is a degree less than k
+function existsDegLTk(deg, k)
+    for d in deg
+        if (d < k)
+            return true    
         end
     end
 
-    return allNegs
+    return false
 end
 
-function vizRemoveNode(states::Vector{GraphState}, G::Graph, degrees::Vector{Int64}, nodeInd::Int64)
-    if length(G.nodes) == 0
-        return
-    end
-    i = 1
-    numEdges = length(G.edges)
-    while i <= numEdges
-        curr = G.edges[i]
-
-        if curr.sourceKey == nodeInd || curr.destKey == nodeInd 
-            curr.color = "red"
-            curr.lineWidth = 7
-
-            desc = "Removing edge from " * G.nodes[curr.sourceKey].label * " to " * G.nodes[curr.destKey].label
-            push!(states, GraphState(deepcopy(G), desc, []))
-            
-            if (curr.sourceKey == nodeInd)
-            # Decrease the degree of the destination
-                degrees[curr.destKey] -= 1
-            else
-            # Decrease the degree of the source
-                degrees[curr.sourceKey] -= 1
-            end
-
-            deleteat!(G.edges, i)
-            i -= 1
-            numEdges -= 1
-        end
-        i += 1
-    end
-    degrees[nodeInd] = -1 # Indicates that the node has been deleted, so its degree does not matter
-
-    desc = "Removing node " * G.nodes[nodeInd].label * " from the graph"
-    push!(states, GraphState(deepcopy(G), desc, []))
-    removeNode(G, G.nodes[nodeInd].label)
-
-end
-
-function runKCore(G::Graph, k::Int64)::Vector{GraphState}
+#=
+ Degree Pruning algorithm
+ Input: An undirected, unweighted graph and an integer k
+=#
+function runkCore(G::Graph, k::Int64)::Vector{GraphState}
     states::Vector{GraphState} = []
-    degrees = getDegrees(G)
+    core = deepcopy(G)
+    n = length(core.nodes)
+    deg = computeDegreeVec(core)
 
-    while (!allGreaterThan(degrees, k) || length(G.nodes) != 0)
-        numDeleted = 0
-        for i in eachindex(degrees)
-            if degrees[i] < k
-                if degrees[i] == -1
-                    numDeleted += 1
-                    continue
-                end
+    initKCore(core)
+    push!(states, GraphState(deepcopy(core), "", deepcopy(deg)))
 
-                if (i - numDeleted == 0 || length(G.nodes) == 0)
-                    println("sss")
-                    break
-                end
+    while (existsDegLTk(deg, k))
+        
+        for i in range(1, length(core.nodes))
+            if (deg[i] < k)
                 
-                G.nodes[i - numDeleted].fillColor = "red"
-                desc = "Node " * G.nodes[i - numDeleted].label * " has a degree of " * string(degrees[i]) * " which is less than " * string(k) * "!"
-                push!(states, GraphState(deepcopy(G), desc, []))
-                
-                vizRemoveNode(states, G, degrees, i - numDeleted)
-                numDeleted += 1
+                rmNodeLabel = core.nodes[i].label
+
+                core.nodes[i].fillColor = "lightgrey"
+                str = "Removing node: " * rmNodeLabel
+                push!(states, GraphState(deepcopy(core), str, deepcopy(deg)))
+
+                # Remove node at index i from graph 
+                # note: removeNode() also deletes incident edges
+                removeNode(core, core.nodes[i].label)
+
+                # Recompute the degrees of each node from the updated core
+                deg = computeDegreeVec(core)
+
+                str = "Removed node " * rmNodeLabel
+                push!(states, GraphState(deepcopy(core), str, deepcopy(deg)))
+                break
             end
         end
     end
+
+    setAllNodes(core, split("setall nodes -fc black -lc white", " "))
+    str = "Final " * string(k) * " core"
+    push!(states, GraphState(deepcopy(core), str, deepcopy(deg)))
 
     return states
-end 
+end
 
-g = vacRead("../resources/testDir.vac")
-s = runKCore(g, 4)
-println(s)
+# Plot the degree below the node label
+function plotkCoreLabels(p, g, meta, last)
+    n = length(g.nodes)
+    for i in 1:n
+        x = g.nodes[i].xCoord
+        y = g.nodes[i].yCoord
+
+        # Plot the node's label on top bold
+        label = g.nodes[i].label * "\n"
+        # Plot the node's degree under the label
+        deglabel = "\ndeg=" * string(Int(meta[i]))
+
+        if (!last)
+            annotate!(p, x, y, text(label, "Times Bold", 15, :black))
+            annotate!(p, x, y, text(deglabel, "computer modern", 10))
+        else            
+            # If this is the last state, we use font color white
+            annotate!(p, x, y, text(label, "Times Bold", 15, :white))
+            annotate!(p, x, y, text(deglabel, "computer modern", 10, :white))
+        end
+    end
+end
+
+function drawkCore(states::Vector{GraphState})
+    numStates = length(states)
+    foldername = "k-core"
+    cd(foldername)
+    anim = Animation()
+    for i in 1:numStates
+        currState = states[i]
+        currPlot = makePlot(currState.g, false, false)
+        plotkCoreLabels(currPlot, currState.g, currState.meta, i==numStates)
+        
+        # Save a pdf file of each state
+        filename = "$i.pdf"
+        savefig(currPlot, filename)
+
+        # Add the current state to a gif
+        frame(anim, currPlot)
+    end
+
+    # Export the final gif
+    gif(anim, "kcore.gif", fps=3)
+end
+
+G = vacRead("../resources/kcore.vac")
+s = runkCore(G, 3)
+drawkCore(s)

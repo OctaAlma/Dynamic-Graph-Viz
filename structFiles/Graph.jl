@@ -1253,7 +1253,7 @@ function graphEditParser(G::Graph, commands::Vector{SubString{String}}, majorCom
 
         displayGraph(G)
         return 1
-    elseif commands[majorCommand] == "remove"
+    elseif commands[majorCommand] == "remove" || commands[majorCommand] == "rm"
         if majorCommand == 2
             printRemoveCommands() 
             return 0

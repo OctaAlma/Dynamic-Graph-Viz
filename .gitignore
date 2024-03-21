@@ -1,6 +1,7 @@
 *.png
 *.pdf
 *.gif
+!/algorithms/*
 .DS_Store
 userinput-edit.jl
 /cool

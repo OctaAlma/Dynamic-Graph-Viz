@@ -122,7 +122,8 @@ end
 
 g = vacRead("../resources/kruskal.vac")
 s = runKruskal(g)
+saveStatesToPDFs(s, "Kruskal", 1, length(s), false, false, txtsize = 28)
+cd("Kruskal")
 saveGIF(s, "kruskal.gif", interval = 0.2, showLabels = false, showTicks = false, txtsize = 28)
-saveStatesToPDFs(s, "kruskal", 1, length(s), false, false, txtsize = 28)
 
 println("Done!")

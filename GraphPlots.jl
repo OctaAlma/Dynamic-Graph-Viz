@@ -1,9 +1,9 @@
 include("./structFiles/Graph.jl")
 
-function initPlot(p, g, k, showTicks)
+function initPlot(p, g, padding, showTicks)
 
-    deltaX = (g.xMax - g.xMin) * k
-    deltaY = (g.yMax - g.yMin) * k
+    deltaX = (g.xMax - g.xMin) * padding
+    deltaY = (g.yMax - g.yMin) * padding
 
     plot!(p, xlim = [g.xMin - deltaX,g.xMax + deltaX], ylim = [g.yMin - deltaY, g.yMax + deltaY])
     plot!(p, grid = showTicks, legend = false, aspect_ratio =:none)
@@ -144,11 +144,11 @@ function plotDirectedEdges2(p, g, xy; plot_font = "computer modern", txtsize = 1
 end
 
 # This function returns a plot object containing the visualization of the graph object g
-function makePlot(g::Graph, showTicks::Bool, showLabels::Bool; plot_font = "computer modern", txtsize = 12, DPI = 250)::Plots.Plot{Plots.GRBackend} 
+function makePlot(g::Graph, showTicks::Bool, showLabels::Bool; padding = 0.25, plot_font = "computer modern", txtsize = 12, DPI = 250)::Plots.Plot{Plots.GRBackend} 
     gr()
     graphPlot = plot(dpi = DPI)
 
-    initPlot(graphPlot, g, 0.25, showTicks)
+    initPlot(graphPlot, g, padding, showTicks)
 
     # Check if there are no nodes in the graph:
     if isempty(g.nodes)
@@ -190,14 +190,20 @@ end
 rect(w, h, x, y) = Shape(x .+ [0, w, w, 0, 0], y .+ [0, 0, h, h, 0])
 
 # Draws an array to the plot that was passed in
-function drawArray(p, g::Graph, array; maxEntries::Int64 = 7, plot_font = "computer modern", txtsize = 12)
+function drawArray(p, g::Graph, array; yPadding = 0.1, distFromPlot = 1.1, maxEntries::Int64 = 7, plot_font = "computer modern", txtsize = 12)
+
+    # Update the lower plot limits to fit the array in the bottom 
+    plotYLims = ylims(p)
+    yMinpad = yPadding * (plotYLims[2] - plotYLims[1])
+
+    plot!(p, ylims = [plotYLims[1] - yMinpad, plotYLims[2]])
 
     # Create and plot the rectangle containing the data structure's elements:
     w = abs(g.xMax - g.xMin)
-    h = abs(g.yMax - g.yMin) * 0.1
+    h = abs(g.yMax - g.yMin) * 0.12
     
-    yMaxBox = g.yMin * 1.1 - h
-    yMinBox = g.yMin * 1.1 - 2 * h
+    yMaxBox = (g.yMin - yPadding) * distFromPlot - h
+    yMinBox = (g.yMin - yPadding) * distFromPlot - 2 * h
     yMidBox = (yMaxBox + yMinBox) / 2.0
 
     queueBox = rect(w, h, g.xMin, yMinBox)

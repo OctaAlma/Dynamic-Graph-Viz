@@ -55,8 +55,8 @@ function runBFS(G::Graph, sInd::Int64)
         for vInd in adju
             eInd = edgeInds[i]
             G.edges[eInd].color = "chartreuse3"
-            push!(qs, deepcopy(Q))
-            push!(states, GraphState(deepcopy(G), "", deepcopy(attributes)))
+            # push!(qs, deepcopy(Q))
+            # push!(states, GraphState(deepcopy(G), "", deepcopy(attributes)))
 
             if (G.nodes[vInd].fillColor == "white")
                 G.nodes[vInd].fillColor = "lightgrey"
@@ -66,7 +66,11 @@ function runBFS(G::Graph, sInd::Int64)
                 push!(qs, deepcopy(Q))
                 push!(states, GraphState(deepcopy(G), "", deepcopy(attributes)))
                 edgeCols[i] = "gold"
+            else
+                push!(qs, deepcopy(Q))
+                push!(states, GraphState(deepcopy(G), "", deepcopy(attributes)))
             end
+
             G.edges[eInd].color = edgeCols[i]
             push!(qs, deepcopy(Q))
             push!(states, GraphState(deepcopy(G), "", deepcopy(attributes)))
@@ -129,7 +133,8 @@ function drawBFS(states::Vector{GraphState}, qs)
         currq = collect(qs[i])
 
         currPlot = makePlot(currState.g, false, false, txtsize = 18)
-        drawArray(currPlot, currState.g, currq, maxEntries = 4, txtsize = 18)
+
+        drawArray(currPlot, currState.g, currq, maxEntries = 4, txtsize = 18, distFromPlot = 1.1)
         plotBFSLabels(currPlot, currState.g, currState.meta)
 
         # Save a pdf file of each state
