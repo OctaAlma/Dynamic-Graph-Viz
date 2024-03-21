@@ -1,7 +1,10 @@
 *.png
 *.pdf
 *.gif
-!/algorithms/*
+!/algorithms/Dijkstra/*
+!/algorithms/Kruskal/*
+!/algorithms/BFS/*
+!/algorithms/k-core/*
 .DS_Store
 userinput-edit.jl
 /cool
