@@ -9,7 +9,7 @@ function initKCore(core::Graph)
     # Color all nodes some color and make them a size
     p = split("setall nodes -fc white -s 35", " ")
     setAllNodes(core, p)
-    p = split("setall edges -t 5", " ")
+    p = split("setall edges -t 5 -c grey", " ")
     setAllEdges(core, p)
 end
 
@@ -54,8 +54,18 @@ function runkCore(G::Graph, k::Int64)::Vector{GraphState}
             if (deg[i] < k)
                 
                 rmNodeLabel = core.nodes[i].label
+                core.nodes[i].fillColor = "firebrick"
+                core.nodes[i].outlineColor = "firebrick"
 
-                core.nodes[i].fillColor = "lightgrey"
+                for e in core.edges
+                    if (e.sourceKey == i || e.destKey == i)
+                        e.color = "firebrick"
+                        e.lineWidth = 8
+                        deg[e.sourceKey] -= 1
+                        deg[e.destKey] -= 1
+                    end
+                end
+
                 str = "Removing node: " * rmNodeLabel
                 push!(states, GraphState(deepcopy(core), str, deepcopy(deg)))
 
@@ -81,7 +91,7 @@ function runkCore(G::Graph, k::Int64)::Vector{GraphState}
 end
 
 # Plot the degree below the node label
-function plotkCoreLabels(p, g, meta, last)
+function plotkCoreLabels(p, g, meta)
     n = length(g.nodes)
     for i in 1:n
         x = g.nodes[i].xCoord
@@ -92,11 +102,10 @@ function plotkCoreLabels(p, g, meta, last)
         # Plot the node's degree under the label
         deglabel = "\ndeg=" * string(Int(meta[i]))
 
-        if (!last)
+        if (g.nodes[i].fillColor == "white")
             annotate!(p, x, y, text(label, "Times Bold", 15, :black))
             annotate!(p, x, y, text(deglabel, "computer modern", 10))
         else            
-            # If this is the last state, we use font color white
             annotate!(p, x, y, text(label, "Times Bold", 15, :white))
             annotate!(p, x, y, text(deglabel, "computer modern", 10, :white))
         end
@@ -111,7 +120,7 @@ function drawkCore(states::Vector{GraphState})
     for i in 1:numStates
         currState = states[i]
         currPlot = makePlot(currState.g, false, false)
-        plotkCoreLabels(currPlot, currState.g, currState.meta, i==numStates)
+        plotkCoreLabels(currPlot, currState.g, currState.meta)
         
         # Save a pdf file of each state
         filename = "$i.pdf"
